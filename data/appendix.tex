@@ -1,0 +1,29 @@
+% 附录, 注意多个附录的编号是按照字母排序的
+
+\chapter{外文资料原文}
+\label{chap:appx:1}
+As one of the most widely used techniques in operations research, {\em mathematical programming} is defined as a means of maximizing a quantity known as {\em objective function}, subject to a set of constraints represented by equations and inequalities.
+Some known subtopics of mathematical programming are linear programming, nonlinear programming, multiobjective programming, goal programming, dynamic programming, and multilevel programming$^{[1]}$.
+
+% \tag{} 出现在公式索引中
+\begin{equation} \tag*{(chap:appx:tag1)}
+    \left\{ \begin{array}{l}
+        \max \,\,f(x)      \\ [0.1 cm]
+        \mbox{subject to:} \\ [0.1 cm]
+        \qquad g_j(x)\le 0, \quad j=1,2,\cdots,p
+    \end{array} \right.
+\end{equation}
+
+% \tag*{} 不出现在公式索引中
+\begin{equation} \tag*{(chap:appx:tag2)}
+    \left\{ \begin{array}{l}
+        \max \,\,f^\ast(x) \\ [0.1 cm]
+        \mbox{subject to:} \\ [0.1 cm]
+        \qquad g_j^\ast(x)\le 0, \quad j=1,2,\cdots,p
+    \end{array} \right.
+\end{equation}
+
+\chapter{其它附录}
+\label{chap:appx:2}
+其它附录的内容可以放到这里。
+也可以独立存放，然后将 \verb|\input| 到主文件中。

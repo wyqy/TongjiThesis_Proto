@@ -1,0 +1,85 @@
+\tongjisetup{
+  %******************************
+  % 注意：
+  %   1. 配置里面不要出现空行
+  %   2. 不需要的配置信息可以删除
+  %******************************
+  % 秘级
+  secretlevel={公开},
+  secretyear={0},
+  %
+  %
+  % 中文信息
+  ctitle={中文论文标题}, % 可手动加入换行符 \\ 控制换行
+  cheadingtitle={中文论文标题页眉版本, 无换行}, % 用于页眉的标题, 不要换行
+  cauthor={},  
+  studentnumber={},
+  cdepartment={电子与信息工程学院},
+  csubjectcategory={工学}, % 学科门类
+  cmajorfirst={一级学科 \& 专业学位类别}, % 专业学位类别
+  cmajorsecond={二级学科 \& 专业领域}, % 专业领域
+  cresearchfield={研究方向}, % 研究方向
+  csupervisor={导师姓名 教授}, 
+  % cassosupervisor={}, % 副指导老师/行业导师, 没有把{}中内容留空即可, 或者注释掉
+  % cjointinstitution={}, % 联合培养单位, 没有把{}中内容留空即可, 或者注释掉
+  cdate={\zhdigits{2024}年\zhnumber{3}月}, % 手动指定日期, 否则自动使用当前时间
+  % cfunds={（本论文由国家杰出青年基金 (No.123456789) 支持）},
+  % 英文信息
+  etitle={Thesis Title in English}, 
+  eauthor={},
+  edepartment={College of Electronic and Information Engineering},
+  esubjectcategory={Engineering}, % 学科门类
+  emajorfirst={First-level Discipline \& Degree}, % 专业学位类别
+  emajorsecond={Second-level Discipline \& Degree's Field}, % 专业领域
+  eresearchfield={Research Fieldd}, % 研究方向
+  esupervisor={Prof. Supervisor},
+  % eassosupervisor={}, % 副指导老师/行业导师
+  % ejointinstitution={}, % 联合培养单位
+  edate={March, 2024} % 手动指定日期, 否则自动使用当前时间
+  % efunds={(Supported by the Natural Science Foundation of China for \\ Distinguished Young Scholars, Grant No.123456789)}
+}
+
+% 定义中英文摘要和关键字
+\begin{cabstract}
+  \LaTeX 是常用的排版软件之一，能够输出高质量的学术出版物。
+  \tongjithesis{} 是基于 \LaTeX 的模板。
+  系统辨识作为控制理论的一个分支，其主要任务是在系统模型未知的情况下，通过量测数据估计系统数学模型。在系统模型难以甚至无法获得的情况下，系统辨识能够为系统分析和控制器设计提供重要的模型支撑。
+  本文针对控制理论和系统辨识研究中的一类重要系统——线性时不变系统，研究其辨识理论和辨识算法，本文的主要贡献如下：
+  
+  \begin{enumerate}[1.]
+    \item 针对离散时域线性时不变系统，基于不变子空间理论和自相关最小二乘法，提出一种系统参数和扰动参数的协同辨识法，能够同时估计确定性系统参数和建模为有色噪声的扰动参数。此外，还利用离散~Fourier~变换的正交性质和快速算法，在不降低精度的前提下，降低了算法计算复杂度。数值实验也证明了这一点。最后给出了 MATLAB 语言实现的辨识程序。
+    
+    \item 将不变子空间辨识法从周期输入信号拓展到一般输入信号，此外，还考虑了非均匀采样数据的辨识问题。通过应用数学上的广义均匀分布序列理论，给出了不变子空间辨识法在非周期输入和非均匀采样下的渐近一致性（consistency）定理。对于采样数有限的情况，还给出了误差随采样数的收敛速度。最后给出了非均匀采样数据下的不变子空间辨识算法实现。
+    
+    \item 在车辆动力学的背景下，研究不变子空间方法在实际动力学系统辨识中的应用流程，包括可行性分析、实验设计、参数辨识、结果分析等步骤。此外，还讨论了不变子空间辨识法在实际应用中一些可能存在的问题，并给出了相应的解决办法。
+  \end{enumerate}
+
+\end{cabstract}
+
+\ckeywords{系统辨识, 不变子空间辨识, 傅里叶变换, 自相关最小二乘, 低差异序列}
+
+\begin{eabstract}
+  System identification is a branch of control theory, which aims to estimate the mathematical model of a system based on measured data when the system model is unknown.
+  Its ability of retrieving the system model can provide an important support for system analysis and controller design when the system model is difficult or even impossible to obtain.
+  This thesis focuses on the identification theory and algorithm of linear time-invariant systems, which is of importance in both system identification and control theory research.
+  The main contributions are as follows:
+
+  \begin{enumerate}[1.]
+    \item Based on the invariant subspace theory and autocorrelation least-square method, this thesis proposes a collaborative identification method for both the system parameters and disturbance parameters of discrete-time linear time-invariant system.
+    It can simultaneously estimate the system parameters and the disturbance parameters modeled as colored noise.
+    In addition, the utilization of orthogonality and fast implementation of discrete Fourier transform makes it possible to reduce the computational complexity without precision loss.
+    The numerical experiment verifies these points.
+    The proposed algorithm implemented in MATLAB language is also given.
+
+    \item The invariant subspace identification method is extended from periodic input signals to general input signals, together with the consideration of non-uniformly sampling.
+    The theorem of asymptomatically consistency is derived based on the generalized uniform distribution sequence theory.
+    As for the condition of finite number of samples, the convergence speed of error relative to sampling number is also derived.
+    Finally, the implementation of the invariant subspace identification algorithm under aperiodic input and non-uniform sampling is presented.
+    
+    \item This thesis studies the application of the invariant subspace method in the background of vehicle dynamic systems.
+    The whole procedure is studied, including feasibility analysis, experimental design, parameter identification, and result analysis.
+    Moreover, some potential problems in the practical application of the invariant subspace identification method are discussed, and corresponding solutions are given.
+  \end{enumerate}
+\end{eabstract}
+
+\ekeywords{system identification, invariant subspace identification, Fourier transform, autocorrelation least-square, low-discrepancy sequence}

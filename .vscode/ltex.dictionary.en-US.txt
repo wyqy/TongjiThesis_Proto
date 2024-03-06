@@ -1,0 +1,24 @@
+extrema
+Koksma
+Invariant-SubsPace
+equidistributed
+Sanathanan-Koerner
+OLHP
+coprime
+SISO
+sawtooth
+summable
+intersample
+Hölder
+Pointwise
+almost surely
+
+ergodic
+Weyl
+Kronecker-Weyl
+equidistribution
+Koksma-Hlawka
+oversampled
+covariances
+ergodicity
+SRIVC

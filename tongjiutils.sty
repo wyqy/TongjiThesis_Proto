@@ -1,0 +1,219 @@
+\ProvidesPackage{tongjiutils}[modified by WYQY]
+
+% 原始模板定义
+\newcommand{\china}{中华人民共和国} % 国家
+\newcommand{\pozhehao}{\kern0.3ex\rule[0.8ex]{2em}{0.1ex}\kern0.3ex} % 破折号
+\newcommand{\ffrac}[2]{\displaystyle\frac{#1}{#2}} % 更好的\frac{}{}, 在多级公式中更美观
+% 表格: 定义三种新的column对齐格式, 允许使用L C R的带长度的表格列
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}           
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+% 表格内部强制换行
+\newcommand{\tabincell}[2]{
+\begin{tabular}{@{}#1@{}}#2\end{tabular}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  ALGO2E  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newlength{\commentWidth}
+\setlength{\commentWidth}{5cm}
+\newcommand{\tcpright}[1]{\tcp*[r]{\makebox[\commentWidth]{#1\hfill}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TIKZ绘图 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usetikzlibrary{
+  arrows.meta, quotes, fit,
+  calc, positioning, backgrounds
+}
+
+\tikzset{
+  meta box/.style = {
+    draw, black, thick, fill = gray!20,
+    minimum height = 1.5em, minimum width = 20em,
+    text centered, text width = 20em,
+    inner sep = .25em
+  },
+  roundrect node/.style = {
+    meta box, rectangle, rounded corners = 2pt,
+  },
+  rect node/.style = {
+    meta box, rectangle,
+  },
+  round node/.style = {
+    meta box, circle,
+  },
+  every fit/.style = {
+    draw, gray, thick, dashed,
+    fill = gray!10, rounded corners,
+    inner sep = .25em
+  }
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Operator类符号 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% RedeclareMathOperator
+\newcommand\RedeclareMathOperator{%
+  \@ifstar{\def\rmo@s{m}\rmo@redeclare}{\def\rmo@s{o}\rmo@redeclare}%
+}
+% this is taken from \renew@command
+\newcommand\rmo@redeclare[2]{%
+  \begingroup \escapechar\m@ne\xdef\@gtempa{{\string#1}}\endgroup
+  \expandafter\@ifundefined\@gtempa
+     {\@latex@error{\noexpand#1undefined}\@ehc}%
+     \relax
+  \expandafter\rmo@declmathop\rmo@s{#1}{#2}}
+% This is just \@declmathop without \@ifdefinable
+\newcommand\rmo@declmathop[3]{%
+  \DeclareRobustCommand{#2}{\qopname\newmcodes@#1{#3}}%
+}
+\@onlypreamble\RedeclareMathOperator
+
+% general operator
+% stat
+% \DeclareMathOperator{\Pr}{Pr}
+\DeclareMathOperator{\E}{E}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Corr}{Corr}
+% little
+\RedeclareMathOperator*{\max}{max}
+\RedeclareMathOperator*{\min}{min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\vect}{vec}
+\DeclareMathOperator{\row}{row}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\svd}{svd}
+\DeclareMathOperator{\fft}{fft}
+\DeclareMathOperator{\atantwo}{atan2}
+% capital
+\DeclareMathOperator{\ROOTS}{ROOTS}
+\DeclareMathOperator{\ROC}{ROC}
+\DeclareMathOperator{\IDFT}{IDFT}
+\DeclareMathOperator{\DFT}{DFT}
+\DeclareMathOperator{\IFFT}{IFFT}
+\DeclareMathOperator{\FFT}{FFT}
+\DeclareMathOperator{\RESHAPE}{RESHAPE}
+\DeclareMathOperator{\PAGEMTIMES}{PAGEMTIMES}
+
+% paired operator for both dynamic (no star) and static mode (star)
+% refer to: https://tex.stackexchange.com/questions/43008/absolute-value-symbols
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil} % alternative: \lfloor {#1}+1
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\DeclarePairedDelimiterX\inprod[2]{\langle}{\rangle}{{#1},{#2}}
+\let\oldabs\abs \def\abs{\@ifstar{\oldabs}{\oldabs*}}
+\let\oldnorm\norm \def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
+\let\oldceil\ceil \def\ceil{\@ifstar{\oldceil}{\oldceil*}}
+\let\oldfloor\floor \def\floor{\@ifstar{\oldfloor}{\oldfloor*}}
+\let\oldinprod\inprod \def\inprod{\@ifstar{\oldinprod}{\oldinprod*}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Command, Def类符号 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% bold Greek letters
+% refer to: https://tex.stackexchange.com/questions/383324/bold-checkmark/383798#383798
+\newcommand{\boldgreek}[1]{%
+  \textpdfrender{%
+    TextRenderingMode=FillStroke, % fill and stroke text
+    LineWidth=.35pt,%
+  }{#1}%
+}
+% matrix
+\newcommand{\mat}[1]{
+  \ifcat\noexpand#1\relax {{\boldgreek{#1}}} 
+  \else {{\mathbf{#1}}} \fi
+}
+\renewcommand{\vec}[1]{
+  \ifcat\noexpand#1\relax {{\boldgreek{#1}}} 
+  \else {{\boldsymbol{#1}}} \fi
+}
+% probability
+\newcommand{\widesim}[2][1.5]{
+  \mathrel{\overset{#2}{\scalebox{#1}[1]{$\sim$}}}
+} % \widesim[2]{SS}
+
+% symbol
+\def\im{{\mathcal{j}}} \def\e{{\mathcal{e}}}
+\def\K{{\mathbb{K}}} % self-defined field
+\def\Z{{\mathbb{Z}}} \def\Q{{\mathbb{Q}}}
+\def\R{{\mathbb{R}}} \def\C{{\mathbb{C}}}
+\def\U{{\mathbb{U}}} % unit circle on \C
+% analysis
+\def\d{{\mathrm{d}\,}} \def\dint{{\,\mathrm{d}}}
+\def\Fc{{\mathbcal{F}}} \def\Fd{{\mathfrak{F}}} % Fourier
+\def\Hc{{\mathbcal{H}}} \def\Hd{{\mathfrak{H}}} % Hilbert
+\def\Lu{{\mathcal{L}}} \def\Lb{{\mathfrak{L}}} % Laplace
+% matrix
+\def\tr{^{\mathrm{T}}} \def\ct{^{\mathrm{H}}}
+\newcommand{\oproj}[3]{{{#1} \; \diagup \; {#2} \; ({#3})}}
+% space
+\def\dual{^{\ast}}
+\def\spaceba{{\mathbcal{ba}}}
+\def\spaceC{{\mathbcal{C}}}
+\def\spaceL{{\mathbcal{L}}} \def\spacel{{\mathbcal{l}}}
+\def\spaceH{{\mathbcal{H}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 符号表示 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% scripts
+\def\sps[#1]{^{\mathrm{#1}}} % 上标
+\def\cps[#1]{{\mathrm{#1}}} % 快速正体
+\def\ups[#1]{_{\mathrm{#1}}} % 下标
+% indices
+% general usage:
+\def\inda{{a}} \def\indb{{b}} \def\indc{{c}} % no \d
+\def\indi{{i}} \def\indj{{j}}
+\def\indk{{k}} \def\indl{{\mathcal{l}}}
+\def\indm{{m}} \def\indn{{n}} 
+\def\indq{{q}} \def\indr{{r}} \def\inds{{s}} % no \p
+% special usage:
+\def\enumk{{\mathscr{k}}} \def\enuml{{\mathscr{l}}}
+\def\enump{{\mathscr{p}}}
+
+% sets
+\def\setT{{\mathbb{T}}} % sampling moment set
+\def\setS{{\mathbb{S}}} % sampled data set
+\def\setF{{\mathbb{F}}} % used frequency set
+
+% specified operator
+\DeclareMathOperator{\kerf}{{\mathcal{f}}}
+\DeclareMathOperator{\kerk}{{\mathcal{k}}}
+\DeclareMathOperator{\kerg}{{\mathcal{g}}}
+\DeclareMathOperator{\kert}{{\mathcal{t}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 毛子符号 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% cyrillic operator
+% refer to: https://tex.stackexchange.com/questions/14633/what-packages-will-let-me-use-cyrillic-characters-in-math-mode
+\DeclareSymbolFont{cyrillicnormal}{T2A}{cmr}{m}{n}
+\DeclareSymbolFont{cyrillicitalic}{T2A}{cmr}{m}{it}
+% #1 for explicit name, #2 for internal name
+\def\makecynormalsymbol#1#2{% 
+  \begingroup\edef\temp{\endgroup
+    \noexpand\DeclareMathSymbol{\noexpand#1}
+    {\noexpand\mathalpha}{cyrillicnormal} % normal shape
+    {\expandafter\expandafter\expandafter
+    \calccyr\expandafter\meaning\csname T2A\string#2\endcsname\end}} % different size
+\temp}
+\def\makecyitalicsymbol#1#2{%
+  \begingroup\edef\temp{\endgroup
+    \noexpand\DeclareMathSymbol{\noexpand#1}
+    {\noexpand\mathalpha}{cyrillicitalic} % normal shape
+    {\expandafter\expandafter\expandafter
+    \calccyr\expandafter\meaning\csname T2A\string#2\endcsname\end}} % different size
+\temp}
+\expandafter\def\expandafter\calccyr\string\char#1\end{#1}
+% d.i.y. cyrillic symbols in math mode
+% capital
+\makecyitalicsymbol\itCyB\CYRB
+\makecyitalicsymbol\itCyG\CYRG
+\makecyitalicsymbol\itCyI\CYRI
+\makecynormalsymbol\rmCyI\CYRI
+\makecyitalicsymbol\rmCyEl\CYRL
+\makecyitalicsymbol\rmCySha\CYRSH
+% little
+\makecyitalicsymbol\itCyb\cyrb
+\makecyitalicsymbol\itCyg\cyrg
+\makecyitalicsymbol\itCyyu\cyryu
+\makecyitalicsymbol\itCyze\cyrz
+
+\endinput

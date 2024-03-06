@@ -1,0 +1,69 @@
+\documentclass[degree=master, degreetype=profession, bibtype=numeric]{tongjithesis}
+% 选项：
+%   degree=[master|doctor], 							% 必选
+%   bibtype=[numeric|authoryear], 						% 可选, 数字式引用|作者-年份引用, 默认为数字式(上标)引用
+%   degreetype=[academic|profession|equaleducation],  	% 可选, 学术型|专业型|同等学力, 默认为学术型
+% 	electronic,                                 		% 可选, 电子版, (打印时删除)
+%   secret,                                     		% 可选, 是否保密, 基本不用
+%   pifootnote,                                 		% 可选, 默认已打开
+%   romantitle                                  		% 可选, 默认已打开
+%   注：默认已打开的选项可以使用arialtitle=false 的形式关闭
+
+%%%%%%%%%%%%%%%%%%%%% 导言区 %%%%%%%%%%%%%%%%%%%%%
+% 生成数学版本
+\wyqymathversion{7} % 参数填写 wyqyinputfile 命令的使用次数
+% 自定义宏放在这里, 包括一些常用指令
+\usepackage{tongjiutils}
+% 加入bib文件
+\addbibresource{ref/refs.bib}
+
+
+%%%%%%%%%%%%%%%%%%%%% 正文区 %%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+% 定义图片文件在 figures 子目录下
+% 最好使用 pdf 格式的图片
+\graphicspath{{figures/}}
+
+%%% 封面部分
+\frontmatter
+\input{data/cover}
+\makecover
+
+% 目录
+\tableofcontents
+% 符号对照表
+\wyqyinputfile[denotation]{denotation}
+
+%%% 以下索引按需要选择
+% 插图索引
+\listoffigures
+% 表格索引
+\listoftables
+% 算法索引
+\listofalgorithms
+% 公式索引
+% \listofequations
+
+%%% 正文 
+\mainmatter
+% 用如下格式的命令插入文件
+% \wyqyinputfile[环境(可选参数)]{文件名}
+\wyqyinputfile{chap01}
+\wyqyinputfile{chap02}
+
+%%% 其它部分
+\backmatter
+
+% 致谢
+\wyqyinputfile[acknowledgement]{ack}
+% 参考文献
+\printTJbibliography
+% 附录
+\wyqyinputfile[appendix]{appendix}
+% 个人简历
+\wyqyinputfile[resume]{resume}
+% 原创性声明和授权书
+\wyqyinputfile{statement}
+
+\end{document}

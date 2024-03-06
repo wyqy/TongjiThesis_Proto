@@ -1,0 +1,171 @@
+\chapter{引言}
+\label{chap:intro}
+
+\section{文字排版}
+\label{sec:intro:typesetting}
+% 文字
+大家好啊，我是文字。
+编辑时推荐打开（word wrap / 自动换行）功能。
+
+% 另一段文字
+我是另一段文字。中文~English~中文，中文（English，En）中文。
+我是带有脚注的文字 \footnote{我是脚注。}。
+
+\section{公式排版}
+\label{sec:intro:formula}
+% 公式
+我是一段带有公式~$E = mc^2$ 的文字。
+我是一段带有如下行间公式~\ref{eq:1} 的文字：
+\begin{equation} \label{eq:1}
+    \vec{y} = \mat{\Psi} \vec{\theta} + \vec{e}.
+\end{equation}
+我是一段带有标量~$a$，向量~$\vec{x}$ 和矩阵~$\mat{A}$ 的文字。
+下面展示了一组具有子公式编号（如：公式~\ref{eq:2:d}）的公式：
+\begin{subequations} \begin{align}
+    \vec{y}\sps[t] &= \begin{bmatrix*} y\sps[n](t_1) & y\sps[n](t_2) & \cdots & y\sps[n](t_N) \end{bmatrix*}, \\
+    \vec{\theta}\sps[t] &= \begin{bmatrix*} \alpha_1 & \cdots & \alpha_{r_a} & \beta_0 & \cdots & \beta_{r_b} \end{bmatrix*}\tr, \\
+    \vec{e}\sps[t] &= A\sps[c](p) \begin{bmatrix*} \varepsilon(t_1) & & \varepsilon(t_2) & \cdots & \varepsilon(t_N) \end{bmatrix*}\tr, \\
+    \mat{\Psi}\sps[nt] &= \left[\begin{array}{ ccc | ccc }
+        -y\sps[n(1)](t_1) & \cdots & -y\sps[n(r_a)](t_1) & u(t_1) & \cdots & u\sps[(r_b)](t_1) \\
+        -y\sps[n(1)](t_2) & \cdots & -y\sps[n(r_a)](t_2) & u(t_2) & \cdots & u\sps[(r_b)](t_2) \\
+        \vdots & \ddots & \vdots & \vdots & \ddots & \vdots \\
+        -y\sps[n(1)](t_N) & \cdots & -y\sps[n(r_a)](t_N) & u(t_N) & \cdots & u\sps[(r_b)](t_N) \\
+    \end{array}\right]. \label{eq:2:d}
+\end{align} \end{subequations}
+下面展示了一组带有左大括号和子公式编号的公式~\ref{eq:3}：
+\begin{subequations} \label{eq:3} \begin{empheq}[left={\empheqlbrace\,}]{align}
+    \vec{x}(\indn+1) &= \mat{A}\sps[d] \vec{x}(\indn) + \mat{B}\sps[d] \vec{u}(\indn) + \vec{z}\sps[x](\indn), \label{eq:3:a} \\
+    \vec{y}\sps[n](\indn) &= \mat{C}\sps[d] \vec{x}(\indn) + \mat{D}\sps[d] \vec{u}(\indn) + \vec{z}\sps[y](\indn), \label{eq:3:b} \\
+    \vec{u}\sps[n](\indn) &= \vec{u}(\indn) + \vec{z}\sps[u](\indn). \label{eq:3:c}
+\end{empheq} \end{subequations}
+
+\section{引用排版}
+\label{sec:intro:reference}
+% 引用
+我是一段带有引用的文字~\cite{IEEE1363}。
+% 句内引用
+我是一段在一句话内引用了文献~\parencite{Jeyakumar2004} 的文字，需要使用 \verb|parencite| 命令。
+% 句间引用
+我是一段在一句话的结尾带有引用的文字~\cite{ElIdrissi1994}，需要使用 \verb|cite| 命令。
+% 参考文献位置
+请注意要将参考文献放在 \verb|data/ref.bib| 文件中，建议使用 Zotero 软件，配合 Better Bib(La)TeX 插件完成这一工作。
+
+\section{图片排版}
+\label{sec:intro:figure}
+% 图片
+% 单个图片
+如图~\ref{fig:1} 展示了如何插入单张图片。
+\begin{figure}[ht] % h (here), t (top), b (bottom), p (page), ! (mandatory in here?)
+    \centering \includegraphics[width=.5\textwidth]{figure_1.png}
+    \caption{我是一张图片} \label{fig:1}
+\end{figure}
+% 子图
+如图~\ref{fig:2} 展示了如何插入含多个子图的图片，位图可以使用 jpg, png 等格式。
+\begin{figure}[ht] \centering
+    \subcaptionbox{子图 1 \label{fig:2:a}}  {\includegraphics[height=.2\textwidth]{figure_2_a.png}} \hspace{2em} % 水平间距
+    \subcaptionbox{子图 2 \label{fig:2:b}}  {\includegraphics[height=.2\textwidth]{figure_2_b.png}} \\ \vspace{1em} % 垂直间距
+    \subcaptionbox{子图 3 \label{fig:2:c}}  {\includegraphics[height=.2\textwidth]{figure_2_c.png}} \hspace{2em} % 水平间距
+    \subcaptionbox{子图 4 \label{fig:2:d}}  {\includegraphics[height=.2\textwidth]{figure_2_d.png}}
+    \caption{我是一组图片} \label{fig:2}
+\end{figure}
+% 矢量图
+矢量图建议转换为 pdf 格式，如图~\ref{fig:3} 所示。
+\begin{figure}[ht] \centering
+    \includegraphics[width=.5\textwidth]{figure_3.pdf}
+    \caption{我是一张矢量图片} \label{fig:3}
+\end{figure}
+% 也可以使用 tikz 制图
+同样可以使用 \verb|tikz| 包制作矢量图，如图~\ref{fig:4} 所示。
+\begin{figure}[htbp] \centering 
+    \begin{tikzpicture}[node distance = 8pt]
+        % nodes
+        % frame 1 - measurement
+        \node[roundrect node]
+            (timeinit) { 生成满足定义~\ref{eq:3} 的采样时刻~$\setT\sps[ua]$, $\setT\sps[ya]$ };
+        \node[roundrect node, below = of timeinit]
+            (experiment) { 根据采样时刻进行实验，收集数据~$\setS\sps[ua]$、$\setS\sps[ya]$ };
+        % frame 2 - calculation
+        \node[roundrect node, below = of experiment, yshift = -16pt]
+        (freqest) { 计算不变子空间参数~$\hat{\vec{U}}\sps[a]$、$\hat{\vec{Y}}\sps[a]$ };
+        \node[roundrect node, below = of freqest]
+            (sysest) { 计算系统参数~$\hat{\vec{\theta}}_0$ };
+        % output
+        % \node[roundrect node, below = of sysest, yshift = -2pt]
+        %     (algoend) {Output $\hat{G}(p)$};
+        
+        % arrowed lines
+        \path[arrows={->[scale=1.2]}, thick]
+            (timeinit) edge (experiment)
+            (experiment) edge (freqest)
+            (freqest) edge (sysest);
+        %     (sysest) edge (algoend);
+
+        % frames
+        \begin{scope}[on background layer]
+            \node[
+                fit=(timeinit) (experiment),
+                label={[gray, anchor = south west]north west: 测量过程}] {};
+            \node[
+                fit=(freqest) (sysest),
+                label={[gray, anchor = south west]north west: 计算过程}] {};
+        \end{scope}
+    \end{tikzpicture}
+    \caption{我是一张 tikz 制作的图片} \label{fig:4}
+\end{figure}
+
+\section{表格}
+\label{sec:intro:table}
+表格可以使用 excel2latex 插件导出，可以标注附注，如表~\ref{table:1} 所示。
+\begin{table}[htb]
+    \centering \caption{我是一张带有附注的表格} \label{table:discrete:complexity}
+    \begin{threeparttable} \begin{tabularx}{0.8\textwidth}{
+            |>{\hsize=\hsize \linewidth=\hsize \centering\arraybackslash}X % 居中对齐
+            |>{\hsize=\hsize \linewidth=\hsize \centering\arraybackslash}X % 居中对齐
+            |>{\hsize=\hsize \linewidth=\hsize \raggedright\arraybackslash}X % 靠左对齐
+        |}
+        \hline \textbf{辨识任务} & \textbf{辨识方法} & \makecell{\centering \textbf{计算复杂度}} \\
+        \hline \multirow{5}{*}{仅估计系统参数}
+            & 算法1 & $\mathcal{O}(Nq^2 + q^2\bar{n} + \bar{n}^3)$ \\
+        \cline{2-3} & \multirow{2}{*}{算法2} & \multirow{2}{*}{\makecell[l]{
+            $\mathcal{O}(Nq + q^2\bar{n} + \bar{n}^3)$ or \\
+            $\mathcal{O}(N\log T + q^2\bar{n} + \bar{n}^3)$}} \\
+            & & \\
+        \cline{2-3} & 算法3\tnote{1} & $\mathcal{O}(N\bar{n}^2 + \bar{n}^3)$ \\
+        \cline{2-3} & 算法4\tnote{2} & $\mathcal{O}(N\log T + q^2\bar{n} + \bar{n}^3)$ \\
+        \hline \multirow{2}{*}{\makecell{同时估计系统参数和 \\ 扰动参数}}
+            & 算法2 & $\mathcal{O}(N\log N + q^2\bar{n} + \bar{n}^3)$ \\
+        \cline{2-3} & 算法3 & $\mathcal{O}(N\bar{n}^2 + \bar{n}^3)$ \\
+        \hline
+    \end{tabularx}
+    \begin{tablenotes}
+        \small
+        \item{1} 参见文献~\cite{Subspace_Overall_Overschee1996}；
+        \item{2} 参见文献~\cite{Subspace_Freq_McKelvey1996}。
+    \end{tablenotes}
+    \end{threeparttable}
+\end{table}
+
+\section{算法}
+\label{sec:intro:algorithm}
+本模板使用的是 algorithm2e 包，如算法~\ref{algorithm:1} 所示。
+\begin{algorithm}[htb]
+    \LinesNumbered \SetAlgoLined
+    \caption{我是一个带有注释的算法} \label{algorithm:1}
+    \KwData{$\mat{Y}_N\sps[nd]$、$\mat{U}_N\sps[nd]$。}
+    \KwResult{$\hat{\mat{\Xi}}\ups[yy,\indl]\sps[d]$、$\hat{\mat{\Xi}}\ups[uu]\sps[d]$。}
+    
+    \tcc{1. 计算参数1}
+    $\hat{\mathbcal{Y}}\sps[rd] \leftarrow \FFT(\mat{Y}_N\sps[nd])$、$\hat{\mathbcal{U}}\sps[rd] \leftarrow \FFT(\mat{U}_N\sps[nd])$ \tcpright{逐列计算 FFT}
+    $\hat{\mathbcal{Y}}_{\text{切片：}[0:T:(k-1)T,:]}\sps[rd] \leftarrow 0$、$\hat{\mathbcal{U}}_{\text{切片：}[0:T:(k-1)T,:]}\sps[rd] \leftarrow 0$\;
+
+    \tcc{2. 计算参数2}
+    $\hat{\mathbcal{Y}}\ups[1]\sps[rd] \leftarrow \RESHAPE(\hat{\mathbcal{Y}}\sps[rd],[p \; 1 \; N])$、$\hat{\mathbcal{Y}}\ups[2]\sps[rd] \leftarrow \overline{\RESHAPE(\hat{\mathbcal{Y}}\sps[rd],[1 \; p \; N])}$\;
+    $\hat{\mathbcal{Y}}\ups[yy]\sps[rd] \leftarrow \PAGEMTIMES(\hat{\mathbcal{Y}}\ups[1]\sps[rd], \hat{\mathbcal{Y}}\ups[2]\sps[rd])$\;
+    $\hat{\mathbcal{y}}\ups[yy]\sps[rd] \leftarrow \IFFT(\hat{\mathbcal{Y}}\ups[yy]\sps[rd])$ \tcpright{对最后一维计算 IFFT}
+    $\hat{\mat{\Xi}}\ups[yy,\indl]\sps[d] \leftarrow \frac{1}{N} \times \RESHAPE[(\hat{\mathbcal{y}}\ups[yy]\sps[rd])_{\text{切片：}[:,:,\indl]}] - \sum_{\indn=0}^{\indl-1}{x(\indn)\overline{y(N-\indl+\indn)}}$\;
+
+    \tcc{3. 计算参数3}
+    $\hat{\mat{\Xi}}\ups[uu]\sps[d] \leftarrow \frac{1}{N^2} \times (\hat{\mathbcal{U}}\sps[rd])\tr \overline{\hat{\mathbcal{U}}\sps[rd]}$\;
+
+    \Return $\hat{\mat{\Xi}}\ups[yy,\indl]\sps[d]$（$\indl = 0,\ldots,M-1$）、$\hat{\mat{\Xi}}\ups[uu]\sps[d]$.
+\end{algorithm}

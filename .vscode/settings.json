@@ -1,0 +1,69 @@
+{
+    // editor
+    "editor.wordWrap": "on",
+    // latex
+    "latex-workshop.latex.autoBuild.run": "onSave",
+    "latex-workshop.showContextMenu": true,
+    "latex-workshop.message.error.show": false,
+    "latex-workshop.message.warning.show": false,
+    "latex-workshop.latex.autoClean.run": "onFailed",
+    "latex-workshop.latex.recipe.default": "lastUsed",
+    "latex-workshop.intellisense.package.enabled": true,
+    "latex-workshop.intellisense.biblatexJSON.replace": {},
+    "latex-workshop.latex.outDir": ".\\.temp",
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "latexmk",
+            "tools": ["latexmk"]
+        }
+    ],
+    "latex-workshop.latex.tools": [
+        {
+            "name": "latexmk",
+            "command": "latexmk",
+            "args": [
+                "-norc", "-xelatex",
+                "-bibtex", "-bibfudge",
+                "-latex=xelatex", "-recorder-",
+                "-latexoption=-synctex=1 -interaction=nonstopmode -file-line-error --shell-escape",
+                "-outdir=%OUTDIR%",
+                "%DOCFILE%"
+            ]
+        }
+    ],
+    "latex-workshop.latex.clean.fileTypes": [
+        "*.aux",
+        "*.bbl",
+        "*.blg",
+        "*.idx",
+        "*.ind",
+        "*.lof",
+        "*.lot",
+        "*.out",
+        "*.toc",
+        "*.acn",
+        "*.acr",
+        "*.alg",
+        "*.glg",
+        "*.glo",
+        "*.gls",
+        "*.ist",
+        "*.fls",
+        "*.log",
+        "*.fdb_latexmk"
+    ]//, pdf reviewer
+    // "latex-workshop.view.pdf.viewer": "external",
+    // "latex-workshop.view.pdf.ref.viewer":"external",
+    // "latex-workshop.view.pdf.internal.synctex.keybinding": "double-click",
+    // "latex-workshop.view.pdf.external.viewer.command": "C:/Program Files/SumatraPDF/SumatraPDF.exe",
+    // "latex-workshop.view.pdf.external.viewer.args": [
+    //     "%PDF%"
+    // ],
+    // "latex-workshop.view.pdf.external.synctex.command": "C:/Program Files/SumatraPDF/SumatraPDF.exe",
+    // "latex-workshop.view.pdf.external.synctex.args": [
+    //     "-forward-search",
+    //     "%TEX%",
+    //     "%LINE%",
+    //     "%PDF%"
+    // ]
+}
