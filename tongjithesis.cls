@@ -127,21 +127,16 @@
 \RequirePackage{nicematrix} % 更好的矩阵排版
 \RequirePackage{pdfrender} % 更好的粗体渲染
 
-% 设置 Times New Roman, Helvetic
-% \RequirePackage{newtxmath} % txfonts的替代品 - 字体太多会报错
-\RequirePackage{courier} % 使用 Courier 字体
-
 % 使用其它数学字体
 \RequirePackage{amsfonts}
-% \RequirePackage{bm} % 处理数学公式中的黑斜体的替代(不能用, Too many math alphabets...)
-% \RequirePackage{lmodern} % 括号会消失
+% \RequirePackage{bm} % 处理数学公式中的黑斜体的替代
 \RequirePackage{mathrsfs} % \mathscr
 \RequirePackage[oldbold,%
   cal=dutchcal, calscaled=1.00,%
   scr=boondoxupr, scrscaled=1.00,%
   bb=libus, bbscaled=1.00]{mathalfa}
-\RequirePackage[utf8]{inputenc} % utf8 encoding
-\RequirePackage[T2A, T1, OT1]{fontenc} % Cyrillic font
+% \RequirePackage[utf8]{inputenc} % utf8 encoding, not used with xelatex
+\RequirePackage[T2A, T1]{fontenc} % Cyrillic font
 % 其它字体
 \iftongji@pifootnote
   \RequirePackage{pifont}% pifont有很多Pi fonts, 如Dingbats(杂锦字体), Symbol, etc
@@ -276,6 +271,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 字体页面设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% 设置 Times New Roman
+% \RequirePackage{newtxmath} % txfonts 的替代品 - 字体太多会报错
+\RequirePackage{courier} % 使用 Courier 字体
+\defaultfontfeatures{Mapping=tex-text} % 修复引号等字符的显示
+\setmainfont{Times New Roman} % 使用 Times New Roman 字体
 
 % 正文小四号 (12bp) 字, 行距为固定值 20 bp
 \renewcommand\normalsize{%
@@ -844,8 +845,8 @@ autoindent=true}
   }
 \let\tongji@appendix\appendix
 \renewenvironment{appendix}{% 
-  \ctexset{% 附录仍属于mainmattertrue才能正确编号成附录A的形式
-  % 因此, 此处的pagestyle仍然会沿用我们前面设的chapter的pagestyle, 而我们需要更改附录的页眉, 因此需要重新设置一下页眉
+  \ctexset{% 附录仍属于 mainmattertrue 才能正确编号成附录A的形式,
+    % 此处的 pagestyle 仍然会沿用我们前面设的 chapter 的 pagestyle, 而我们需要更改附录的页眉, 因此需要重新设置一下页眉
     chapter/pagestyle={tongji@appendix@heading} % 保证首页的页眉正确
     } 
   \pagestyle{tongji@appendix@heading} % 保证附录非首页的页眉正确
@@ -885,53 +886,41 @@ autoindent=true}
 % \secretlevel{}
 % 前辈们很明智地定义了三个东西, 不设置的时候为空. 还可以手动设置. 很强啊
 
+% 校名
+% \tongji@def@term{eschoolname}
 % 定义密级参数
 \tongji@def@term{secretlevel}
 \tongji@def@term{secretyear}
 % 论文中英文题目
-\tongji@def@term{ctitle}
+\tongji@def@term{ctitle} \tongji@def@term{etitle}
 \tongji@def@term{cheadingtitle}
-\tongji@def@term{etitle}
-% 作者, 导师, 副导师(校外)老师
-\tongji@def@term{cauthor}
-\tongji@def@term{csupervisor}
-\tongji@def@term{cassosupervisor}
-\tongji@def@term{cjointinstitution}
-\tongji@def@term{eauthor}
-\tongji@def@term{esupervisor}
-\tongji@def@term{eassosupervisor}
-\tongji@def@term{ejointinstitution}
-% 学位中英文
-\tongji@def@term{cdegree}
-\tongji@def@term{edegree}
-% 学科门类中英文
-\tongji@def@term{csubjectcategory}
-\tongji@def@term{esubjectcategory}
-% 研究领域中英文
-\tongji@def@term{cresearchfield}
-\tongji@def@term{eresearchfield}
-% 院系中英文名称
-\tongji@def@term{cdepartment}
-\tongji@def@term{edepartment}
-% 学位中英文名称
-\tongji@def@term{cmajor}
-\tongji@def@term{emajor}
-% 论文成文日期
-\tongji@def@term{cdate}
-\tongji@def@term{edate}
-% 为了兼容老版本同济模板的封面定义,仍然使用majorfirst, majorsecond
-% 这里majorfirst表示学科门类如工学, 理学, majorsecond表示一级学科或二级学科
-\tongji@def@term{cmajorfirst}
-\tongji@def@term{cmajorsecond}
-\tongji@def@term{emajorfirst}
-\tongji@def@term{emajorsecond}
-% 定义基金支持
-\tongji@def@term{cfunds}
-\tongji@def@term{efunds}
+% 作者
+% 作者
+\tongji@def@term{cauthor} \tongji@def@term{eauthor}
 % 学号
 \tongji@def@term{studentnumber}
-% 校名
-% \tongji@def@term{eschoolname}
+% 导师, 副导师(校外)老师
+\tongji@def@term{csupervisor} \tongji@def@term{esupervisor}
+\tongji@def@term{cassosupervisor} \tongji@def@term{eassosupervisor}
+\tongji@def@term{cjointinstitution} \tongji@def@term{ejointinstitution}
+% 学位中英文
+\tongji@def@term{cdegree} \tongji@def@term{edegree}
+% 学科门类中英文
+\tongji@def@term{csubjectcategory} \tongji@def@term{esubjectcategory}
+% 研究领域中英文
+\tongji@def@term{cresearchfield} \tongji@def@term{eresearchfield}
+% 院系中英文名称
+\tongji@def@term{cdepartment} \tongji@def@term{edepartment}
+% 学位中英文名称
+\tongji@def@term{cmajor} \tongji@def@term{emajor}
+% 论文成文日期
+\tongji@def@term{cdate} \tongji@def@term{edate}
+% 为了兼容老版本同济模板的封面定义,仍然使用majorfirst, majorsecond
+% 这里majorfirst表示学科门类如工学, 理学, majorsecond表示一级学科或二级学科
+\tongji@def@term{cmajorfirst} \tongji@def@term{emajorfirst}
+\tongji@def@term{cmajorsecond} \tongji@def@term{emajorsecond}
+% 定义基金支持
+\tongji@def@term{cfunds} \tongji@def@term{efunds}
 
 % 通过 \cs{tongjisetup} 统一设置封面信息
 % 封面和封底有一大堆信息需要设置, 为了简化操作界面, 提供一个 \cs{tongjisetup} 命令支持 key/value 的方式来设置
@@ -939,12 +928,13 @@ autoindent=true}
 % 由于这些设置项被 \cs{makecover} 调用, 所以此命令需要在 \cs{makecover} 之前被调用
 \def\tongjisetup{\kvsetkeys{tongji}}
 
-% 封面第一页
-% 参考命令: \parbox[position][height][inner-pos]{width}{text}
-\newlength{\tongji@title@width}
-\def\tongji@put@title#1{\makebox{\hb@xt@ \tongji@title@width{#1}}}
-% 这个\hb@xt@是啥玩意儿?
-\newcommand{\tongji@first@titlepage}
+% 语法
+% \parbox[position][height][inner-pos]{width}{text}
+% \hb@xt@{width}{text}: 创建指定宽度和内容的水平盒子
+\newlength{\tongji@title@width} % 创建宽度变量
+\def\tongji@put@title#1{\makebox{\hb@xt@ \tongji@title@width{#1}}} % 创建预设宽度变量和指定内容的盒子
+
+\newcommand{\chicover} % 中文封面
 {
   \begin{center}
     \vspace*{0cm}
@@ -952,33 +942,28 @@ autoindent=true}
     {%
       \hspace*{11.2cm}
       \iftongji@secret{\sanhao\tongji@secret@title}
-        \else\rule{1cm}{0cm}
-      \fi
+      \else\rule{1cm}{0cm} \fi % 是否显示密级
       \\[0.1cm]
       \iftongji@electronic{{\kaishu\xiaosi\bfseries\itshape\tongji@thesistype (打印时删除)}}
-        \else\rule{1cm}{0cm}
-      \fi
+      \else\rule{1cm}{0cm} \fi % 是否显示打印时删除
     }
-    \\[-.9cm] %TODO: 需要伪斜体?
+    \\[-.9cm]
     \parbox[t][1.8cm][t]{\textwidth}
     {%
       \centering\hspace*{.3cm}
       \includegraphics[width=10cm]{tongji-whole-logo.pdf}
-    }
-    \\[-.6cm] % logo
+    } % logo
+    \\[-.6cm] 
     \parbox[t][9cm][t]{\paperwidth-7cm}
-    {% \renewcommand{\baselinestretch}{1} %单倍行距
+    {% \renewcommand{\baselinestretch}{1} % 单倍行距
       \begin{center}
         \erhao[1]{{\bfseries\lishu\tongji@capply}}
         \iftongji@academic{\par\vskip 0.4cm \sihao[1]{{\bfseries\lishu(学术学位)}} \par\vskip 0.9cm}
         \else \iftongji@profession{\par\vskip 0.4cm \sihao[1]{{\bfseries\lishu(专业学位)}} \par\vskip 0.9cm}
-          \else \iftongji@equaleducation {\par\vskip 0.4cm \sihao[1]{{\bfseries\lishu(同等学力)}} \par\vskip 0.9cm}                        
-                \fi
-              \fi
-        \fi
-        % \linespread{0.7}
-        % \linespread{0.7}相当于\renewcommand{\baselinestretch}{0.7}
-        % 需要执行\selectfont才能生效
+        \else \iftongji@equaleducation {\par\vskip 0.4cm \sihao[1]{{\bfseries\lishu(同等学力)}} \par\vskip 0.9cm}                        
+        \fi \fi \fi
+        % \linespread{0.7} % 相当于 \renewcommand{\baselinestretch}{0.7}
+        % 需要执行 \selectfont 才能生效
         \erhao[2]{\bfseries\heiti\tongji@ctitle}
         \par\vskip -0.3cm
         \ifx\cfunds\@empty\else
@@ -987,8 +972,7 @@ autoindent=true}
         \fi
       \end{center}
     }
-    \vskip -0.4cm 
-    \hspace*{1.2cm}
+    \vskip -0.4cm \hspace*{1.2cm}
     \parbox[t][8.5cm][t]{\textwidth}
     {
       {
@@ -997,11 +981,8 @@ autoindent=true}
           \setlength{\extrarowheight}{4pt}          
           \iftongji@profession % 专业学位
               \setlength{\tongji@title@width}{7em}
-              \ifxetex
-                \begin{tabular}{p{\tongji@title@width}@{}c@{\extracolsep{8pt}}p{7cm}l}
-              \else
-                \begin{tabular}{p{\tongji@title@width}c@{\extracolsep{8pt}}p{7cm}l}
-              \fi
+              \ifxetex \begin{tabular}{p{\tongji@title@width}@{}c@{\extracolsep{8pt}}p{7cm}l}
+              \else \begin{tabular}{p{\tongji@title@width}c@{\extracolsep{8pt}}p{7cm}l} \fi
               \tongji@put@title{\tongji@cauthortitle}                & \tongji@title@sep & \tongji@cauthor            \\
               \tongji@put@title{\tongji@cstudentnumbertitle}         & \tongji@title@sep & \tongji@studentnumber      \\
               \tongji@put@title{\tongji@cdepartmenttitle}            & \tongji@title@sep & \tongji@cdepartment        \\
@@ -1017,16 +998,10 @@ autoindent=true}
                   \tongji@put@title{\tongji@cjointinstitutiontitle}  & \tongji@title@sep & \tongji@cjointinstitution  \\
               \fi
           \else % 学术学位
-              \ifx\tongji@cassosupervisor\@empty
-                  \setlength{\tongji@title@width}{5em}
-              \else
-                  \setlength{\tongji@title@width}{6em}
-              \fi
-              \ifxetex
-                  \begin{tabular}{p{\tongji@title@width}@{}c@{\extracolsep{8pt}}p{7cm}l}
-              \else
-                  \begin{tabular}{p{\tongji@title@width}c@{\extracolsep{8pt}}p{7cm}l}
-              \fi
+              \ifx\tongji@cassosupervisor\@empty \setlength{\tongji@title@width}{5em}
+              \else \setlength{\tongji@title@width}{6em} \fi
+              \ifxetex \begin{tabular}{p{\tongji@title@width}@{}c@{\extracolsep{8pt}}p{7cm}l}
+              \else \begin{tabular}{p{\tongji@title@width}c@{\extracolsep{8pt}}p{7cm}l} \fi
               \tongji@put@title{\tongji@cauthortitle}           & \tongji@title@sep    & \tongji@cauthor              \\
               \tongji@put@title{\tongji@cstudentnumbertitle}    & \tongji@title@sep    & \tongji@studentnumber        \\
               \tongji@put@title{\tongji@cdepartmenttitle}       & \tongji@title@sep    & \tongji@cdepartment          \\
@@ -1058,20 +1033,18 @@ autoindent=true}
       \parbox[t][1.8cm][t]{\textwidth}
       {%
         \centering\hspace*{.3cm}
-        \includegraphics[width=10cm]{tongji-whole-logo.pdf}
-      }
-      \\[-.6cm] % logo
+       \includegraphics[width=10cm]{tongji-whole-logo.pdf}
+      } % logo
+      \\[-.6cm] 
       \vspace*{0.3cm}
       \parbox[t][8cm][t]{\paperwidth-6cm}
       {
         \begin{center}
           \iftongji@doctor
             \sihao[1.3]{\tongji@eapplydoctor}
-          \else
-            \iftongji@master
-              \sihao[1.3]{\tongji@eapplymaster}
-            \fi
-          \fi
+          \else \iftongji@master
+            \sihao[1.3]{\tongji@eapplymaster}
+          \fi \fi
           \par\vskip 1.4cm
           \xiaoer[1.5]{\bfseries\sffamily\tongji@etitle}
           \par\vskip 14pt
@@ -1104,11 +1077,8 @@ autoindent=true}
                     \tongji@ejointinstitutiontitle \tongji@title@esep \tongji@ejointinstitution  \\
                 \fi
           \else % 学术学位
-            \ifx\tongji@cassosupervisor\@empty
-              \setlength{\tongji@title@width}{4em}
-            \else
-              \setlength{\tongji@title@width}{5em}
-            \fi
+            \ifx\tongji@cassosupervisor\@empty \setlength{\tongji@title@width}{4em}
+            \else \setlength{\tongji@title@width}{5em} \fi
             \begin{tabular}{p{12cm}}
                 \tongji@eauthortitle               \tongji@title@esep \tongji@eauthor            \\
                 \tongji@estudentnumbertitle        \tongji@title@esep \tongji@studentnumber      \\
@@ -1141,7 +1111,7 @@ autoindent=true}
   \pdfbookmark[-1]{\tongji@ctitle}{ctitle}
   \normalsize%
   \begin{titlepage}
-    \tongji@first@titlepage
+    \chicover
     \cleardoublepage
     \engcover
     \cleardoublepage
