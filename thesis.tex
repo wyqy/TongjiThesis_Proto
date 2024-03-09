@@ -1,17 +1,16 @@
 \documentclass[degree=master, degreetype=profession, bibtype=numeric]{tongjithesis}
 % 选项：
-%   degree=[master|doctor], 							% 必选
-%   bibtype=[numeric|authoryear], 						% 可选, 数字式引用|作者-年份引用, 默认为数字式(上标)引用
-%   degreetype=[academic|profession|equaleducation],  	% 可选, 学术型|专业型|同等学力, 默认为学术型
-% 	electronic,                                 		% 可选, 电子版, (打印时删除)
-%   secret,                                     		% 可选, 是否保密, 基本不用
-%   pifootnote,                                 		% 可选, 默认已打开
-%   romantitle                                  		% 可选, 默认已打开
+%   degree=[master|doctor],                             % 必选
+%   bibtype=[numeric|authoryear],                       % 可选, 数字式引用|作者-年份引用, 默认为数字式(上标)引用
+%   degreetype=[academic|profession|equaleducation],    % 可选, 学术型|专业型|同等学力, 默认为学术型
+% 	electronic,                                         % 可选, 电子版, (打印时删除)
+%   secret,                                             % 可选, 是否保密, 基本不用
+%   pifootnote                                          % 可选, 脚注是否用①这种格式, 默认已打开
 %   注：默认已打开的选项可以使用arialtitle=false 的形式关闭
 
 %%%%%%%%%%%%%%%%%%%%% 导言区 %%%%%%%%%%%%%%%%%%%%%
-% 生成数学版本
-\wyqymathversion{8} % 参数填写 wyqyinputfile 命令的使用次数
+% 环境准备
+\wyqymathversion{8} % 参数填写本文件中 wyqyinputfile 命令的使用次数, 可以多不可少
 % 自定义宏放在这里, 包括一些常用指令
 \usepackage{tongjiutils}
 % 加入bib文件
