@@ -1,6 +1,9 @@
 {
     // editor
     "editor.wordWrap": "on",
+    "files.associations": {
+        "*.cfg": "tex"
+    },
     // latex
     "latex-workshop.latex.autoBuild.run": "onSave",
     "latex-workshop.showContextMenu": true,

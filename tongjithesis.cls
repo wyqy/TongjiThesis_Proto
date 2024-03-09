@@ -44,8 +44,8 @@
 
 \DeclareBoolOption{electronic} % 封面的 electronic 选项(打印时删除)
 \DeclareBoolOption{secret} % 论文是否保密
-% \DeclareBoolOption{romantoc} % 目录的英文是否用 Times 字体(默认关闭)
-\DeclareBoolOption{romantitle} % 章节标题的英文, 标号是否用 Times 字体(默认打开)
+% \DeclareBoolOption{romantoc} % 目录的英文是否用 Times 字体 (弃用)
+% \DeclareBoolOption{romantitle} % 章节标题的英文, 标号是否用 Times 字体 (弃用)
 \IfFileExists{/dev/null}{}{\PassOptionsToClass{fontset=windows}{ctexbook}}  % simhei 字体
 
 % ctexbook 配置
@@ -82,8 +82,7 @@
 % 打开默认选项
 \kvsetkeys{tongji}{
   raggedbottom,
-  pifootnote,
-  romantitle}
+  pifootnote}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 中文语言支持 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -142,14 +141,11 @@
   \RequirePackage{pifont}% pifont有很多Pi fonts, 如Dingbats(杂锦字体), Symbol, etc
 \fi
 
-% 图形支持宏包
+% 图形支持宏包, 支持 eps
 \RequirePackage{graphicx}
-% LaTeX绘制图形
+% tikz 绘制图形
 \RequirePackage{tikz}
-% \RequirePackage[outdir=./.temp/]{epstopdf} % eps支持
-
 % 并排图形
-% \pkg{subfigure}, \pkg{subfig}已经不再推荐, 用新的\pkg{subcaption}
 \RequirePackage[labelformat=simple]{subcaption}
 
 % \pkg{pdfpages} 宏包便于我们插入扫描后的授权页和声明页 PDF 文档
@@ -195,9 +191,10 @@
 \RequirePackage{slashbox} % 表格中的反斜线
 
 % 算法宏包
-\let\old@chapter\@chapter% Store \@chapter
+\let\old@chapter\@chapter % Store \@chapter
 \RequirePackage[algochapter,linesnumbered,ruled]{algorithm2e}
-\let\@chapter\old@chapter% Restore \@chapter % 避免章间空隙, https://tex.stackexchange.com/questions/237388/remove-vertical-space-after-new-chapters-in-listofalgorithms
+\let\@chapter\old@chapter % Restore \@chapter % 避免章间空隙
+% https://tex.stackexchange.com/questions/237388/remove-vertical-space-after-new-chapters-in-listofalgorithms
 
 % 其它宏包
 \RequirePackage[ntheorem]{empheq}
@@ -221,12 +218,15 @@
 \else
   \iftongji@authoryear % 若需使用author-year格式的文献引用, 可将style选择为: gb7714-2015ay
     \RequirePackage[backend=biber,style=gb7714-2015ay,%
-    gbnamefmt=familyahead,gbpub=false,isbn=false,doi=false,gbtitlelink=true,url=false,sortlocale=zh__pinyin]{biblatex} 
+    gbnamefmt=familyahead,gbpub=false,isbn=false,doi=false,gbtitlelink=true,url=false,sortlocale=zh__pinyin,]{biblatex} 
   \fi
 \fi
 % 参考文献宏包的其他选项:
 % gbpub=false: 用于去除参考文献中的出版地不详, 出版者不详等信息
-% 后边 isbn 和 doi 选项同理
+% maxnames={int}: 设置所有作者都能够列出时, 允许的最大作者数量, 默认为3
+% 后边 isbn 和 doi 选项略去
+\DefineBibliographyStrings{english}{in={}}  % 去掉中文析出文献的 in 符号
+\DefineBibliographyStrings{english}{incn={}} % 去掉中文析出文献的 // 符号
 
 % 生成有书签的 pdf 及其开关, 请结合 gbk2uni 避免书签乱码
 \RequirePackage{hyperref}
@@ -272,11 +272,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 字体页面设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% 设置 Times New Roman
+% 全文设置 songti + times
 % \RequirePackage{newtxmath} % txfonts 的替代品 - 字体太多会报错
 \RequirePackage{courier} % 使用 Courier 字体
 \defaultfontfeatures{Mapping=tex-text} % 修复引号等字符的显示
 \setmainfont{Times New Roman} % 使用 Times New Roman 字体
+
+% 标题设置 heiti + times
+% 各级标题格式设置在本文件后边
+% \def\tongji@title@font{\rmfamily}
+\def\tongji@title@font{\heiti}
 
 % 正文小四号 (12bp) 字, 行距为固定值 20 bp
 \renewcommand\normalsize{%
@@ -327,10 +332,7 @@
 \tongji@define@fontsize{qihao}{5.5bp}
 \tongji@define@fontsize{bahao}{5bp}
 
-% 章节标题具体设置在 .cfg 中,各级标题格式设置在本文件后边
-% 如果章节题目中的英文要使用 Times, 那么就加上 rmfamily
-\def\tongji@title@font{%
-  \iftongji@romantitle\rmfamily\else\heiti\fi}
+
 
 % 全文首行缩进2字符, 标点符号用全角
 \ctexset{%
@@ -656,19 +658,18 @@ autoindent=true}
 %\fi
 
 % 调整目录特殊要求, 重定义缩进量
-% 研究生学位论文写作指南中规定: 目录中的章标题行居左书写, 一级节标题行缩进 1 个
-% 汉字符(2个字符), 二级节标题行缩进 2 个汉字符(4个字符)
- \RequirePackage{titletoc}
- \contentsmargin{0em}
- \titlecontents{chapter}[0em]{\filright}%
-           {\xiaosi\songti\thecontentslabel\enspace}%
-               {\xiaosi\songti}{\dotfill\contentspage}[\addvspace{0pt}]
- \titlecontents{section}[1em]{\addvspace{0pt}}%
-           {\xiaosi\songti \thecontentslabel\enspace}%
-               {\xiaosi\songti}{\dotfill\contentspage}[\addvspace{0pt}]
- \titlecontents{subsection}[2em]{\addvspace{0pt}}%
-           {\xiaosi\songti\thecontentslabel\enspace}%
-               {\xiaosi\songti}{\dotfill\contentspage}[\addvspace{0pt}]
+% 研究生学位论文写作指南中规定: 目录中的章标题行居左书写, 一级节标题行缩进 1 个汉字符(2个字符), 二级节标题行缩进 2 个汉字符(4个字符)
+\RequirePackage{titletoc}
+\contentsmargin{0em}
+\titlecontents{chapter}[0em]{\filright}%
+    {\xiaosi\songti\thecontentslabel\enspace}%
+        {\xiaosi\songti}{\dotfill\contentspage}[\addvspace{0pt}]
+\titlecontents{section}[1em]{\addvspace{0pt}}%
+    {\xiaosi\songti \thecontentslabel\enspace}%
+        {\xiaosi\songti}{\dotfill\contentspage}[\addvspace{0pt}]
+\titlecontents{subsection}[2em]{\addvspace{0pt}}%
+    {\xiaosi\songti\thecontentslabel\enspace}%
+        {\xiaosi\songti}{\dotfill\contentspage}[\addvspace{0pt}]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 论文摘要设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -770,10 +771,11 @@ autoindent=true}
 \renewcommand*\l@figure{\@dottedtocline{1}{0em}{4em}}
 \renewcommand{\@dotsep}{2} %改变索引中点间距
 % 表格索引
-\renewcommand\listoftables{\tongji@listof{table}}
 \let\l@table\l@figure
+\renewcommand\listoftables{\tongji@listof{table}}
 
 % 算法索引
+\SetAlgoRefRelativeSize{1}
 \newcommand{\tongji@algorithm@capsty}{\xiaosi[2]\normalfont}
 \AtEndOfPackageFile*{algorithm2e}{
   \SetAlgoCaptionLayout{tongji@algorithm@capsty} % thu@caption@font
