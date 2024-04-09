@@ -939,9 +939,7 @@ autoindent=true}
 \newcommand{\chicover} % 中文封面
 {
   \begin{center}
-    \vspace*{0cm}
-    \parbox[t][1.8cm][t]{\textwidth}
-    {%
+    \parbox[t][1.8cm][t]{\textwidth}{
       \hspace*{11.2cm}
       \iftongji@secret{\sanhao\tongji@secret@title}
       \else\rule{1cm}{0cm} \fi % 是否显示密级
@@ -950,33 +948,34 @@ autoindent=true}
       \else\rule{1cm}{0cm} \fi % 是否显示打印时删除
     }
     \\[-.9cm]
-    \parbox[t][1.8cm][t]{\textwidth}
-    {%
+    \parbox[t][1.8cm][t]{\textwidth}{
       \centering\hspace*{.3cm}
       \includegraphics[width=10cm]{tongji-whole-logo.pdf}
     } % logo
     \\[-.6cm] 
-    \parbox[t][9cm][t]{\paperwidth-7cm}
-    {% \renewcommand{\baselinestretch}{1} % 单倍行距
+    
+    \parbox[t][5cm][t]{\paperwidth-7cm}{
       \begin{center}
-        \erhao[1]{{\bfseries\lishu\tongji@capply}}
-        \iftongji@academic{\par\vskip 0.4cm \sihao[1]{{\bfseries\lishu(学术学位)}} \par\vskip 0.9cm}
-        \else \iftongji@profession{\par\vskip 0.4cm \sihao[1]{{\bfseries\lishu(专业学位)}} \par\vskip 0.9cm}
-        \else \iftongji@equaleducation {\par\vskip 0.4cm \sihao[1]{{\bfseries\lishu(同等学力)}} \par\vskip 0.9cm}                        
-        \fi \fi \fi
-        % \linespread{0.7} % 相当于 \renewcommand{\baselinestretch}{0.7}
-        % 需要执行 \selectfont 才能生效
-        \erhao[2]{\bfseries\heiti\tongji@ctitle}
+        \erhao[1]{{\bfseries\lishu\tongji@capply}} \par
+        \iftongji@academic{\sihao[1]{{\bfseries\lishu(学术学位)}}}
+        \else \iftongji@profession{\sihao[1]{{\bfseries\lishu(专业学位)}}}
+        \else \iftongji@equaleducation {\sihao[1]{{\bfseries\lishu(同等学力)}}}
+        \fi \fi \fi \par
+
+        \parbox[t]{\paperwidth-7cm}{\begin{center}\zihao{-4}\linespread{1.0}\selectfont
+          \erhao[2]{\bfseries\heiti\tongji@ctitle} % title
+        \end{center}}
         \par\vskip -0.3cm
-        \ifx\cfunds\@empty\else
-            {\parbox[t]{\paperwidth-7cm}{\begin{center}\zihao{-4}\linespread{1.3}\selectfont\tongji@cfunds\end{center}}}
-                \par\vskip 20bp
-        \fi
+
+        \parbox[t]{\paperwidth-7cm}{\begin{center}\zihao{-4}\linespread{1.3}\selectfont
+          \ifx\cfunds\@empty\else\tongji@cfunds\fi
+        \end{center}}
       \end{center}
     }
-    \vskip -0.4cm \hspace*{1.2cm}
-    \parbox[t][8.5cm][t]{\textwidth}
-    {
+    \par\vskip 3cm
+
+    \hspace*{1.2cm}
+    \parbox[t][11cm][t]{\textwidth}{
       {
         \fangsong\sanhao[1.5]        
         \begin{center}
@@ -1022,8 +1021,10 @@ autoindent=true}
         \end{tabular}
       \end{center}}
     }
-    \\[1.3cm] % \vskip2cm
-    \begin{center} {\sanhao\songti\tongji@cdate} \end{center}
+
+    \begin{center}
+      {\sanhao\songti\tongji@cdate}
+    \end{center}
   \end{center}
 } % end of titlepage
 
@@ -1031,34 +1032,28 @@ autoindent=true}
 \newcommand{\engcover}
 {%
   \begin{center}
-      \vspace*{0.5cm} \vspace*{0.5cm}
-      \parbox[t][1.8cm][t]{\textwidth}
-      {%
+      \vspace*{0.8cm}
+      \parbox[t][1.8cm][t]{\textwidth}{
         \centering\hspace*{.3cm}
        \includegraphics[width=10cm]{tongji-whole-logo.pdf}
       } % logo
-      \\[-.6cm] 
-      \vspace*{0.3cm}
-      \parbox[t][8cm][t]{\paperwidth-6cm}
-      {
+      \\[-.6cm]
+      
+      \parbox[t][8cm][t]{\paperwidth-6cm}{
         \begin{center}
-          \iftongji@doctor
-            \sihao[1.3]{\tongji@eapplydoctor}
-          \else \iftongji@master
-            \sihao[1.3]{\tongji@eapplymaster}
-          \fi \fi
-          \par\vskip 1.4cm
+          \iftongji@doctor \sihao[1.3]{\tongji@eapplydoctor}
+          \else \iftongji@master \sihao[1.3]{\tongji@eapplymaster}
+          \fi \fi \par\vskip 1.4cm
+
           \xiaoer[1.5]{\bfseries\sffamily\tongji@etitle}
-          \par\vskip 14pt
-          \ifx\efunds\@empty\else
-            \xiaosi[1.3]{\tongji@efunds}
-            \par\vskip 20bp
-          \fi
+          \par% \vskip 14pt
+
+          \ifx\efunds\@empty\else\xiaosi[1.3]{\tongji@efunds}\fi
         \end{center}
       }
+
       \hspace*{-1.2cm}
-      \parbox[t][8.7cm][t]{0.80\textwidth}
-      {
+      \parbox[t][11cm][t]{0.80\textwidth}{
         \sanhao[1.5] % 1.0 for smaller fonts
         \begin{center}
           \iftongji@profession % 专业学位
@@ -1100,8 +1095,10 @@ autoindent=true}
           \end{tabular}
         \end{center}
       }
-      \vskip 2.0cm 
-      \begin{center} \sanhao\tongji@edate \end{center}
+      
+      \begin{center}
+        \sanhao\tongji@edate
+      \end{center}
   \end{center}
 } % end of english cover
 
