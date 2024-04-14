@@ -9,6 +9,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 读取配置选项 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% 读取配置
 \RequirePackage{kvoptions}
 \SetupKeyvalOptions{
   family=tongji,
@@ -21,6 +22,44 @@
   \tongji@masterfalse
   \tongji@doctorfalse
   \expandafter\csname tongji@#1true\endcsname}
+
+% 方便的定义封面的一些替换命令
+% 注意\define@key的语法, 即\define@key{fam}{key}{对参数#1的处理,即handler}
+% 使用kvoptions的\define@key之后, 就可以key-val的方式设置封面的数据了
+\def\tongji@def@term#1{%
+  \define@key{tongji}{#1}{\csname #1\endcsname{##1}}
+  \expandafter\gdef\csname #1\endcsname##1{%
+    \expandafter\gdef\csname tongji@#1\endcsname{##1}}
+  \csname #1\endcsname{}}
+% 解析: 假设我们使用\tongji@def@term{secretlevel}, 展开之后就是: 
+% \define@key{tongji}{secretlevel}{\secretlevel{#1}}
+% \gdef\secretlevel#1{\gdef\tongji@secretlevel{#1}}
+% \secretlevel{}
+% 前辈们很明智地定义了三个东西, 不设置的时候为空. 还可以手动设置. 很强啊
+% \tongji@def@term{eschoolname} % 校名英文
+\tongji@def@term{secretlevel} % 密级参数
+\tongji@def@term{secretyear} % 解密年份
+\tongji@def@term{ctitle} \tongji@def@term{etitle} % 题目中英文
+\tongji@def@term{cheadingtitle} % 页眉标题
+\tongji@def@term{cauthor} \tongji@def@term{eauthor} % 作者中英文
+\tongji@def@term{studentnumber} % 学号
+\tongji@def@term{csupervisor} \tongji@def@term{esupervisor} % 导师中英文
+\tongji@def@term{cassosupervisor} \tongji@def@term{eassosupervisor} % 副导师(校外)老师中英文
+\tongji@def@term{cjointinstitution} \tongji@def@term{ejointinstitution} % 培养机构中英文
+\tongji@def@term{cdegree} \tongji@def@term{edegree} % 学位中英文
+\tongji@def@term{csubjectcategory} \tongji@def@term{esubjectcategory} % 学科门类中英文
+\tongji@def@term{cresearchfield} \tongji@def@term{eresearchfield} % 研究领域中英文
+\tongji@def@term{cdepartment} \tongji@def@term{edepartment} % 院系中英文名称
+\tongji@def@term{cmajor} \tongji@def@term{emajor} % 学位中英文名称
+\tongji@def@term{cdate} \tongji@def@term{edate} % 论文成文日期
+\tongji@def@term{cmajorfirst} \tongji@def@term{emajorfirst} % 学科门类, 如工学, 理学
+\tongji@def@term{cmajorsecond} \tongji@def@term{emajorsecond} % 一级学科或二级学科
+\tongji@def@term{cfunds} \tongji@def@term{efunds} % 基金支持中英文
+% 通过 \cs{tongjisetup} 统一设置封面信息
+% 封面和封底有一大堆信息需要设置, 为了简化操作界面, 提供一个 \cs{tongjisetup} 命令支持 key/value 的方式来设置
+% key 就是前面各个设置项的名字 \note[说明: ]{只能设置普通项, 不支持环境项, 如 \texttt{cabstract} 和 \texttt{eabstract}. }
+% 由于这些设置项被 \cs{makecover} 调用, 所以此命令需要在 \cs{makecover} 之前被调用
+\def\tongjisetup{\kvsetkeys{tongji}}
 
 % 数字式引用 以及 作者-年份引用
 \newif\iftongji@numeric
@@ -108,17 +147,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 一般宏包引用 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\RequirePackage{filehook} % 魔改宏包
-\RequirePackage{etoolbox} % etoolbox 引入了LATEX kernel commands的不同实现, 但功能一样
-
 % 提供了一个\ifxetex 判断命令, 用于判断是否为 xetex
-% xelatex 就是 xetex + 预加载 LaTeX format
-% 而 xetex 预加载的是 plain tex. xetex的特性: Unicode input and right-to-left typesetting
+% xetex 预加载 plain tex; 而 xelatex = xetex + 预加载 LaTeX format
 \RequirePackage{ifxetex}
 
-% xparse提供了LATEX2ε的 \newcommand macro 的一种高性能的替代, 即\NewDocumentCommand
-% 详见此处介绍: https://www.texdev.net/2010/05/23/from-newcommand-to-newdocumentcommand/
-\RequirePackage{xparse}
+\RequirePackage{filehook} % 魔改宏包
+\RequirePackage{xstring} % 字符串处理宏包
+\RequirePackage{etoolbox} % LATEX kernel commands 的不同实现
+\RequirePackage{xparse} % \newcommand 的替代: \NewDocumentCommand
 
 \RequirePackage{amsmath, amssymb} % \AmSTeX\ 宏包
 \RequirePackage{mathtools} % 增强数学功能
@@ -332,8 +368,6 @@
 \tongji@define@fontsize{qihao}{5.5bp}
 \tongji@define@fontsize{bahao}{5bp}
 
-
-
 % 全文首行缩进2字符, 标点符号用全角
 \ctexset{%
 punct=quanjiao,
@@ -346,12 +380,11 @@ autoindent=true}
 \setlist{nosep}
 
 % 定义页眉和页脚
-% 定义三种页眉页脚格式: 
+% 定义三种页眉页脚格式
 % \texttt{tongji@empty}: 页眉页脚都没有
-% \texttt{tongji@plain}: 只显示页脚的页码, \cs{chapter} 自动调用 \cs{thispagestyle\{tongji@plain\}}
+% \texttt{tongji@plain}: 只显示页脚的页码, 默认 \cs{chapter} 调用 \cs{tongji@plain}
 % \texttt{tongji@headings}: 页眉页脚同时显示
 % \texttt{tongji@headingseasy}: 页眉页脚同时显示, 但是页眉均为左侧页面格式
-% \end{itemize}
 \fancypagestyle{tongji@empty}{%
   \fancyhf{}
   \renewcommand{\headrulewidth}{0pt}
@@ -363,8 +396,14 @@ autoindent=true}
   \renewcommand{\headrulewidth}{0pt}
   \renewcommand{\footrulewidth}{0pt}}
 \fancypagestyle{tongji@headings}{%
+  % 后处理: 在标题中含有 \\ 的情况下, 删除 \\
+  \StrSubstitute{\leftmark}{ \\ }{}[\tongji@post@header@1]
+  \StrSubstitute{\tongji@post@header@1}{ \\}{}[\tongji@post@header@2]
+  \StrSubstitute{\tongji@post@header@2}{\\ }{}[\tongji@post@header@3]
+  \StrSubstitute{\tongji@post@header@3}{\\}{}[\tongji@post@header@4]
+
   \fancyhead{}
-  \fancyhead[RO]{\wuhao\songti\leftmark}
+  \fancyhead[RO]{\wuhao\songti\tongji@post@header@4}
   \fancyhead[LE]{\wuhao\songti\tongji@schoolname~\tongji@capply~\tongji@cheadingtitle}
   \fancyfoot{}
   \fancyfoot[C]{\songti\wuhao\thepage}
@@ -435,9 +474,8 @@ autoindent=true}
 \pretocmd{\@makefntext}{\let\@makefnmark\tongji@@makefnmark}{}{}
 \apptocmd{\@makefntext}{\let\@makefnmark\tongji@makefnmark}{}{}
 
-% \pkg{fancyhdr} 定义页眉页脚很方便, 但是有一个非常隐蔽的坑. 通过 \pkg{fancyhdr}
-% 定义的样式在第一次被调用时会修改 \cs{chaptermark}, 这会导致页眉信息错误(多余
-% 章号并且英文大写)
+% \pkg{fancyhdr} 有一个非常隐蔽的坑
+% 其定义的样式在第一次被调用时会修改 \cs{chaptermark}, 会导致页眉多余章号并且英文大写
 % thuthesis对此专门进行了解决: 
 \AtBeginDocument{%
   \pagestyle{tongji@empty}
@@ -533,7 +571,7 @@ autoindent=true}
     % 但这里必须再重新应用一次, 用来保证章首页的页眉正确
     beforeskip={2bp},% 设置章节标题前的垂直间距
     aftername=\hskip\ccwd, % 控制章节编号与标题内容之间的距离
-    % \ccwd 为一个汉字的宽度，在ctex宏集中有介绍
+    % \ccwd 为一个汉字的宽度，在 ctex 宏集中有介绍
     afterskip={18bp}, % 控制章节标题与后面下方之间的距离
     format={\centering\bfseries\tongji@title@font\sanhao[1.8]},
     % format 项用于控制章节标题的全局格式, 作用域为章节名字和随后的标题内容
@@ -571,11 +609,12 @@ autoindent=true}
 
 % 目录调教:
 % \NewDocumentCommand 替代了 \newcommand, 它是 xparse 宏包的主要命令, 可以定义参数个数, 类型等
-% 如 \tongji@chapter{s o m o} 中
-% s 表示 optional star, 此时 #1 = 是否带*调用(带*为\BooleanTrue), 用于\IfBooleanF, \IfBooleanT, \IfBooleanTF 等
-% o 表示可选参数, m 表示强制参数
-% 举个例子: 对于's o o m',如果输入'*[Foo]{Bar}', 那么#1 = \BooleanTrue, #2 = Foo, #3 = -NoValue-, #4 = Bar
-% 下面定义的用法是: \cs{tongji@chapter*}\oarg[tocline]\marg{title}\oarg[header]
+% 语法: \tongji@chapter{s o m o} 中
+%   o 表示可选参数, m 表示强制参数
+%   s 表示 optional star, 此时 #1 = 是否带*调用(带*为\BooleanTrue)
+%       用于\IfBooleanF, \IfBooleanT, \IfBooleanTF 等
+% 解释: 对于's o m o', 如果输入'*[Foo]{Bar}', 那么#1 = \BooleanTrue, #2 = Foo, #3 = Bar, #4 = -NoValue-
+% 用法: \cs{tongji@chapter*}\oarg[tocline]\marg{title}\oarg[header]
 % tocline 是出现在目录中的条目, 如果为空则此 chapter 不出现在目录中, 如果省略表示目录出现 title
 % title   是章标题
 % header  是页眉出现的标题, 如果忽略则取 title
@@ -600,18 +639,17 @@ autoindent=true}
       \addcontentsline{toc}{chapter}{#2}
       % \addcontentsline{file}{sec_unit}{entry}
       % file是文件扩展名: toc (table of contents), lof (list of figures), or lot (list of tables).
-      % sec_unit, 对于toc来说就是这些名字: part, chapter, section等
+      % sec_unit, 对于toc来说就是这些名字: part, chapter, section 等
     }
   }
   {%若没有指定该参数(即#2=-NoValue-), 表示目录出现title
     \addcontentsline{toc}{chapter}{#3}
   }% 
   \chapter*{#3}%
-  \IfValueTF{#4}  
-  {%提供了第四个参数, 即header
-    \ifthenelse{\equal{#4}{}}
-    {\@mkboth{}{}}%页眉为空为空
-    {%页眉为提供的#4
+  \IfValueTF{#4}
+  {%提供了第四个参数, 即 header
+    \ifthenelse{\equal{#4}{}}{\@mkboth{}{}} % 页眉为空
+    {% 页眉为 header
       \thispagestyle{fancy}
       \fancyhead{}
       \fancyhead[RO,LE]{#4}
@@ -620,19 +658,19 @@ autoindent=true}
       \renewcommand{\headrulewidth}{0.4pt}
       \renewcommand{\footrulewidth}{0pt}
     }
-    % 注: 此命令等同于\markboth{left}{right}
+    % 注: 此命令等同于 \markboth{left}{right}
     % 也就是定义一个“left-hand heading” 和“righthand heading”
-    % 这样, \leftmark读出来的就是我们设的left, \rightmark就是我们设的right
+    % 这样, \leftmark 读出来的就是我们设的left, \rightmark 就是我们设的right
     % 通过这种方式, 我们可以很方便地设置页眉
   }
-  {% header 是页眉出现的标题, 如果没有提供header参数, 则取 title作为页眉
-     \thispagestyle{fancy}
-     \fancyhead{}
-      \fancyhead[RO,LE]{#3}
-      \fancyfoot{}
-      \fancyfoot[C]{\songti\wuhao\thepage}
-      \renewcommand{\headrulewidth}{0.4pt}
-      \renewcommand{\footrulewidth}{0pt}      
+  {% 若未提供 header, 则取 title 为页眉
+    \thispagestyle{fancy}
+    \fancyhead{}
+    \fancyhead[RO,LE]{#3}
+    \fancyfoot{}
+    \fancyfoot[C]{\songti\wuhao\thepage}
+    \renewcommand{\headrulewidth}{0.4pt}
+    \renewcommand{\footrulewidth}{0pt}
   }
 }
 
@@ -649,13 +687,9 @@ autoindent=true}
 % 减小目录项中的导引小点跟页码之间的留白
 % 目录生成命令
 \renewcommand\tableofcontents{%
-  \tongji@chapter*[]{\contentsname}[\wuhao\songti\tongji@schoolname~\tongji@capply~\contentsname] 
+  \tongji@chapter*[]{\contentsname}[\wuhao\songti\tongji@schoolname~\tongji@capply~\contentsname]
   \xiaosi[1.5]\@starttoc{toc}\normalsize\clearpage}
-% 同济要求目录的行距为18磅
-% 调整目录样式, 允许指定目录字体
-%\iftongji@arialtoc
-%  \def\tongji@toc@font{\sffamily}
-%\fi
+
 
 % 调整目录特殊要求, 重定义缩进量
 % 研究生学位论文写作指南中规定: 目录中的章标题行居左书写, 一级节标题行缩进 1 个汉字符(2个字符), 二级节标题行缩进 2 个汉字符(4个字符)
@@ -874,63 +908,6 @@ autoindent=true}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 封面格式设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% 方便的定义封面的一些替换命令
-% 注意\define@key的语法, 即\define@key{fam}{key}{对参数#1的处理,即handler}
-% 使用kvoptions的\define@key之后, 就可以key-val的方式设置封面的数据了
-\def\tongji@def@term#1{%
-  \define@key{tongji}{#1}{\csname #1\endcsname{##1}}
-  \expandafter\gdef\csname #1\endcsname##1{%
-    \expandafter\gdef\csname tongji@#1\endcsname{##1}}
-  \csname #1\endcsname{}}
-% 解析: 假设我们使用\tongji@def@term{secretlevel}, 展开之后就是: 
-% \define@key{tongji}{secretlevel}{\secretlevel{#1}}
-% \gdef\secretlevel#1{\gdef\tongji@secretlevel{#1}}
-% \secretlevel{}
-% 前辈们很明智地定义了三个东西, 不设置的时候为空. 还可以手动设置. 很强啊
-
-% 校名
-% \tongji@def@term{eschoolname}
-% 定义密级参数
-\tongji@def@term{secretlevel}
-\tongji@def@term{secretyear}
-% 论文中英文题目
-\tongji@def@term{ctitle} \tongji@def@term{etitle}
-\tongji@def@term{cheadingtitle}
-% 作者
-% 作者
-\tongji@def@term{cauthor} \tongji@def@term{eauthor}
-% 学号
-\tongji@def@term{studentnumber}
-% 导师, 副导师(校外)老师
-\tongji@def@term{csupervisor} \tongji@def@term{esupervisor}
-\tongji@def@term{cassosupervisor} \tongji@def@term{eassosupervisor}
-\tongji@def@term{cjointinstitution} \tongji@def@term{ejointinstitution}
-% 学位中英文
-\tongji@def@term{cdegree} \tongji@def@term{edegree}
-% 学科门类中英文
-\tongji@def@term{csubjectcategory} \tongji@def@term{esubjectcategory}
-% 研究领域中英文
-\tongji@def@term{cresearchfield} \tongji@def@term{eresearchfield}
-% 院系中英文名称
-\tongji@def@term{cdepartment} \tongji@def@term{edepartment}
-% 学位中英文名称
-\tongji@def@term{cmajor} \tongji@def@term{emajor}
-% 论文成文日期
-\tongji@def@term{cdate} \tongji@def@term{edate}
-% 为了兼容老版本同济模板的封面定义,仍然使用majorfirst, majorsecond
-% 这里majorfirst表示学科门类如工学, 理学, majorsecond表示一级学科或二级学科
-\tongji@def@term{cmajorfirst} \tongji@def@term{emajorfirst}
-\tongji@def@term{cmajorsecond} \tongji@def@term{emajorsecond}
-% 定义基金支持
-\tongji@def@term{cfunds} \tongji@def@term{efunds}
-
-% 通过 \cs{tongjisetup} 统一设置封面信息
-% 封面和封底有一大堆信息需要设置, 为了简化操作界面, 提供一个 \cs{tongjisetup} 命令支持 key/value 的方式来设置
-% key 就是前面各个设置项的名字 \note[说明: ]{只能设置普通项, 不支持环境项, 如 \texttt{cabstract} 和 \texttt{eabstract}. }
-% 由于这些设置项被 \cs{makecover} 调用, 所以此命令需要在 \cs{makecover} 之前被调用
-\def\tongjisetup{\kvsetkeys{tongji}}
-
-% 语法
 % \parbox[position][height][inner-pos]{width}{text}
 % \hb@xt@{width}{text}: 创建指定宽度和内容的水平盒子
 \newlength{\tongji@title@width} % 创建宽度变量
