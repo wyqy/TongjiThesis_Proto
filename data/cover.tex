@@ -10,9 +10,8 @@
   %
   %
   % 中文信息
-  ctitle={中文论文标题}, % 可手动加入换行符 \\ 控制换行
-  cheadingtitle={中文论文标题页眉版本, 无换行}, % 用于页眉的标题, 不要换行
-  cauthor={姓名},  
+  ctitle={中文论文标题, \\ 中文论文副标题}, % 可手动加入换行符 \\ 控制换行
+  cauthor={姓名},
   studentnumber={1234567},
   cdepartment={电子与信息工程学院},
   csubjectcategory={工学}, % 学科门类
@@ -23,7 +22,7 @@
   cassosupervisor={副导师姓名 教授}, % 副指导老师/行业导师, 没有把{}中内容留空即可, 或者注释掉
   cjointinstitution={联合培养单位名称}, % 联合培养单位, 没有把{}中内容留空即可, 或者注释掉
   cdate={\zhdigits{2024}年\zhnumber{3}月}, % 手动指定日期, 否则自动使用当前时间
-  cfunds={（本论文由国家杰出青年基金 (No.123456789) 支持）},
+  cfunds={（本论文由国家杰出青年基金 (No.123456789) 支持）}, % 中文版基金信息
   % 英文信息
   etitle={Thesis Title in English}, 
   eauthor={Nome Cognome},
@@ -36,8 +35,21 @@
   eassosupervisor={Prof. Associate Supervisor}, % 副指导老师/行业导师
   ejointinstitution={Joint Training Institution}, % 联合培养单位
   edate={March, 2024}, % 手动指定日期, 否则自动使用当前时间
-  efunds={(Supported by the Natural Science Foundation of China for Distinguished Young Scholars, Grant No.123456789)}
+  efunds={(Supported by the Natural Science Foundation of China for Distinguished Young Scholars, Grant No.123456789)}, % 英文版基金信息
+  cheadingtitle={},  % 弃用
 }
+
+\makeatletter
+% 设置需要后处理的信息
+\define@key{tongji}{cheadingtitlenew}{\cheadingtitlenew{#1}}
+\gdef\cheadingtitlenew#1{\gdef\tongji@cheadingtitlenew{#1}}
+% 后处理: 在标题中含有 \\ 的情况下, 删除 \\
+\StrSubstitute{\tongji@ctitle}{ \\ }{ }[\tongji@post@title@1]
+\StrSubstitute{\tongji@post@title@1}{ \\}{ }[\tongji@post@title@2]
+\StrSubstitute{\tongji@post@title@2}{\\ }{ }[\tongji@post@title@3]
+\StrSubstitute{\tongji@post@title@3}{\\}{ }[\tongji@post@title@4]
+\cheadingtitlenew{\tongji@post@title@4}
+\makeatother
 
 % 定义中英文摘要和关键字
 \begin{cabstract}

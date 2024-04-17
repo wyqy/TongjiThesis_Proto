@@ -5,6 +5,13 @@
 \def\tongjithesis{\textsc{TongjiThesis}} % \textsc 将所有字符大写. 用于强调
 \def\version{2}
 
+% 工具宏包
+\RequirePackage{ifxetex} % 判断是否为 xetex
+\RequirePackage{filehook} % 魔改宏包
+\RequirePackage{xstring} % 字符串处理宏包
+\RequirePackage{etoolbox} % LATEX kernel commands 的不同实现
+\RequirePackage{xparse} % \newcommand 的替代: \NewDocumentCommand
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 读取配置选项 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -40,7 +47,6 @@
 \tongji@def@term{secretlevel} % 密级参数
 \tongji@def@term{secretyear} % 解密年份
 \tongji@def@term{ctitle} \tongji@def@term{etitle} % 题目中英文
-\tongji@def@term{cheadingtitle} % 页眉标题
 \tongji@def@term{cauthor} \tongji@def@term{eauthor} % 作者中英文
 \tongji@def@term{studentnumber} % 学号
 \tongji@def@term{csupervisor} \tongji@def@term{esupervisor} % 导师中英文
@@ -55,9 +61,9 @@
 \tongji@def@term{cmajorfirst} \tongji@def@term{emajorfirst} % 学科门类, 如工学, 理学
 \tongji@def@term{cmajorsecond} \tongji@def@term{emajorsecond} % 一级学科或二级学科
 \tongji@def@term{cfunds} \tongji@def@term{efunds} % 基金支持中英文
-% 通过 \cs{tongjisetup} 统一设置封面信息
-% 封面和封底有一大堆信息需要设置, 为了简化操作界面, 提供一个 \cs{tongjisetup} 命令支持 key/value 的方式来设置
-% key 就是前面各个设置项的名字 \note[说明: ]{只能设置普通项, 不支持环境项, 如 \texttt{cabstract} 和 \texttt{eabstract}. }
+\tongji@def@term{cheadingtitle} % 弃用
+% 通过 \cs{tongjisetup} 以 key / value 的方式统一设置封面信息
+% key 不支持环境项, 如 \texttt{cabstract} 和 \texttt{eabstract}
 % 由于这些设置项被 \cs{makecover} 调用, 所以此命令需要在 \cs{makecover} 之前被调用
 \def\tongjisetup{\kvsetkeys{tongji}}
 
@@ -146,15 +152,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 一般宏包引用 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% 提供了一个\ifxetex 判断命令, 用于判断是否为 xetex
-% xetex 预加载 plain tex; 而 xelatex = xetex + 预加载 LaTeX format
-\RequirePackage{ifxetex}
-
-\RequirePackage{filehook} % 魔改宏包
-\RequirePackage{xstring} % 字符串处理宏包
-\RequirePackage{etoolbox} % LATEX kernel commands 的不同实现
-\RequirePackage{xparse} % \newcommand 的替代: \NewDocumentCommand
 
 \RequirePackage{amsmath, amssymb} % \AmSTeX\ 宏包
 \RequirePackage{mathtools} % 增强数学功能
@@ -404,7 +401,7 @@ autoindent=true}
 
   \fancyhead{}
   \fancyhead[RO]{\wuhao\songti\tongji@post@header@4}
-  \fancyhead[LE]{\wuhao\songti\tongji@schoolname~\tongji@capply~\tongji@cheadingtitle}
+  \fancyhead[LE]{\wuhao\songti\tongji@schoolname~\tongji@capply~\tongji@cheadingtitlenew}
   \fancyfoot{}
   \fancyfoot[C]{\songti\wuhao\thepage}
   \renewcommand{\headrulewidth}{0.4pt}
