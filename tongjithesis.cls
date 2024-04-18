@@ -61,7 +61,6 @@
 \tongji@def@term{cmajorfirst} \tongji@def@term{emajorfirst} % 学科门类, 如工学, 理学
 \tongji@def@term{cmajorsecond} \tongji@def@term{emajorsecond} % 一级学科或二级学科
 \tongji@def@term{cfunds} \tongji@def@term{efunds} % 基金支持中英文
-\tongji@def@term{cheadingtitle} % 弃用
 % 通过 \cs{tongjisetup} 以 key / value 的方式统一设置封面信息
 % key 不支持环境项, 如 \texttt{cabstract} 和 \texttt{eabstract}
 % 由于这些设置项被 \cs{makecover} 调用, 所以此命令需要在 \cs{makecover} 之前被调用
