@@ -9,7 +9,6 @@
     "latex-workshop.showContextMenu": true,
     "latex-workshop.message.error.show": false,
     "latex-workshop.message.warning.show": false,
-    "latex-workshop.latex.autoClean.run": "onFailed",
     "latex-workshop.latex.recipe.default": "lastUsed",
     "latex-workshop.intellisense.package.enabled": true,
     "latex-workshop.intellisense.biblatexJSON.replace": {},

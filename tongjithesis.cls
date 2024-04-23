@@ -301,7 +301,7 @@
 \RequirePackage{xspace} % 给自定义的宏后面自动加空白
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 字体页面设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 文章字体设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % 全文设置 songti + times
@@ -375,36 +375,40 @@ autoindent=true}
 % 利用 \pkg{enumitem} 命令调整默认列表环境间的距离, 以符合中文习惯
 \setlist{nosep}
 
-% 定义页眉和页脚
-% 定义三种页眉页脚格式
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 文章页面设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% 修改 \cs{chaptermark}, 导致页眉多余章号并且英文大写的问题
+\AtBeginDocument{%
+  \pagestyle{tongji@empty}
+  \renewcommand{\chaptermark}[1]{%
+    \wyqydeletelinebreaktxt{#1}{wyqy@chaptermark}
+    \@mkboth{\CTEXthechapter\hskip\ccwd\wyqy@chaptermark}{}}}
+
+% 定义页眉和页脚格式
 % \texttt{tongji@empty}: 页眉页脚都没有
-% \texttt{tongji@plain}: 只显示页脚的页码, 默认 \cs{chapter} 调用 \cs{tongji@plain}
-% \texttt{tongji@headings}: 页眉页脚同时显示
-% \texttt{tongji@headingseasy}: 页眉页脚同时显示, 但是页眉均为左侧页面格式
 \fancypagestyle{tongji@empty}{%
   \fancyhf{}
   \renewcommand{\headrulewidth}{0pt}
   \renewcommand{\footrulewidth}{0pt}
   }
+% \texttt{tongji@plain}: 只显示页脚的页码, 默认 \cs{chapter} 调用 \cs{tongji@plain}
 \fancypagestyle{tongji@plain}{%
   \fancyhead{}
   \fancyfoot[C]{\songti\wuhao\thepage}
   \renewcommand{\headrulewidth}{0pt}
   \renewcommand{\footrulewidth}{0pt}}
+% \texttt{tongji@headings}: 页眉页脚同时显示
 \fancypagestyle{tongji@headings}{%
-  % 后处理: 在标题中含有 \\ 的情况下, 删除 \\
-  \StrSubstitute{\leftmark}{ \\ }{}[\tongji@post@header@1]
-  \StrSubstitute{\tongji@post@header@1}{ \\}{}[\tongji@post@header@2]
-  \StrSubstitute{\tongji@post@header@2}{\\ }{}[\tongji@post@header@3]
-  \StrSubstitute{\tongji@post@header@3}{\\}{}[\tongji@post@header@4]
-
   \fancyhead{}
-  \fancyhead[RO]{\wuhao\songti\tongji@post@header@4}
+  \fancyhead[RO]{\wuhao\songti\leftmark}
   \fancyhead[LE]{\wuhao\songti\tongji@schoolname~\tongji@capply~\tongji@cheadingtitlenew}
   \fancyfoot{}
   \fancyfoot[C]{\songti\wuhao\thepage}
   \renewcommand{\headrulewidth}{0.4pt}
   \renewcommand{\footrulewidth}{0pt}}
+% \texttt{tongji@headingseasy}: 页眉页脚同时显示, 但是页眉均为左侧页面格式
 \fancypagestyle{tongji@headingseasy}{%
   \fancyhead{}
   \fancyhead[RO]{\wuhao\songti\tongji@schoolname~\tongji@capply~\tongji@referencesname}
@@ -469,13 +473,6 @@ autoindent=true}
 \def\tongji@@makefnmark{\hbox{{\normalfont\@thefnmark}}}
 \pretocmd{\@makefntext}{\let\@makefnmark\tongji@@makefnmark}{}{}
 \apptocmd{\@makefntext}{\let\@makefnmark\tongji@makefnmark}{}{}
-
-% \pkg{fancyhdr} 有一个非常隐蔽的坑
-% 其定义的样式在第一次被调用时会修改 \cs{chaptermark}, 会导致页眉多余章号并且英文大写
-% thuthesis对此专门进行了解决: 
-\AtBeginDocument{%
-  \pagestyle{tongji@empty}
-  \renewcommand{\chaptermark}[1]{\@mkboth{\CTEXthechapter\hskip\ccwd#1}{}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 断行分页设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1109,8 +1106,8 @@ autoindent=true}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % 生成新的 mathversion
+\newcounter{mathversioncount} % 定义计数器
 % 解决报错 Too many math alphabets used in version normal: 每章一个mathversion
-\newcounter{mathversioncount}
 \newcommand{\wyqymathversion}[1]{
   \loop % 循环生成
     \stepcounter{mathversioncount}
@@ -1119,7 +1116,6 @@ autoindent=true}
   \ifnum\value{mathversioncount}<#1\repeat
   \setcounter{mathversioncount}{0} % 重置计数器
 }
-
 % 插入文件, 同时应用环境
 \newcommand{\wyqyinputfile}[2][\relax]{% 第一个参数为环境名称(可选), 第二个参数为插入文件名称(强制)
   \stepcounter{mathversioncount}
@@ -1131,6 +1127,33 @@ autoindent=true}
       \begin{#1} \input{data/#2} \end{#1}
       \mathversion{normal}
   \fi
+}
+
+
+% 后处理: 在标题中含有 \\ 的情况下, 删除 \\ xstringmid@chaptermark
+\newcounter{substitutecount} % 定义计数器
+\setcounter{substitutecount}{0} % 重置计数器
+% 预定义格式参考
+\def\xstringintern@pattern@a{ \\ }
+\def\xstringintern@pattern@b{ \\}
+\def\xstringintern@pattern@c{\\ }
+\def\xstringintern@pattern@d{\\}
+% 原文本为命令式, 每次调用都会生成新的变量名
+\newcommand{\wyqydeletelinebreakcmd}[2]{% 第一个参数为原文本命令名称, 第二个参数为新文本命令名称
+  \stepcounter{substitutecount}
+  \expandafter\StrSubstitute\expandafter{\csname#1\expandafter\endcsname\expandafter}\expandafter{\csname xstringintern@pattern@a\expandafter\endcsname\expandafter}\expandafter{\expandafter}\expandafter[\csname xstringintern@delbreak@\arabic{substitutecount}\endcsname]
+  \stepcounter{substitutecount}
+  \expandafter\StrSubstitute\expandafter{\csname xstringintern@delbreak@\the\numexpr\arabic{substitutecount}-1\relax\expandafter\endcsname\expandafter}\expandafter{\csname xstringintern@pattern@b\expandafter\endcsname\expandafter}\expandafter{\expandafter}\expandafter[\csname xstringintern@delbreak@\arabic{substitutecount}\endcsname]
+  \stepcounter{substitutecount}
+  \expandafter\StrSubstitute\expandafter{\csname xstringintern@delbreak@\the\numexpr\arabic{substitutecount}-1\relax\expandafter\endcsname\expandafter}\expandafter{\csname xstringintern@pattern@c\expandafter\endcsname\expandafter}\expandafter{\expandafter}\expandafter[\csname xstringintern@delbreak@\arabic{substitutecount}\endcsname]
+  \stepcounter{substitutecount}
+  \expandafter\StrSubstitute\expandafter{\csname xstringintern@delbreak@\the\numexpr\arabic{substitutecount}-1\relax\expandafter\endcsname\expandafter}\expandafter{\csname xstringintern@pattern@d\expandafter\endcsname\expandafter}\expandafter{\expandafter}\expandafter[\csname xstringintern@delbreak@\arabic{substitutecount}\endcsname]
+  \expandafter\gdef\csname#2\expandafter\endcsname\expandafter{\csname xstringintern@delbreak@\arabic{substitutecount}\endcsname}
+}
+\newcommand{\wyqydeletelinebreaktxt}[2]{% 第一个参数为原文本内容, 第二个参数为新文本命令名称
+   \def\xstringintern@args{#1}
+   \wyqydeletelinebreakcmd{xstringintern@args}{#2}
+   \let\xstringintern@args=undefined
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
