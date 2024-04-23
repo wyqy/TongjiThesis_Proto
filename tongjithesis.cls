@@ -1153,7 +1153,6 @@ autoindent=true}
 \newcommand{\wyqydeletelinebreaktxt}[2]{% 第一个参数为原文本内容, 第二个参数为新文本命令名称
    \def\xstringintern@args{#1}
    \wyqydeletelinebreakcmd{xstringintern@args}{#2}
-   \let\xstringintern@args=undefined
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
