@@ -189,11 +189,12 @@
 % environ使得我们在创建新的环境的时候可以定义new author interface
 \RequirePackage{environ}
 
-% This package suppresses page numbers and headings from appearing on empty pages. 例如 \cleardoublepage 创建的空白页
+% 禁止在留白页(\cs{cleardoublepage})上标记页眉页脚(页码)
 \RequirePackage{emptypage} 
 
-% 禁止 \LaTeX 自动调整多余的页面底部空白, 并保持脚注仍然在底部
-% 脚注按页编号
+% 页眉页脚样式
+% 禁止自动调整多余的页面底部空白
+% 保持脚注仍然在底部, 并按页编号
 \iftongji@raggedbottom
   \RequirePackage[bottom,perpage,hang]{footmisc}
   \raggedbottom
@@ -295,7 +296,7 @@
 	left=31.7mm, % 注意left=right
 	headheight=5mm,
 	headsep=5.4mm,	% 页眉距顶端要求 2cm. 即25.4-20=5.4
-	footskip=5.4mm}	%\footskip指的是 baseline of last line of text andbaseline of footer 的距离
+	footskip=5.4mm}	%\footskip指的是正文最后一行距离页脚的距离(baseline)
 
 \RequirePackage{fancyhdr} % 利用 \pkg{fancyhdr} 设置页眉页脚
 \RequirePackage{xspace} % 给自定义的宏后面自动加空白
@@ -407,7 +408,7 @@ autoindent=true}
   \fancyfoot{}
   \fancyfoot[C]{\songti\wuhao\thepage}
   \renewcommand{\headrulewidth}{0.4pt}
-  \renewcommand{\footrulewidth}{0pt}}
+  \renewcommand{\footrulewidth}{0.4pt}}
 % \texttt{tongji@headingseasy}: 页眉页脚同时显示, 但是页眉均为左侧页面格式
 \fancypagestyle{tongji@headingseasy}{%
   \fancyhead{}
@@ -447,7 +448,7 @@ autoindent=true}
   % \renewcommand\thetable{\Alph{chapter}.\ \arabic{table}}
   }
 
-% 脚注符合中文习惯, 数字带圈
+% 脚注部分
 % 生成带圈的脚注数字, 最多处理到 10
 \def\tongji@textcircled#1{%
   \ifnum\value{#1} >9
@@ -461,7 +462,7 @@ autoindent=true}
   \fi}
 \renewcommand{\thefootnote}{\tongji@textcircled{footnote}}
 \renewcommand{\thempfootnote}{\tongji@textcircled{mpfootnote}}
-% 关于footnote marking的更改, 可以参考: https://en.wikibooks.org/wiki/LaTeX/Footnotes_and_Margin_Notes		
+% 关于 footnote marking 的更改, 可以参考: https://en.wikibooks.org/wiki/LaTeX/Footnotes_and_Margin_Notes		
 % 定义脚注分割线, 字号(宋体小五), 以及悬挂缩进(1.5字符)
 \def\footnoterule{\vskip-3\p@\hrule\@width0.3\textwidth\@height0.4\p@\vskip2.6\p@}
 \let\tongji@footnotesize\footnotesize
@@ -473,6 +474,9 @@ autoindent=true}
 \def\tongji@@makefnmark{\hbox{{\normalfont\@thefnmark}}}
 \pretocmd{\@makefntext}{\let\@makefnmark\tongji@@makefnmark}{}{}
 \apptocmd{\@makefntext}{\let\@makefnmark\tongji@makefnmark}{}{}
+% 为 \cs{footnote} 增加后空白
+\let\oldfootnote\footnote
+\renewcommand{\footnote}[1]{\oldfootnote{#1\vspace{2.6pt}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 断行分页设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -808,8 +812,7 @@ autoindent=true}
   \SetAlgoCaptionLayout{tongji@algorithm@capsty} % thu@caption@font
   \SetAlCapSty{tongji@algorithm@capsty} % 标题样式
   \SetAlgoCaptionSeparator{\hspace*{1em}} % 分隔符
-  \renewcommand\listalgorithmcfname{\tongji@listname@algorithmname}
-}
+  \renewcommand\listalgorithmcfname{\tongji@listname@algorithmname}}
 \def\ext@algorithmcf{loa}
 \let\l@algorithmcf\l@figure
 \renewcommand\listofalgorithms{\tongji@listof{algorithmcf}}
@@ -829,16 +832,14 @@ autoindent=true}
 \let\l@equation\l@figure
 \newcommand\listofequations{\tongji@listof{equation}}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 致谢声明设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % 致谢以及声明
 \NewDocumentEnvironment{acknowledgement}{}{%
-\tongji@chapter*[\tongji@ackname]{\tongji@ackname}[\wuhao\songti\tongji@schoolname~\tongji@capply~\tongji@ackname] 
-\fangsong 
- }{\clearpage}
+  \tongji@chapter*[\tongji@ackname]{\tongji@ackname}[\wuhao\songti\tongji@schoolname~\tongji@capply~\tongji@ackname] 
+  \fangsong}{\clearpage}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 参考文献设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -863,15 +864,13 @@ autoindent=true}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 附录样式设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% 附录
 \fancypagestyle{tongji@appendix@heading}{%
   \fancyhead{}
   \fancyhead[RO,LE]{\wuhao\songti\tongji@schoolname~\tongji@capply~\appendixname}
   \fancyfoot{}
   \fancyfoot[C]{\songti\wuhao\thepage}
   \renewcommand{\headrulewidth}{0.4pt}
-  \renewcommand{\footrulewidth}{0pt}
-  }
+  \renewcommand{\footrulewidth}{0pt}}
 \let\tongji@appendix\appendix
 \renewenvironment{appendix}{% 
   \ctexset{% 附录仍属于 mainmattertrue 才能正确编号成附录A的形式,
@@ -881,13 +880,12 @@ autoindent=true}
   \pagestyle{tongji@appendix@heading} % 保证附录非首页的页眉正确
   \let\title\tongji@appendix@title
   \tongji@appendix}{%
-  \let\title\@gobble  \clearpage}
+  \let\title\@gobble \clearpage}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 个人简历设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% 个人简历
 \newenvironment{resume}{%
   \tongji@chapter*{\tongji@resume@title}[\wuhao\songti\tongji@schoolname~\tongji@capply~\tongji@resume@title] 
   \wuhao[1.5] 
@@ -896,6 +894,13 @@ autoindent=true}
 
 \newcommand{\resumeitem}[1]{\vspace{2.5em}{\bfseries\wuhao\heiti\leftline{#1}}\par}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 原创声明设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newenvironment{statement}{%
+  \pagestyle{tongji@plain}
+  }{\clearpage}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 封面格式设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
