@@ -23,79 +23,77 @@
   prefix=tongji@,
   setkeys=\kvsetkeys}
 
-\newif\iftongji@master
-\newif\iftongji@doctor
-\define@key{tongji}{degree}{%
-  \tongji@masterfalse
-  \tongji@doctorfalse
-  \expandafter\csname tongji@#1true\endcsname}
-
-% 方便的定义封面的一些替换命令
-% 注意\define@key的语法, 即\define@key{fam}{key}{对参数#1的处理,即handler}
-% 使用kvoptions的\define@key之后, 就可以key-val的方式设置封面的数据了
+% COVERLETTERR 配置
+% 注意 \define@key 的语法, 即 \define@key{fam}{key}{ 对参数 #1 的处理,即 handler}
+% 使用 kvoptions 的 \define@key 之后, 就可以以 key-val 的方式设置封面的数据了
 \def\tongji@def@term#1{%
   \define@key{tongji}{#1}{\csname #1\endcsname{##1}}
   \expandafter\gdef\csname #1\endcsname##1{%
     \expandafter\gdef\csname tongji@#1\endcsname{##1}}
   \csname #1\endcsname{}}
 % 解析: 假设我们使用\tongji@def@term{secretlevel}, 展开之后就是: 
-% \define@key{tongji}{secretlevel}{\secretlevel{#1}}
-% \gdef\secretlevel#1{\gdef\tongji@secretlevel{#1}}
-% \secretlevel{}
+% \define@key{tongji}{secretlevel}{\secretlevel{#1}} \gdef\secretlevel#1{\gdef\tongji@secretlevel{#1}} \secretlevel{}
 % 前辈们很明智地定义了三个东西, 不设置的时候为空. 还可以手动设置. 很强啊
-% \tongji@def@term{eschoolname} % 校名英文
-\tongji@def@term{secretlevel} % 密级参数
-\tongji@def@term{secretyear} % 解密年份
-\tongji@def@term{ctitle} \tongji@def@term{etitle} % 题目中英文
-\tongji@def@term{cauthor} \tongji@def@term{eauthor} % 作者中英文
-\tongji@def@term{studentnumber} % 学号
-\tongji@def@term{csupervisor} \tongji@def@term{esupervisor} % 导师中英文
-\tongji@def@term{cassosupervisor} \tongji@def@term{eassosupervisor} % 副导师(校外)老师中英文
+\tongji@def@term{secretlevel}                                           % 密级参数
+\tongji@def@term{secretyear}                                            % 解密年份
+\tongji@def@term{ctitle}            \tongji@def@term{etitle}            % 题目中英文
+\tongji@def@term{cauthor}           \tongji@def@term{eauthor}           % 作者中英文
+\tongji@def@term{studentnumber}                                         % 学号
+\tongji@def@term{csupervisor}       \tongji@def@term{esupervisor}       % 导师中英文
+\tongji@def@term{cassosupervisor}   \tongji@def@term{eassosupervisor}   % 副导师(校外)老师中英文
 \tongji@def@term{cjointinstitution} \tongji@def@term{ejointinstitution} % 培养机构中英文
-\tongji@def@term{cdegree} \tongji@def@term{edegree} % 学位中英文
-\tongji@def@term{csubjectcategory} \tongji@def@term{esubjectcategory} % 学科门类中英文
-\tongji@def@term{cresearchfield} \tongji@def@term{eresearchfield} % 研究领域中英文
-\tongji@def@term{cdepartment} \tongji@def@term{edepartment} % 院系中英文名称
-\tongji@def@term{cmajor} \tongji@def@term{emajor} % 学位中英文名称
-\tongji@def@term{cdate} \tongji@def@term{edate} % 论文成文日期
-\tongji@def@term{cmajorfirst} \tongji@def@term{emajorfirst} % 学科门类, 如工学, 理学
-\tongji@def@term{cmajorsecond} \tongji@def@term{emajorsecond} % 一级学科或二级学科
-\tongji@def@term{cfunds} \tongji@def@term{efunds} % 基金支持中英文
-% 通过 \cs{tongjisetup} 以 key / value 的方式统一设置封面信息
-% key 不支持环境项, 如 \texttt{cabstract} 和 \texttt{eabstract}
-% 由于这些设置项被 \cs{makecover} 调用, 所以此命令需要在 \cs{makecover} 之前被调用
-\def\tongjisetup{\kvsetkeys{tongji}}
+\tongji@def@term{cdegree}           \tongji@def@term{edegree}           % 学位中英文
+\tongji@def@term{csubjectcategory}  \tongji@def@term{esubjectcategory}  % 学科门类中英文
+\tongji@def@term{cresearchfield}    \tongji@def@term{eresearchfield}    % 研究领域中英文
+\tongji@def@term{cdepartment}       \tongji@def@term{edepartment}       % 院系中英文名称
+\tongji@def@term{cmajor}            \tongji@def@term{emajor}            % 学位中英文名称
+\tongji@def@term{cdate}             \tongji@def@term{edate}             % 论文成文日期
+\tongji@def@term{cmajorfirst}       \tongji@def@term{emajorfirst}       % 学科门类, 如工学, 理学
+\tongji@def@term{cmajorsecond}      \tongji@def@term{emajorsecond}      % 一级学科或二级学科
+\tongji@def@term{cfunds}            \tongji@def@term{efunds}            % 基金支持中英文
+% 通过 \cs{tongjisetup} 以 key / value 的方式统一设置封面信息, 需要在 \cs{makecover} 之前被调用
+\def\tongjisetup{\kvsetkeys{tongji}}  % key 不支持环境项, 如 \texttt{cabstract} 和 \texttt{eabstract}
 
-% 数字式引用 以及 作者-年份引用
-\newif\iftongji@numeric
-\tongji@numerictrue % 默认为数字式引用
-\newif\iftongji@authoryear
+% 模板配置选项
+% (必选) 学位类别: degree=[master|doctor]
+\newif\iftongji@master
+\newif\iftongji@doctor
+\define@key{tongji}{degree}{%
+  \tongji@masterfalse \tongji@doctorfalse
+  \expandafter\csname tongji@#1true\endcsname}
+
+% (可选) 引用格式: bibtype=[numeric|authoryear] ( 数字式引用 或 作者-年份引用 )
+\newif\iftongji@numeric \tongji@numerictrue  % 数字式引用 (默认)
+\newif\iftongji@authoryear  % 作者-年份引用
 \define@key{tongji}{bibtype}{%
-  \tongji@numericfalse
-  \tongji@authoryearfalse
+  \tongji@numericfalse \tongji@authoryearfalse
   \expandafter\csname tongji@#1true\endcsname}
 
-% 学术型|专业型|同等学力
-\newif\iftongji@academic
-\tongji@academictrue % 默认为学术型
-\newif\iftongji@profession
-\newif\iftongji@equaleducation
+% (可选) 硕士学位类别: degreetype=[academic|profession|equaleducation] ( 学术型 或 专业型 或 同等学力 )
+\newif\iftongji@academic \tongji@academictrue  % 学术型 (默认)
+\newif\iftongji@profession  % 专业型
+\newif\iftongji@equaleducation  % 同等学力
 \define@key{tongji}{degreetype}{%
-  \tongji@academicfalse
-  \tongji@professionfalse
-  \tongji@equaleducationfalse
+  \tongji@academicfalse \tongji@professionfalse \tongji@equaleducationfalse
   \expandafter\csname tongji@#1true\endcsname}
 
-\DeclareBoolOption{electronic} % 封面的 electronic 选项(打印时删除)
-\DeclareBoolOption{secret} % 论文是否保密
-% \DeclareBoolOption{romantoc} % 目录的英文是否用 Times 字体 (弃用)
-% \DeclareBoolOption{romantitle} % 章节标题的英文, 标号是否用 Times 字体 (弃用)
+% (可选) 电子版标注: electronic / 打印时删除
+\DeclareBoolOption{electronic}  % 默认为 false (不显示)
+
+% (可选) 保密标注: 秘密 / 机密/ 绝密 ( 请同时在 cover.tex 中配置相应选项 )
+\DeclareBoolOption{secret}  % 默认为 false (不显示)
+
+% (可选) 页眉格式: false = 传统格式 / true = 新格式
+\DeclareBoolOption{styleheadercentered}  % 默认为 true (新格式)
+
+% 强制使用 windows 风格字体, 然后映射到目录下的字体文件
 \IfFileExists{/dev/null}{}{\PassOptionsToClass{fontset=windows}{ctexbook}}  % simhei 字体
 
 % ctexbook 配置
-% tex 默认会尽量使得所有 page 的 bottom margins 相等
-\DeclareBoolOption{raggedbottom} % (默认打开) raggedbottom 允许不同 page 的 bottom margins 不一样, 防止大段材料跨页
-\DeclareBoolOption{pifootnote} % 在脚注标记中使用 \pkg{pifont} 的带圈数字(默认打开), 此选项生成的带圈数字更漂亮
+% tex 默认会尽量使得所有 page 的 bottom margins 相等, raggedbottom 允许不同 page 的 bottom margins 不一样, 防止大段材料跨页
+\DeclareBoolOption{raggedbottom}
+% 在脚注标记中使用 \pkg{pifont} 的带圈数字(默认打开), 此选项生成的带圈数字更漂亮
+\DeclareBoolOption{pifootnote}
 \DeclareDefaultOption{\PassOptionsToClass{\CurrentOption}{ctexbook}} % 将选项传递给 \pkg{ctexbook}
 
 % 解析用户传递过来的选项, 并加载 \pkg{ctexbook}
@@ -124,9 +122,7 @@
 \fi
 
 % 打开默认选项
-\kvsetkeys{tongji}{
-  raggedbottom,
-  pifootnote}
+\kvsetkeys{tongji}{ raggedbottom, pifootnote, styleheadercentered }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 中文语言支持 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -138,6 +134,7 @@
 % CTEX 宏集预定义的中文字库还定义了一些字体命令
 % \songti, \heiti, \fangsong, \kaishu, \lishu, \youyuan, \yahei
 % 等价的CJK命令为\CJKfamily{zhsong}等
+
 
 % 将伪粗体与伪斜体的选项传递给xeCJK package
 \PassOptionsToPackage{AutoFakeBold=1.2,AutoFakeSlant}{xeCJK}
@@ -306,10 +303,20 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % 全文设置 songti + times
-% \RequirePackage{newtxmath} % txfonts 的替代品 - 字体太多会报错
 \RequirePackage{courier} % 使用 Courier 字体
 \defaultfontfeatures{Mapping=tex-text} % 修复引号等字符的显示
-\setmainfont{Times New Roman} % 使用 Times New Roman 字体
+% 强制使用 font 文件夹下自带字体
+\setCJKfamilyfont{zhsong}[Path={fonts/}]{SimSun.ttf}  % \songti
+\setCJKfamilyfont{zhhei}[Path={fonts/}]{SimHei.ttf}  % \heiti
+\setCJKfamilyfont{zhfs}[Path={fonts/}]{FangSong_GB2312.ttf}  % \fangsong
+\setCJKfamilyfont{zhkai}[Path={fonts/}]{KaiTi_GB2312.ttf}  % \kaishu
+\setCJKfamilyfont{zhli}[Path={fonts/}]{LiShu.ttf}  % \lishu
+\setmainfont{times.ttf}[
+  Path = fonts/,
+  BoldFont = timesbd.ttf,
+  ItalicFont = timesi.ttf,
+  BoldItalicFont = timesbi.ttf
+]
 
 % 标题设置 heiti + times
 % 各级标题格式设置在本文件后边
@@ -394,26 +401,31 @@ autoindent=true}
   \renewcommand{\headrulewidth}{0pt}
   \renewcommand{\footrulewidth}{0pt}
   }
+
 % \texttt{tongji@plain}: 只显示页脚的页码, 默认 \cs{chapter} 调用 \cs{tongji@plain}
 \fancypagestyle{tongji@plain}{%
   \fancyhead{}
   \fancyfoot[C]{\songti\wuhao\thepage}
   \renewcommand{\headrulewidth}{0pt}
   \renewcommand{\footrulewidth}{0pt}}
-% \texttt{tongji@headings}: 页眉页脚同时显示
-\fancypagestyle{tongji@headings}{%
+
+% \texttt{tongji@headingmain}: 正文样式: 页眉页脚同时显示 ( 可选择是否页眉居中 )
+\iftongji@styleheadercentered\def\xparameter@headingmain@odd{CO}\else\def\xparameter@headingmain@odd{RO}\fi
+\iftongji@styleheadercentered\def\xparameter@headingmain@even{CE}\else\def\xparameter@headingmain@even{LE}\fi
+\fancypagestyle{tongji@headingmain}{%
   \fancyhead{}
-  \fancyhead[RO]{\wuhao\songti\leftmark}
-  \fancyhead[LE]{\wuhao\songti\tongji@schoolname~\tongji@capply~\tongji@cheadingtitlenew}
+  \fancyhead[\xparameter@headingmain@odd]{\wuhao\songti\tongji@schoolname~\tongji@capply~\tongji@cheadingtitlenew}
+  \fancyhead[\xparameter@headingmain@even]{\wuhao\songti\tongji@schoolname~\tongji@capply~\tongji@cheadingtitlenew}
   \fancyfoot{}
   \fancyfoot[C]{\songti\wuhao\thepage}
   \renewcommand{\headrulewidth}{0.4pt}
-  \renewcommand{\footrulewidth}{0.4pt}}
-% \texttt{tongji@headingseasy}: 页眉页脚同时显示, 但是页眉均为左侧页面格式
-\fancypagestyle{tongji@headingseasy}{%
+  \renewcommand{\footrulewidth}{0pt}}
+
+% \texttt{tongji@headingref}: 参考文献样式: 页眉页脚同时显示, 但是页眉均为奇数页面格式 ( 可选择是否页眉居中 )
+\fancypagestyle{tongji@headingref}{%
   \fancyhead{}
-  \fancyhead[RO]{\wuhao\songti\tongji@schoolname~\tongji@capply~\tongji@referencesname}
-  \fancyhead[LE]{\wuhao\songti\tongji@schoolname~\tongji@capply~\tongji@referencesname}
+  \fancyhead[\xparameter@headingmain@odd]{\wuhao\songti\tongji@schoolname~\tongji@capply~\tongji@referencesname}
+  \fancyhead[\xparameter@headingmain@even]{\wuhao\songti\tongji@schoolname~\tongji@capply~\tongji@referencesname}
   \fancyfoot{}
   \fancyfoot[C]{\songti\wuhao\thepage}
   \renewcommand{\headrulewidth}{0.4pt}
@@ -431,7 +443,7 @@ autoindent=true}
   \cleardoublepage % 强迫第一章的首页从右边开始, 在双面打印中, 即奇数页在右边
   \@mainmattertrue
   \pagenumbering{arabic}
-  \pagestyle{tongji@headings}
+  \pagestyle{tongji@headingmain}
   % \renewcommand\thesection{\arabic{chapter}.\ \arabic{section}} % 各级标题以及图标序号格式修改(增加序号中点后的空格)
   % \renewcommand\thesubsection{\arabic{chapter}.\ \arabic{section}.\ \arabic{subsection}}
   % \renewcommand\thesubsubsection{\arabic{chapter}.\ \arabic{section}.\ \arabic{subsection}.\ \arabic{subsubsection}}
@@ -441,7 +453,7 @@ autoindent=true}
 \renewcommand\backmatter{%
   \clearpage
   \@mainmattertrue
-  % \renewcommand\thesection{\Alph{chapter}.\ \arabic{section}} % 附录中的chapter需要使用英文标号
+  % \renewcommand\thesection{\Alph{chapter}.\ \arabic{section}} % 附录中的 chapter 需要使用英文标号
   % \renewcommand\thesubsection{\Alph{chapter}.\ \arabic{section}.\ \arabic{subsection}}
   % \renewcommand\thesubsubsection{\Alph{chapter}.\ \arabic{section}.\ \arabic{subsection}.\ \arabic{subsubsection}}
   % \renewcommand\thefigure{\Alph{chapter}.\ \arabic{figure}}
@@ -476,7 +488,7 @@ autoindent=true}
 \apptocmd{\@makefntext}{\let\@makefnmark\tongji@makefnmark}{}{}
 % 为 \cs{footnote} 增加后空白
 \let\oldfootnote\footnote
-\renewcommand{\footnote}[1]{\oldfootnote{#1\vspace{2.6pt}}}
+\renewcommand{\footnote}[1]{\oldfootnote{#1\vspace{2.1pt}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 断行分页设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -562,22 +574,21 @@ autoindent=true}
 % 同济的英文摘要以及各章标题都要加粗, 故不需要\ifthenelse{<test>}{<then clause>}{<else clause>}的判断了
 \ctexset{%
   chapter={ % 章标题
-    afterindent=true, % afterindent 选项用于设置章节标题后首段的缩进
-    pagestyle={tongji@headings},% 这句用来保证章首页的页眉正确
-    % 注意我们在前面\mainmatter时已经定义过\pagestyle{tongji@headings}了
-    % 但这里必须再重新应用一次, 用来保证章首页的页眉正确
-    beforeskip={2bp},% 设置章节标题前的垂直间距
-    aftername=\hskip\ccwd, % 控制章节编号与标题内容之间的距离
-    % \ccwd 为一个汉字的宽度，在 ctex 宏集中有介绍
-    afterskip={18bp}, % 控制章节标题与后面下方之间的距离
+    afterindent=true,               % afterindent 选项用于设置章节标题后首段的缩进
+    pagestyle={tongji@headingmain}, % 这句用来保证章首页的页眉正确
+                                    % 注意我们在前面 \mainmatter 时已经定义过 \pagestyle{tongji@headingmain}了, 但这里必须再重新应用一次, 用来保证章首页的页眉正确
+    beforeskip={2bp},               % 设置章节标题前的垂直间距
+    aftername=\hskip\ccwd,          % 控制章节编号与标题内容之间的距离
+                                    % \ccwd 为一个汉字的宽度，在 ctex 宏集中有介绍
+    afterskip={18bp},               % 控制章节标题与后面下方之间的距离
     format={\centering\bfseries\tongji@title@font\sanhao[1.8]},
-    % format 项用于控制章节标题的全局格式, 作用域为章节名字和随后的标题内容
-    % 可以用于控制章节标题的对齐方式, 整体字体字号等格
+                                    % format 项用于控制章节标题的全局格式, 作用域为章节名字和随后的标题内容
+                                    % 可以用于控制章节标题的对齐方式, 整体字体字号等格
     nameformat=\relax,
     numberformat=\relax,
     titleformat=\bfseries,
-    lofskip=0pt, % 控制插图目录(.lof)中, 章之间的插图标题的距离
-    lotskip=0pt, % 控制表格目录(.lot)中, 章之间的表格标题的距离
+    lofskip=0pt,                    % 控制插图目录(.lof)中, 章之间的插图标题的距离
+    lotskip=0pt,                    % 控制表格目录(.lot)中, 章之间的表格标题的距离
     % loaskip=0pt,
   },
   section={ % 一级节标题
@@ -854,11 +865,11 @@ autoindent=true}
 \setlength{\bibinitsep}{0ex}
 % 解决参考文献页眉问题(当存在附录时, 参考文献页眉会出问题)
 \newcommand\printTJbibliography{
-  \ctexset{chapter/pagestyle={tongji@headingseasy}}
-  \pagestyle{tongji@headingseasy}
+  \ctexset{chapter/pagestyle={tongji@headingref}}
+  \pagestyle{tongji@headingref}
   \printbibliography[heading=bibintoc]
   \clearpage
-  \ctexset{chapter/pagestyle={tongji@headings}}}
+  \ctexset{chapter/pagestyle={tongji@headingmain}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 附录样式设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1112,7 +1123,7 @@ autoindent=true}
 
 % 生成新的 mathversion
 \newcounter{mathversioncount} % 定义计数器
-% 解决报错 Too many math alphabets used in version normal: 每章一个mathversion
+% 解决报错 Too many math alphabets used in version normal: 每章一个 mathversion
 \newcommand{\wyqymathversion}[1]{
   \loop % 循环生成
     \stepcounter{mathversioncount}
