@@ -1,7 +1,0 @@
-{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qsystem identification parameter estimation continuous-time systems Fourier transformation equidistributed sequence\\E$"}
-{"rule":"ENGLISH_WORD_REPEAT_BEGINNING_RULE","sentence":"^\\QSection \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q propose the method of system parameters identification using the above estimations.\\E$"}
-{"rule":"ENGLISH_WORD_REPEAT_BEGINNING_RULE","sentence":"^\\QSection \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q show the results of numerical simulation.\\E$"}
-{"rule":"ENGLISH_WORD_REPEAT_BEGINNING_RULE","sentence":"^\\QSection \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q conclude the paper.\\E$"}
-{"rule":"ENGLISH_WORD_REPEAT_BEGINNING_RULE","sentence":"^\\QAssumption \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q makes the identification problem well-posed with no model selection.\\E$"}
-{"rule":"ENGLISH_WORD_REPEAT_BEGINNING_RULE","sentence":"^\\QAssumption \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q is used in the consistency analysis for finite time interval.\\E$"}
-{"rule":"FINAL_ADVERB_COMMA","sentence":"^\\QTheorem \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q shows that uniform distribution means that \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q convergences almost surely.\\E$"}

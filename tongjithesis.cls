@@ -84,16 +84,16 @@
 \DeclareBoolOption{secret}  % 默认为 false (不显示)
 
 % (可选) 页眉格式: false = 传统格式 / true = 新格式
-\DeclareBoolOption{styleheadercentered}  % 默认为 true (新格式)
+\DeclareBoolOption[true]{newstyle}  % 默认为 true (新格式)
 
 % 强制使用 windows 风格字体, 然后映射到目录下的字体文件
 \IfFileExists{/dev/null}{}{\PassOptionsToClass{fontset=windows}{ctexbook}}  % simhei 字体
 
 % ctexbook 配置
 % tex 默认会尽量使得所有 page 的 bottom margins 相等, raggedbottom 允许不同 page 的 bottom margins 不一样, 防止大段材料跨页
-\DeclareBoolOption{raggedbottom}
+\DeclareBoolOption[true]{raggedbottom}
 % 在脚注标记中使用 \pkg{pifont} 的带圈数字(默认打开), 此选项生成的带圈数字更漂亮
-\DeclareBoolOption{pifootnote}
+\DeclareBoolOption[true]{pifootnote}
 \DeclareDefaultOption{\PassOptionsToClass{\CurrentOption}{ctexbook}} % 将选项传递给 \pkg{ctexbook}
 
 % 解析用户传递过来的选项, 并加载 \pkg{ctexbook}
@@ -120,9 +120,6 @@
       \ClassError{tongjithesis}{Unknown bib type option.\MessageBreak Please check your bib type option, good luck!}{}  
    \fi
 \fi
-
-% 打开默认选项
-\kvsetkeys{tongji}{ raggedbottom, pifootnote, styleheadercentered }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 中文语言支持 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -153,7 +150,6 @@
 \RequirePackage{mathtools} % 增强数学功能
 % \RequirePackage{xfrac} % 更好的分式排版
 \RequirePackage{nicematrix} % 更好的矩阵排版
-\RequirePackage{pdfrender} % 更好的粗体渲染
 
 % 使用其它数学字体
 \RequirePackage{amsfonts}
@@ -163,7 +159,6 @@
   cal=dutchcal, calscaled=1.00,%
   scr=boondoxupr, scrscaled=1.00,%
   bb=libus, bbscaled=1.00]{mathalfa}
-% \RequirePackage[utf8]{inputenc} % utf8 encoding, not used with xelatex
 \RequirePackage[T2A, T1]{fontenc} % Cyrillic font
 % 其它字体
 \iftongji@pifootnote
@@ -394,44 +389,48 @@ autoindent=true}
     \wyqydeletelinebreaktxt{#1}{wyqy@chaptermark}
     \@mkboth{\CTEXthechapter\hskip\ccwd\wyqy@chaptermark}{}}}
 
-% 定义页眉和页脚格式
+% 预定义页眉和页脚参数
+\iftongji@newstyle\def\xparameter@heading@odd{CO}\else\def\xparameter@heading@odd{RO}\fi
+\iftongji@newstyle\def\xparameter@heading@even{CE}\else\def\xparameter@heading@even{LE}\fi
+\iftongji@newstyle\def\xparameter@heading@mainleft{\leftmark}\else\def\xparameter@heading@mainleft{\tongji@schoolname~\tongji@capply~\tongji@cheadingtitlenew}\fi
+\iftongji@newstyle\def\xparameter@heading@mainright{\leftmark}\else\def\xparameter@heading@mainright{\leftmark}\fi
+\iftongji@newstyle\newcommand{\xparameter@heading@cother}[1]{#1}\else\newcommand{\xparameter@heading@cother}[1]{\wuhao\songti\tongji@schoolname~\tongji@capply~#1}\fi
+\iftongji@newstyle\newcommand{\xparameter@heading@eother}[1]{#1}\else\newcommand{\xparameter@heading@eother}[1]{\wuhao\tongji@eschoolname~\; the degree of Master \;~#1}\fi
+
 % \texttt{tongji@empty}: 页眉页脚都没有
 \fancypagestyle{tongji@empty}{%
   \fancyhf{}
   \renewcommand{\headrulewidth}{0pt}
-  \renewcommand{\footrulewidth}{0pt}
-  }
+  \renewcommand{\footrulewidth}{0pt}}
 
-% \texttt{tongji@plain}: 只显示页脚的页码, 默认 \cs{chapter} 调用 \cs{tongji@plain}
-\fancypagestyle{tongji@plain}{%
+% 只显示页脚(页码), 默认 \cs{chapter} 调用 \cs{tongji@footonly}
+\fancypagestyle{tongji@footonly}{%
   \fancyhead{}
   \fancyfoot[C]{\songti\wuhao\thepage}
   \renewcommand{\headrulewidth}{0pt}
   \renewcommand{\footrulewidth}{0pt}}
 
-% \texttt{tongji@headingmain}: 正文样式: 页眉页脚同时显示 ( 可选择是否页眉居中 )
-\iftongji@styleheadercentered\def\xparameter@headingmain@odd{CO}\else\def\xparameter@headingmain@odd{RO}\fi
-\iftongji@styleheadercentered\def\xparameter@headingmain@even{CE}\else\def\xparameter@headingmain@even{LE}\fi
+% 正文样式: 页眉页脚同时显示 (可选择是否页眉居中)
 \fancypagestyle{tongji@headingmain}{%
   \fancyhead{}
-  \fancyhead[\xparameter@headingmain@odd]{\wuhao\songti\tongji@schoolname~\tongji@capply~\tongji@cheadingtitlenew}
-  \fancyhead[\xparameter@headingmain@even]{\wuhao\songti\tongji@schoolname~\tongji@capply~\tongji@cheadingtitlenew}
+  \fancyhead[\xparameter@heading@odd]{\wuhao\songti\xparameter@heading@mainleft}
+  \fancyhead[\xparameter@heading@even]{\wuhao\songti\xparameter@heading@mainright}
   \fancyfoot{}
   \fancyfoot[C]{\songti\wuhao\thepage}
   \renewcommand{\headrulewidth}{0.4pt}
   \renewcommand{\footrulewidth}{0pt}}
 
-% \texttt{tongji@headingref}: 参考文献样式: 页眉页脚同时显示, 但是页眉均为奇数页面格式 ( 可选择是否页眉居中 )
-\fancypagestyle{tongji@headingref}{%
+% 附录样式: 页眉页脚同时显示, 且左右相同 (可选择是否页眉居中)
+\fancypagestyle{tongji@headingappendix}{%
   \fancyhead{}
-  \fancyhead[\xparameter@headingmain@odd]{\wuhao\songti\tongji@schoolname~\tongji@capply~\tongji@referencesname}
-  \fancyhead[\xparameter@headingmain@even]{\wuhao\songti\tongji@schoolname~\tongji@capply~\tongji@referencesname}
+  \fancyhead[\xparameter@heading@odd]{\wuhao\songti\xparameter@heading@cother{\appendixname}}
+  \fancyhead[\xparameter@heading@even]{\wuhao\songti\xparameter@heading@cother{\appendixname}}
   \fancyfoot{}
   \fancyfoot[C]{\songti\wuhao\thepage}
   \renewcommand{\headrulewidth}{0.4pt}
   \renewcommand{\footrulewidth}{0pt}}
 
-% 定义样式
+% 分段使用样式
 \renewcommand\frontmatter{%
   \clearpage
   \@mainmatterfalse
@@ -465,13 +464,9 @@ autoindent=true}
 \def\tongji@textcircled#1{%
   \ifnum\value{#1} >9
     \ClassError{tongjithesis}%
-      {Too many footnotes in this page.}{Keep footnote less than 10.}
-  \fi
-  \iftongji@pifootnote%
-    \ding{\the\numexpr\value{#1}+171\relax}%
-  \else%
-    \textcircled{\xiaoliu\arabic{#1}}%
-  \fi}
+      {Too many footnotes in this page.}{Keep footnote less than 10.} \fi
+  \iftongji@pifootnote \ding{\the\numexpr\value{#1}+171\relax}%
+    \else \textcircled{\xiaoliu\arabic{#1}} \fi}
 \renewcommand{\thefootnote}{\tongji@textcircled{footnote}}
 \renewcommand{\thempfootnote}{\tongji@textcircled{mpfootnote}}
 % 关于 footnote marking 的更改, 可以参考: https://en.wikibooks.org/wiki/LaTeX/Footnotes_and_Margin_Notes		
@@ -627,7 +622,7 @@ autoindent=true}
 % title   是章标题
 % header  是页眉出现的标题, 如果忽略则取 title
 \newcounter{tongji@bookmark}
-\NewDocumentCommand\tongji@chapter{s o m o}{
+\NewDocumentCommand\tongji@chapter{s o m o}{%
   \IfBooleanF{#1}{%如果调用的时候不带*, 那么#1 = \BooleanFalse
     \ClassError{tongjithesis}{You have to use the star form: \string\tongji@chapter*}{}
   }%
@@ -636,38 +631,32 @@ autoindent=true}
   % in other words it puts a hyper marker on the page
   % For example a starred section or chapter added to the TOC would normally refer to the wrong place without \phantomsection
   % \IfValueTF {<argument>} {<true code>} {<false code>}
-  \IfValueTF{#2}
-  {%若第一个o对应的可选参数没有提供, 那么#2=-NoValue-,此判断为false
-    \ifthenelse{\equal{#2}{}}
-    {%第二个参数有, 但为空, 此 chapter 不出现在目录中
+  \IfValueTF{#2}{% 若第一个o对应的可选参数没有提供, 那么#2=-NoValue-,此判断为false
+    \ifthenelse{\equal{#2}{}}{% 第二个参数有, 但为空, 此 chapter 不出现在目录中
       \addtocounter{tongji@bookmark}\@ne
-      \pdfbookmark[0]{#3}{tongjichapter.\thetongji@bookmark}
-      }
-    {%第二个参数有, 且不为空, 则将其加入目录
+      \pdfbookmark[0]{#3}{tongjichapter.\thetongji@bookmark}}
+    {% 第二个参数有, 且不为空, 则将其加入目录
       \addcontentsline{toc}{chapter}{#2}
       % \addcontentsline{file}{sec_unit}{entry}
       % file是文件扩展名: toc (table of contents), lof (list of figures), or lot (list of tables).
       % sec_unit, 对于toc来说就是这些名字: part, chapter, section 等
     }
   }
-  {%若没有指定该参数(即#2=-NoValue-), 表示目录出现title
+  {% 若没有指定该参数(即#2=-NoValue-), 表示目录出现title
     \addcontentsline{toc}{chapter}{#3}
-  }% 
+  }
   \chapter*{#3}%
-  \IfValueTF{#4}
-  {%提供了第四个参数, 即 header
+  \IfValueTF{#4}{% 提供了第四个参数, 即 header
     \ifthenelse{\equal{#4}{}}{\@mkboth{}{}} % 页眉为空
     {% 页眉为 header
       \thispagestyle{fancy}
-      \fancyhead{}
-      \fancyhead[RO,LE]{#4}
-      \fancyfoot{}
-      \fancyfoot[C]{\songti\wuhao\thepage}
+      \fancyhead{} \fancyhead[\xparameter@heading@odd]{#4} \fancyhead[\xparameter@heading@even]{#4}
+      \fancyfoot{} \fancyfoot[C]{\songti\wuhao\thepage}
       \renewcommand{\headrulewidth}{0.4pt}
       \renewcommand{\footrulewidth}{0pt}
     }
     % 注: 此命令等同于 \markboth{left}{right}
-    % 也就是定义一个“left-hand heading” 和“righthand heading”
+    % 也就是定义一个 "left-hand heading" 和 "righthand heading"
     % 这样, \leftmark 读出来的就是我们设的left, \rightmark 就是我们设的right
     % 通过这种方式, 我们可以很方便地设置页眉
   }
@@ -695,7 +684,7 @@ autoindent=true}
 % 减小目录项中的导引小点跟页码之间的留白
 % 目录生成命令
 \renewcommand\tableofcontents{%
-  \tongji@chapter*[]{\contentsname}[\wuhao\songti\tongji@schoolname~\tongji@capply~\contentsname]
+  \tongji@chapter*[]{\contentsname}[\xparameter@heading@cother{\contentsname}]
   \xiaosi[1.5]\@starttoc{toc}\normalsize\clearpage}
 
 
@@ -745,18 +734,18 @@ autoindent=true}
 \tongji@parse@keywords{ekeywords}
 \newcommand{\tongji@makeabstract}{%
   \cleardoublepage % always openright for Abstract
-  \tongji@chapter*[]{\cabstractname}[\wuhao\songti\tongji@schoolname~\tongji@capply~\cabstractname] % no tocline
+  \tongji@chapter*[]{\tongji@cabstractname}[\xparameter@heading@cother{\tongji@cabstractname}] % no tocline
   \pagenumbering{Roman}
   \tongji@cabstract
   \vskip12bp
-  \setbox0=\hbox{{\bfseries\heiti\tongji@ckeywords@title}}
+  \setbox0=\hbox{{\bfseries\heiti\tongji@ckeyword@title}}
   \noindent\hangindent\wd0\hangafter1
     \box0\tongji@ckeywords
   % \cleardoublepage % always openright for Abstract  
-  \tongji@chapter*[]{\eabstractname}[\wuhao\tongji@eschoolname~\quad the degree of Master \quad~\eabstractname] % no tocline
+  \tongji@chapter*[]{\tongji@eabstractname}[\xparameter@heading@eother{\tongji@eabstractname}] % no tocline
   \tongji@eabstract
   \vskip12bp
-  \setbox0=\hbox{{\bfseries Key Words:\enskip}}
+  \setbox0=\hbox{{\bfseries\tongji@ekeyword@title}}
   \noindent\hangindent\wd0\hangafter1
     \box0\tongji@ekeywords}
 
@@ -766,8 +755,8 @@ autoindent=true}
    
 % 主要符号对照表  
 % 基于清华模板, 利用 \pkg{enumitem} 改造环境定义
-\newenvironment{denotation}[1][3.5cm]{
-  \tongji@chapter*{\tongji@denotation@name}[\wuhao\songti\tongji@schoolname~\tongji@capply~\tongji@denotation@name]
+\NewDocumentEnvironment{denotation}{O{3.5cm}}{%
+  \tongji@chapter*{\tongji@denotationname}[\xparameter@heading@cother{\tongji@denotationname}]
   \vskip-30bp\xiaosi[1.6]\begin{tongji@denotation}[labelwidth=#1]
 }{%
   \end{tongji@denotation}
@@ -799,11 +788,11 @@ autoindent=true}
   \setcounter{tocdepth}{2} % restore tocdepth in case being modified
   \@ifstar
     {%带星的不加入目录, 如\listoftables*
-      \tongji@chapter*[]{\csname list#1name\endcsname}[\wuhao\songti\tongji@schoolname~\tongji@capply~\csname list#1name\endcsname]
+      \tongji@chapter*[]{\csname list#1name\endcsname}[\xparameter@heading@cother\expandafter{\csname list#1name\endcsname}]
       \tongji@starttoc{#1}
       \clearpage}
     {%加入目录
-      \tongji@chapter*{\csname list#1name\endcsname}[\wuhao\songti\tongji@schoolname~\tongji@capply~\csname list#1name\endcsname]
+      \tongji@chapter*{\csname list#1name\endcsname}[\xparameter@heading@cother\expandafter{\csname list#1name\endcsname}]
       \tongji@starttoc{#1}
       \clearpage}
 }
@@ -847,10 +836,11 @@ autoindent=true}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 致谢声明设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% 致谢以及声明
+% 设置文档环境
 \NewDocumentEnvironment{acknowledgement}{}{%
-  \tongji@chapter*[\tongji@ackname]{\tongji@ackname}[\wuhao\songti\tongji@schoolname~\tongji@capply~\tongji@ackname] 
-  \fangsong}{\clearpage}
+  \tongji@chapter*{\tongji@acknowname}[\xparameter@heading@cother{\tongji@acknowname}] 
+  \fangsong}
+  {\clearpage}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 参考文献设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -858,37 +848,30 @@ autoindent=true}
 
 % 兼容参考文献的老命令
 \let\inlinecite\parencite
-% 全局字体
-\renewcommand{\bibfont}{\zihao{5}\songti}%宋体五号
+
+% 文献列表字体
+\renewcommand{\bibfont}{\zihao{5}\songti }%宋体五号
 % \setlength{\bibitemsep}{0ex}
 \setlength{\bibnamesep}{0ex}
 \setlength{\bibinitsep}{0ex}
-% 解决参考文献页眉问题(当存在附录时, 参考文献页眉会出问题)
-\newcommand\printTJbibliography{
-  \ctexset{chapter/pagestyle={tongji@headingref}}
-  \pagestyle{tongji@headingref}
-  \printbibliography[heading=bibintoc]
-  \clearpage
-  \ctexset{chapter/pagestyle={tongji@headingmain}}}
+
+% 设置文档环境
+\NewDocumentEnvironment{reference}{}{%
+  \tongji@chapter*{\tongji@referencename}[\xparameter@heading@cother{\tongji@referencename}]}
+  {\clearpage}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 附录样式设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\fancypagestyle{tongji@appendix@heading}{%
-  \fancyhead{}
-  \fancyhead[RO,LE]{\wuhao\songti\tongji@schoolname~\tongji@capply~\appendixname}
-  \fancyfoot{}
-  \fancyfoot[C]{\songti\wuhao\thepage}
-  \renewcommand{\headrulewidth}{0.4pt}
-  \renewcommand{\footrulewidth}{0pt}}
+% 设置文档环境
 \let\tongji@appendix\appendix
 \renewenvironment{appendix}{% 
-  \ctexset{% 附录仍属于 mainmattertrue 才能正确编号成附录A的形式,
+  \ctexset{% 附录仍属于 mainmattertrue 才能正确编号成附录A 的形式,
     % 此处的 pagestyle 仍然会沿用我们前面设的 chapter 的 pagestyle, 而我们需要更改附录的页眉, 因此需要重新设置一下页眉
-    chapter/pagestyle={tongji@appendix@heading} % 保证首页的页眉正确
+    chapter/pagestyle={tongji@headingappendix} % 保证首页的页眉正确
     } 
-  \pagestyle{tongji@appendix@heading} % 保证附录非首页的页眉正确
+  \pagestyle{tongji@headingappendix} % 保证附录非首页的页眉正确
   \let\title\tongji@appendix@title
   \tongji@appendix}{%
   \let\title\@gobble \clearpage}
@@ -897,11 +880,10 @@ autoindent=true}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 个人简历设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newenvironment{resume}{%
-  \tongji@chapter*{\tongji@resume@title}[\wuhao\songti\tongji@schoolname~\tongji@capply~\tongji@resume@title] 
-  \wuhao[1.5] 
-  \setlist[enumerate,1]{leftmargin=2em} % 设置enumerate左间隙距离
-  }{\clearpage}
+\NewDocumentEnvironment{resume}{}{%
+  \tongji@chapter*{\tongji@resumename}[\xparameter@heading@cother{\tongji@resumename}] 
+  \wuhao[1.5] \setlist[enumerate,1]{leftmargin=2em}} % 设置enumerate左间隙距离
+  {\clearpage}
 
 \newcommand{\resumeitem}[1]{\vspace{2.5em}{\bfseries\wuhao\heiti\leftline{#1}}\par}
 
@@ -909,9 +891,9 @@ autoindent=true}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 原创声明设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newenvironment{statement}{%
-  \pagestyle{tongji@plain}
-  }{\clearpage}
+\NewDocumentEnvironment{statements}{}{
+  \pagestyle{tongji@footonly}}
+  {\clearpage}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 封面格式设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1137,10 +1119,10 @@ autoindent=true}
   \stepcounter{mathversioncount}
   \ifx#1\relax % 没有提供可选参数
     {\expandafter\mathversion\expandafter{\csname wyqymath\arabic{mathversioncount}\endcsname}}
-      \input{data/#2} \mathversion{normal}
+      \input{#2} \mathversion{normal}
   \else % 提供了可选参数
     {\expandafter\mathversion\expandafter{\csname wyqymath\arabic{mathversioncount}\endcsname}}
-      \begin{#1} \input{data/#2} \end{#1}
+      \begin{#1} \input{#2} \end{#1}
       \mathversion{normal}
   \fi
 }

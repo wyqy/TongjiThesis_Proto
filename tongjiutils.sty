@@ -114,10 +114,12 @@
 % bold Greek letters
 % refer to: https://tex.stackexchange.com/questions/383324/bold-checkmark/383798#383798
 \newcommand{\boldgreek}[1]{%
-  \textpdfrender{%
-    TextRenderingMode=FillStroke, % fill and stroke text
-    LineWidth=.35pt,%
-  }{#1}%
+  \special{pdf:literal 2 Tr}% 设置文本渲染模式为描边和填充
+  \special{pdf:literal 0.35 w}% 设置描边宽度
+  \special{pdf:literal 0 0 0 RG}% 设置描边颜色为黑色
+  \special{pdf:literal 0 0 0 RG}% 设置填充颜色为黑色
+  #1%
+  \special{pdf:literal 0 Tr}% 恢复文本渲染模式
 }
 % matrix
 \newcommand{\mat}[1]{
