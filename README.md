@@ -28,7 +28,7 @@ WYQY的硕士毕业论文 by 同济大学硕博士论文LaTeX模板
 
 ### 使用
 1. 需要提前根据 ``wyqyinputfile`` 命令的使用次数修改 ``\wyqymathversion`` 的参数 (位于 [thesis.tex @ L16](https://github.com/wyqy/TongjiThesis_Proto/blob/main/thesis.tex#L16) ).
-2. 已根据最新的 ``写作示例`` 修订了页眉格式; 如果要返回到旧版, 请参照 [thesis.tex @ L9](https://github.com/wyqy/TongjiThesis_Proto/blob/main/thesis.tex#L9) 的说明, 通过设置 ``newstyle=false`` 还原
+2. 已根据最新的 ``写作示例`` 修订了页眉格式 (感谢 [@colderwater666](https://github.com/colderwater666)); 如果要返回到旧版, 请参照 [thesis.tex @ L9](https://github.com/wyqy/TongjiThesis_Proto/blob/main/thesis.tex#L9) 的说明, 通过设置 ``newstyle=false`` 还原
 
 ### 编译过程中出现未知的奇怪的错误怎么办
 若碰到奇怪的错误, 最好的方法就是： __清除所有临时文件, 重新编译__
