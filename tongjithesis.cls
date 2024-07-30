@@ -146,21 +146,19 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 一般宏包引用 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% 数学排版
 \RequirePackage{amsmath, amssymb} % \AmSTeX\ 宏包
 \RequirePackage{mathtools} % 增强数学功能
-% \RequirePackage{xfrac} % 更好的分式排版
 \RequirePackage{nicematrix} % 更好的矩阵排版
 
-% 使用其它数学字体
+% 数学字体
 \RequirePackage{amsfonts}
-% \RequirePackage{bm} % 处理数学公式中的黑斜体的替代
 \RequirePackage{mathrsfs} % \mathscr
 \RequirePackage[oldbold,%
   cal=dutchcal, calscaled=1.00,%
   scr=boondoxupr, scrscaled=1.00,%
   bb=libus, bbscaled=1.00]{mathalfa}
-\RequirePackage[T2A, T1]{fontenc} % Cyrillic font
-% 其它字体
+% 符号字体
 \iftongji@pifootnote
   \RequirePackage{pifont}% pifont有很多Pi fonts, 如Dingbats(杂锦字体), Symbol, etc
 \fi
@@ -297,25 +295,31 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 文章字体设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% 全文设置 songti + times
-\RequirePackage{courier} % 使用 Courier 字体
+% 字体编码
+\RequirePackage[T2A, T1]{fontenc} % Cyrillic fonts
 \defaultfontfeatures{Mapping=tex-text} % 修复引号等字符的显示
-% 强制使用 font 文件夹下自带字体
+
+% 使用 font 文件夹下自带字体
 \setCJKfamilyfont{zhsong}[Path={fonts/}]{SimSun.ttf}  % \songti
 \setCJKfamilyfont{zhhei}[Path={fonts/}]{SimHei.ttf}  % \heiti
 \setCJKfamilyfont{zhfs}[Path={fonts/}]{FangSong_GB2312.ttf}  % \fangsong
 \setCJKfamilyfont{zhkai}[Path={fonts/}]{KaiTi_GB2312.ttf}  % \kaishu
 \setCJKfamilyfont{zhli}[Path={fonts/}]{LiShu.ttf}  % \lishu
-\setmainfont{times.ttf}[
+\setmainfont{times.ttf}[ % Times New Roman 字体
   Path = fonts/,
   BoldFont = timesbd.ttf,
   ItalicFont = timesi.ttf,
   BoldItalicFont = timesbi.ttf
 ]
+\setmonofont{cour.ttf}[  % Courier New 字体
+  Path = fonts/,
+  BoldFont = courbd.ttf,
+  ItalicFont = couri.ttf,
+  BoldItalicFont = courbi.ttf
+]
 
-% 标题设置 heiti + times
+% 标题设置 heiti
 % 各级标题格式设置在本文件后边
-% \def\tongji@title@font{\rmfamily}
 \def\tongji@title@font{\heiti}
 
 % 正文小四号 (12bp) 字, 行距为固定值 20 bp
@@ -368,10 +372,7 @@
 \tongji@define@fontsize{bahao}{5bp}
 
 % 全文首行缩进2字符, 标点符号用全角
-\ctexset{%
-punct=quanjiao,
-space=auto,
-autoindent=true}
+\ctexset{ punct=quanjiao, space=auto, autoindent=true }
 % \ctexset的详细介绍见"ctex宏集手册" (2018/01/28 v2.4.12)
 % 它有很多实用选项, 如chapter/name = {第,章}, section/name = {\S}
 
@@ -548,18 +549,22 @@ autoindent=true}
   \noalign{\ifnum0=`}\fi\hrule \@height #1 \futurelet
     \reserved@a\@xhline}
 
-% 定义algorithm2e的字体
-\newcommand\commentFont[1]{\ttfamily{#1}}
-\newcommand{\tongji@algorithm@kwsty}{\xiaosi[2]\normalfont}
-\AtEndOfPackageFile*{algorithm2e}{
-  \SetCommentSty{commentFont}
-  \SetKwSty{tongji@algorithm@kwsty}
-  \SetArgSty{tongji@algorithm@kwsty}
-  \SetAlFnt{\xiaosi[1.75]} % 字体: 算法正文
-  \SetKwInput{KwData}{输入数据}
-  \SetKwInput{KwResult}{输出结果}
-  \renewcommand\algorithmcfname{\tongji@name@algorithmname}
-}
+% 定义 algorithm2e 样式
+\SetAlFnt{\xiaosi[1.75]} % 字体: 算法正文
+\newcommand\commentFont[1]{\ttfamily{#1}} % 字体: 注释
+\newcommand{\tongji@algorithm@kwsty}{\xiaosi[2]\normalfont} % 字体: 关键词
+\newcommand{\tongji@algorithm@capsty}{\xiaosi[2]\normalfont}  % 字体: 标题
+\SetCommentSty{commentFont}
+\SetKwSty{tongji@algorithm@kwsty}
+\SetArgSty{tongji@algorithm@kwsty}
+\SetAlCapSty{tongji@algorithm@capsty}
+\SetAlgoCaptionLayout{tongji@algorithm@capsty}
+\SetAlgoCaptionSeparator{\hspace*{1em}} % 分隔符
+
+\SetKwInput{KwData}{输入数据}
+\SetKwInput{KwResult}{输出结果}
+\SetAlgorithmName{\algocfname}{\algocfname}{\listalgocfname}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 目录样式设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -795,40 +800,37 @@ autoindent=true}
       \tongji@chapter*{\csname list#1name\endcsname}[\xparameter@heading@cother\expandafter{\csname list#1name\endcsname}]
       \tongji@starttoc{#1}
       \clearpage}
+  \titlecontents{#1}[0em]{\filright}%设定索引样式
+    {\xiaosi\songti\thecontentslabel\enspace}%
+      {\xiaosi\songti}{\dotfill\contentspage}[\addvspace{0pt}]
+  \contentsuse{#1}{\csname ext@#1\endcsname}
 }
 
 % 图片索引
-\renewcommand\listoffigures{\tongji@listof{figure}}
-\renewcommand*\l@figure{\@dottedtocline{1}{0em}{4em}}
 \renewcommand{\@dotsep}{2} %改变索引中点间距
+\renewcommand*\l@figure{\@dottedtocline{1}{0em}{4em}}
+\renewcommand\listoffigures{\tongji@listof{figure}}
+
 % 表格索引
 \let\l@table\l@figure
 \renewcommand\listoftables{\tongji@listof{table}}
 
 % 算法索引
-\SetAlgoRefRelativeSize{1}
-\newcommand{\tongji@algorithm@capsty}{\xiaosi[2]\normalfont}
-\AtEndOfPackageFile*{algorithm2e}{
-  \SetAlgoCaptionLayout{tongji@algorithm@capsty} % thu@caption@font
-  \SetAlCapSty{tongji@algorithm@capsty} % 标题样式
-  \SetAlgoCaptionSeparator{\hspace*{1em}} % 分隔符
-  \renewcommand\listalgorithmcfname{\tongji@listname@algorithmname}}
-\def\ext@algorithmcf{loa}
-\let\l@algorithmcf\l@figure
-\renewcommand\listofalgorithms{\tongji@listof{algorithmcf}}
+\def\ext@algocf{loa}
+\let\l@algocf\l@figure
+\renewcommand\listofalgorithms{\tongji@listof{algocf}}
 
 
 % 公式索引
-% \LaTeX\ 默认没有公式索引, 此处定义自己的 \cs{listofequations}
-% 如果要编号最好用 equation 环境, 否则请手动添加 \cs{equcaption}
-% 用法为: \cs{equcaption}\marg{counter}
-%   \marg{counter} 指定出现在索引中的编号, 一般取 \cs{theequation}
-%   如果你是用 \pkg{amsmath} 的 \cs{tag}, 那么默认是 \cs{tag} 的参数
-%   除此之外可能需要你手工指定
+% \LaTeX\ 默认没有公式索引, 此处自定义公式列表命令 \cs{listofequations} 和添加条目命令 \cs{equcaption}
+% 用法为: \cs{equcaption}\marg{description}
+%   \marg{description} 为公式在列表中的说明文字
+%   如果你是用 \pkg{amsmath} 的 \cs{tag}, 那么默认是 \cs{tag} 的参数, 除此之外可能需要你手工指定
+%   注意, 只有在公式后面使用了 \cs{equcaption} 命令, 才会在公式列表中出现这个公式
 \def\ext@equation{loe} % 本命令只是为了生成公式列表, 所以这个 caption 是假的
 \def\equcaption#1{%
   \addcontentsline{\ext@equation}{equation}%
-                  {\protect\numberline{#1}}}
+                  {\protect\numberline{\theequation}{\ignorespaces #1}}}
 \let\l@equation\l@figure
 \newcommand\listofequations{\tongji@listof{equation}}
 
@@ -1093,8 +1095,8 @@ autoindent=true}
 
 % 书脊
 % 单独使用书脊命令会在新的一页产生竖排书脊
-\NewDocumentCommand{\shuji}{O{\tongji@ctitle} O{\tongji@cauthor}}{%
-  \newpage\thispagestyle{empty}%
+\NewDocumentCommand{\shuji}{O{\tongji@cheadingtitlenew} O{\tongji@cauthortitle}}{%
+  \newpage\thispagestyle{tongji@empty}%
   \fangsong\ifxetex\addCJKfontfeatures*{RawFeature={vertical:}}\fi
   \xiaosan\ziju{0.4}%
   \noindent\hfill\rotatebox[origin=lt]{-90}{\makebox[\textheight]{#1\hfill#2}}}

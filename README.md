@@ -1,6 +1,6 @@
-# TongjiThesis
+# TongjiThesis - 2024
 ## 总览
-WYQY的硕士毕业论文 by 同济大学硕博士论文LaTeX模板
+同济大学硕博士论文LaTeX模板 - 2024 年修订版, 绝赞更新中!
 
 本次修改的发起者：
 * [WYQY](https://github.com/wyqy)
@@ -12,24 +12,26 @@ WYQY的硕士毕业论文 by 同济大学硕博士论文LaTeX模板
 历史贡献者列表:[请点击这里](https://github.com/marquistj13/TongjiThesis/graphs/contributors)
 
 主要参考资料：
-* [ThuThesis](https://github.com/tuna/thuthesis);
+* [ThuThesis](https://github.com/tuna/thuthesis), [ustcthesis](https://github.com/ustctug/ustcthesis);
 * [TongjiThesis @ Tongji LUG, 2014](https://sourceforge.net/projects/tongjithesis/);
 * [TongjiThesis @ marquistj13, CNchence, Wenda, 2020](https://github.com/marquistj13/TongjiThesis);
 * ``Copilot`` \& ``texdoc`` \& ``tex.stackexchange.com``.
 
 ## 版本说明
-需要 TeXLive 2023+, 推荐使用 VSCode 编辑 
+基于 __TeXLive__ 编写, 版本要求为 __2023 及以上__, 同时要求使用 __XeLaTeX__ 编译
+推荐使用 VSCode + SumatraPDF 编辑
 
 ### 安装
 1. (必需) 安装 [Texlive](https://mirrors.tuna.tsinghua.edu.cn/ctan/systems/texlive/Images/);
-1. (必需) 安装 [VSCode](https://code.visualstudio.com/);
-1. (可选) 安装 [SumatraPDF](https://www.sumatrapdfreader.org/free-pdf-reader), 请参阅 [Zhihu](https://zhuanlan.zhihu.com/p/95330916) 配置相应文件;
+1. (建议) 安装 [VSCode](https://code.visualstudio.com/);
+1. (建议) 安装 [SumatraPDF](https://www.sumatrapdfreader.org/free-pdf-reader), 请参阅 [Zhihu](https://zhuanlan.zhihu.com/p/95330916) 配置相应文件;
 1. 开始使用.
 
 ### 使用
 1. 需要提前根据 ``wyqyinputfile`` 命令的使用次数修改 ``\wyqymathversion`` 的参数 (位于 [thesis.tex @ L16](https://github.com/wyqy/TongjiThesis_Proto/blob/main/thesis.tex#L16) ).
 2. 已根据最新的 ``写作示例`` 修订了页眉格式 (感谢 [@colderwater666](https://github.com/colderwater666)); 如果要返回到旧版, 请参照 [thesis.tex @ L9](https://github.com/wyqy/TongjiThesis_Proto/blob/main/thesis.tex#L9) 的说明, 通过设置 ``newstyle=false`` 还原
 
+## F&Q
 ### 编译过程中出现未知的奇怪的错误怎么办
 若碰到奇怪的错误, 最好的方法就是： __清除所有临时文件, 重新编译__
 

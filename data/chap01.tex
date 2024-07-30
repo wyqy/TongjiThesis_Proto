@@ -1,24 +1,24 @@
 \chapter{引言}
 \label{chap:intro}
 
-\section{文字排版}
+\section{文字排版示例}
 \label{sec:intro:typesetting}
 % 文字
-大家好啊，我是文字。
-编辑时推荐打开（word wrap / 自动换行）功能。
+大家好啊，我是一段文字。
 
 % 另一段文字
 我是另一段文字。中文~English~中文，中文（English，En）中文。
 我是带有脚注的文字 \footnote{我是脚注。}。
 
-\section{公式排版}
+\section{公式排版示例}
 \label{sec:intro:formula}
 % 公式
-我是一段带有公式~$E = mc^2$ 的文字。
+我是一段带有行内公式~$E = mc^2$ 的文字。
 我是一段带有如下行间公式~\ref{eq:1} 的文字：
-\begin{equation} \label{eq:1}
+\begin{equation} \label{eq:1} \equcaption{线性回归}
     \vec{y} = \mat{\Psi} \vec{\theta} + \vec{e}.
 \end{equation}
+行间公式~\ref{eq:1} 已经被列入~\textbf{\listequationname}~之中。
 我是一段带有标量~$a$，向量~$\vec{x}$ 和矩阵~$\mat{A}$ 的文字。
 下面展示了一组具有子公式编号（如：公式~\ref{eq:2:d}）的公式：
 \begin{subequations} \begin{align}
@@ -39,7 +39,7 @@
     \vec{u}\sps[n](\indn) &= \vec{u}(\indn) + \vec{z}\sps[u](\indn). \label{eq:3:c}
 \end{empheq} \end{subequations}
 
-\section{引用排版}
+\section{引用排版示例}
 \label{sec:intro:reference}
 % 引用
 我是一段带有引用的文字~\cite{IEEE1363}。
@@ -50,7 +50,7 @@
 % 参考文献位置
 请注意要将参考文献放在 \verb|data/ref.bib| 文件中，建议使用 Zotero 软件，配合 Better Bib(La)TeX 插件完成这一工作。
 
-\section{图片排版}
+\section{图片排版示例}
 \label{sec:intro:figure}
 % 图片
 % 单个图片
@@ -113,7 +113,7 @@
     \caption{我是一张 tikz 制作的图片} \label{fig:4}
 \end{figure}
 
-\section{表格}
+\section{表格排版示例}
 \label{sec:intro:table}
 表格可以使用 excel2latex 插件导出，可以标注附注，如表~\ref{table:discrete:complexity} 所示。
 \begin{table}[htb]
@@ -145,7 +145,7 @@
     \end{threeparttable}
 \end{table}
 
-\section{算法}
+\section{算法排版示例}
 \label{sec:intro:algorithm}
 本模板使用的是 algorithm2e 包，如算法~\ref{algorithm:1} 所示。
 \begin{algorithm}[htb]

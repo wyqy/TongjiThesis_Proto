@@ -7,7 +7,7 @@
 %   secret,                                             % 可选, 是否保密: 秘密 / 机密 / 绝密
 %   pifootnote,                                         % 可选, 脚注是否用 ① 这种格式, 默认已打开
 %   newstyle,                                           % 可选, 是否使用新页眉格式 (居中格式), 默认已打开
-%   注：默认已打开的选项可以使用arialtitle=false 的形式关闭
+%   注：默认已打开的选项可以使用 arialtitle=false 的形式关闭
 
 % 其他文本格式 / 章节标题格式等选项可以参见 tongjithesis.cfg 中的说明, 按需要修改
 
@@ -33,7 +33,7 @@
 \listoffigures                                          % 插图索引
 \listoftables                                           % 表格索引
 \listofalgorithms                                       % 算法索引
-% \listofequations                                      % 公式索引
+\listofequations                                        % 公式索引
 
 %%% 正文部分
 \mainmatter
@@ -44,7 +44,7 @@
 %%% 封底部分
 \backmatter
 \wyqyinputfile[acknowledgement]{data/ack}               % 致谢示例, 位置: data/ack.tex
-\wyqyinputfile[reference]{data/reference}               % 参考文献示例, 位置: data/ref.tex  
+\wyqyinputfile[reference]{ref/style}                    % 参考文献示例, 位置: data/ref.tex  
 \wyqyinputfile[appendix]{data/appendix}                 % 附录示例, 位置: data/appendix.tex
 \wyqyinputfile[resume]{data/resume}                     % 个人简历示例, 位置: data/resume.tex
 \wyqyinputfile[statements]{data/statements}             % 原创性声明和授权书( 仅供测试, 最终提交时请替换为签字扫描件 )
