@@ -1,0 +1,70 @@
+name: Build LaTeX Document via GitHub Actions
+# push to main branch or tag with 'build-*' to trigger the workflow
+# workflow:
+#   1. build latex document
+#   2. release the document and source code
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'release-*' ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+jobs:
+  build_document:
+    name: Build & Realse LaTeX Document (Template)
+
+    runs-on: ubuntu-latest
+    # 1 min (Linux) = 2 min (Windows) = 10 min (MacOS)
+
+    env:
+      DOC_PATH: .output
+
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
+
+      - name: compile document
+        uses: xu-cheng/latex-action@v3
+        with:
+          compiler: latexmk
+          texlive_version: 2024
+          root_file: thesis.tex
+          extra_fonts: ./fonts/*.ttf
+          args: |
+            -norc -xelatex
+            -bibtex -bibfudge
+            -latex=xelatex -recorder-
+            -latexoption=-synctex=1 -interaction=nonstopmode -file-line-error --shell-escape
+            -ourdir=$DOC_PATH
+          post_compile: "latexmk -norc -c -outdir=$DOC_PATH"
+          
+      - name: release 1 - document
+        run: |
+          mkdir -p $HOME/release_doc
+          cp $GITHUB_WORKSPACE/$DOC_PATH/thesis.pdf $HOME/release_doc
+
+      - name: release 2 - source code with document
+        run: |
+          mkdir -p $HOME/release_src
+          tar -czvf $HOME/release_src/source_code.tar.gz -C $GITHUB_WORKSPACE .
+      
+      - name: extract tag name
+        if: startsWith(github.ref, 'refs/tags/release-')
+        run: echo "TAG_NAME=${GITHUB_REF#refs/tags/release-}" >> $GITHUB_ENV
+
+      - name: create new release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/release-')
+        with:
+          tag_name: ${{ env.TAG_NAME }}
+          draft: false
+          prerelease: false
+          files: |
+            $HOME/release_doc/thesis.pdf
+            $HOME/release_src/source_code.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  

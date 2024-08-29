@@ -23,17 +23,19 @@
 
 ### 安装
 1. (必需) 安装 [Texlive](https://mirrors.tuna.tsinghua.edu.cn/ctan/systems/texlive/Images/);
-1. (建议) 安装 [VSCode](https://code.visualstudio.com/);
+1. (建议) 安装 [VSCode](https://code.visualstudio.com/) 和 [latex-workshop](https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop) 插件
 1. (建议) 安装 [SumatraPDF](https://www.sumatrapdfreader.org/free-pdf-reader), 请参阅 [Zhihu](https://zhuanlan.zhihu.com/p/95330916) 配置相应文件;
 1. 开始使用.
 
 ### 使用
 1. 需要提前根据 ``wyqyinputfile`` 命令的使用次数修改 ``\wyqymathversion`` 的参数 (位于 [thesis.tex @ L16](https://github.com/wyqy/TongjiThesis_Proto/blob/main/thesis.tex#L16) ).
-2. 已根据最新的 ``写作示例`` 修订了页眉格式 (感谢 [@colderwater666](https://github.com/colderwater666)); 如果要返回到旧版, 请参照 [thesis.tex @ L9](https://github.com/wyqy/TongjiThesis_Proto/blob/main/thesis.tex#L9) 的说明, 通过设置 ``newstyle=false`` 还原
+1. 已根据最新的 ``写作示例`` 修订了页眉格式 (感谢 [@colderwater666](https://github.com/colderwater666)); 如果要返回到旧版, 请参照 [thesis.tex @ L9](https://github.com/wyqy/TongjiThesis_Proto/blob/main/thesis.tex#L9) 的说明, 通过设置 ``newstyle=false`` 还原
 
 ## F&Q
 ### 编译过程中出现未知的奇怪的错误怎么办
 若碰到奇怪的错误, 最好的方法就是： __清除所有临时文件, 重新编译__
+### 编译选项在哪里 / 如何自定义编译选项 (如修改输出目录)
+本模板默认使用 latexmk + xelatex 编译, 如果需要使用其他 LaTeX 编辑器 / 自定义编译选项 (如修改输出目录), 可查找项目中的 setting.json 文件 (用于 VSCode) 或 build-release.yml 文件 (用于 GitHub Actions)
 
 ### 关于 author year 的引用
 本模板使用经过广泛验证和良好维护的引用样式包 [biblatex-gb7714-2015](https://github.com/hushidong/biblatex-gb7714-2015) 生成引用

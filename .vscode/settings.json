@@ -11,16 +11,20 @@
     "latex-workshop.latex.recipe.default": "lastUsed",
     "latex-workshop.intellisense.package.enabled": true,
     "latex-workshop.intellisense.biblatexJSON.replace": {},
-    "latex-workshop.latex.outDir": ".\\.temp",
+    "latex-workshop.latex.outDir": ".\\.output",
     "latex-workshop.latex.recipes": [
         {
-            "name": "latexmk",
-            "tools": ["latexmk"]
+            "name": "build",
+            "tools": ["build - latexmk"]
+        },
+        {
+            "name": "clean",
+            "tools": ["clean - latexmk"]
         }
     ],
     "latex-workshop.latex.tools": [
         {
-            "name": "latexmk",
+            "name": "build - latexmk",
             "command": "latexmk",
             "args": [
                 "-norc", "-xelatex",
@@ -29,6 +33,14 @@
                 "-latexoption=-synctex=1 -interaction=nonstopmode -file-line-error --shell-escape",
                 "-outdir=%OUTDIR%",
                 "%DOCFILE%"
+            ]
+        },
+        {
+            "name": "clean - latexmk",
+            "command": "latexmk",
+            "args": [
+                "-norc", "-c",
+                "-outdir=%OUTDIR%"
             ]
         }
     ],
