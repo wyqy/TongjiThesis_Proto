@@ -19,9 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     # 1 min (Linux) = 2 min (Windows) = 10 min (MacOS)
 
-    env:
-      DOC_PATH: .output
-
     steps:
       - name: checkout repo
         uses: actions/checkout@v3
@@ -32,20 +29,19 @@ jobs:
           compiler: latexmk
           texlive_version: 2024
           root_file: thesis.tex
-          working_directory: $GITHUB_WORKSPACE
           extra_fonts: ./fonts/*.ttf
           args: |
             -norc -xelatex
             -bibtex -bibfudge
             -latex=xelatex -recorder-
             -latexoption=-synctex=1 -interaction=nonstopmode -file-line-error --shell-escape
-            -outdir=$DOC_PATH
-          post_compile: "latexmk -norc -c -outdir=$DOC_PATH"
+          pre_compile: "export"
+          post_compile: "latexmk -norc -c"
           
       - name: release 1 - document
         run: |
           mkdir -p $HOME/release_doc
-          cp $GITHUB_WORKSPACE/$DOC_PATH/thesis.pdf $HOME/release_doc
+          cp $GITHUB_WORKSPACE/thesis.pdf $HOME/release_doc
 
       - name: release 2 - source code with document
         run: |
