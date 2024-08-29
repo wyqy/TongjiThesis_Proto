@@ -32,13 +32,14 @@ jobs:
           compiler: latexmk
           texlive_version: 2024
           root_file: thesis.tex
+          working_directory: $GITHUB_WORKSPACE
           extra_fonts: ./fonts/*.ttf
           args: |
             -norc -xelatex
             -bibtex -bibfudge
             -latex=xelatex -recorder-
             -latexoption=-synctex=1 -interaction=nonstopmode -file-line-error --shell-escape
-            -ourdir=$DOC_PATH
+            -outdir=$DOC_PATH
           post_compile: "latexmk -norc -c -outdir=$DOC_PATH"
           
       - name: release 1 - document
