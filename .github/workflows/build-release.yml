@@ -6,8 +6,8 @@ name: Build LaTeX Document via GitHub Actions
 
 on:
   push:
-    branches: [ main ]
     tags: [ 'release-*' ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
   # workflow_dispatch: {}
