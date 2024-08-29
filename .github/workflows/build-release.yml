@@ -38,16 +38,6 @@ jobs:
             -latexoption=-synctex=1 -interaction=nonstopmode -file-line-error --shell-escape
           pre_compile: "export"
           post_compile: "latexmk -norc -c"
-          
-      - name: release 1 - document
-        run: |
-          mkdir -p $HOME/release_doc
-          cp $GITHUB_WORKSPACE/thesis.pdf $HOME/release_doc
-
-      - name: release 2 - source code with document
-        run: |
-          mkdir -p $HOME/release_src
-          tar -czvf $HOME/release_src/source_code.tar.gz -C $GITHUB_WORKSPACE .
       
       - name: extract tag name
         if: startsWith(github.ref, 'refs/tags/release-')
@@ -61,8 +51,7 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            $HOME/release_doc/thesis.pdf
-            $HOME/release_src/source_code.tar.gz
+            thesis.pdf
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
