@@ -19,9 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     # 1 min (Linux) = 2 min (Windows) = 10 min (MacOS)
 
-    env:
-      DOC_PATH: .output
-
     steps:
       - name: checkout repo
         uses: actions/checkout@v3
@@ -38,13 +35,13 @@ jobs:
             -bibtex -bibfudge
             -latex=xelatex -recorder-
             -latexoption=-synctex=1 -interaction=nonstopmode -file-line-error --shell-escape
-            -outdir=$DOC_PATH
-          post_compile: "latexmk -norc -c -outdir=$DOC_PATH"
+          pre_compile: "export"
+          post_compile: "latexmk -norc -c"
           
       - name: release 1 - document
         run: |
           mkdir -p $HOME/release_doc
-          cp $GITHUB_WORKSPACE/$DOC_PATH/thesis.pdf $HOME/release_doc
+          cp $GITHUB_WORKSPACE/thesis.pdf $HOME/release_doc
 
       - name: release 2 - source code with document
         run: |
