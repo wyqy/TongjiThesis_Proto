@@ -87,7 +87,7 @@
 \DeclareBoolOption[true]{newstyle}  % 默认为 true (新格式)
 
 % 强制使用 windows 风格字体, 然后映射到目录下的字体文件
-\IfFileExists{/dev/null}{}{\PassOptionsToClass{fontset=windows}{ctexbook}}  % simhei 字体
+\PassOptionsToClass{fontset=wyqy}{ctexbook}  % 取消字体映射
 
 % ctexbook 配置
 % tex 默认会尽量使得所有 page 的 bottom margins 相等, raggedbottom 允许不同 page 的 bottom margins 不一样, 防止大段材料跨页
@@ -298,25 +298,6 @@
 % 字体编码
 \RequirePackage[T2A, T1]{fontenc} % Cyrillic fonts
 \defaultfontfeatures{Mapping=tex-text} % 修复引号等字符的显示
-
-% 使用 font 文件夹下自带字体
-\setCJKfamilyfont{zhsong}[Path={fonts/}]{SimSun.ttf}  % \songti
-\setCJKfamilyfont{zhhei}[Path={fonts/}]{SimHei.ttf}  % \heiti
-\setCJKfamilyfont{zhfs}[Path={fonts/}]{FangSong_GB2312.ttf}  % \fangsong
-\setCJKfamilyfont{zhkai}[Path={fonts/}]{KaiTi_GB2312.ttf}  % \kaishu
-\setCJKfamilyfont{zhli}[Path={fonts/}]{LiShu.ttf}  % \lishu
-\setmainfont{times.ttf}[ % Times New Roman 字体
-  Path = fonts/,
-  BoldFont = timesbd.ttf,
-  ItalicFont = timesi.ttf,
-  BoldItalicFont = timesbi.ttf
-]
-\setmonofont{cour.ttf}[  % Courier New 字体
-  Path = fonts/,
-  BoldFont = courbd.ttf,
-  ItalicFont = couri.ttf,
-  BoldItalicFont = courbi.ttf
-]
 
 % 标题设置 heiti
 % 各级标题格式设置在本文件后边

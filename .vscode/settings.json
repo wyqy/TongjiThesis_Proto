@@ -1,7 +1,8 @@
 {
     // editor
     "files.associations": {
-        "*.cfg": "tex"
+        "*.cfg": "tex",
+        "*.def": "tex"
     },
     // latex
     "latex-workshop.latex.autoBuild.run": "onSave",
