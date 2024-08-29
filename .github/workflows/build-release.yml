@@ -32,7 +32,6 @@ jobs:
           compiler: latexmk
           texlive_version: 2024
           root_file: thesis.tex
-          working_directory: $GITHUB_WORKSPACE
           extra_fonts: ./fonts/*.ttf
           args: |
             -norc -xelatex
