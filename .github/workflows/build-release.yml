@@ -10,7 +10,7 @@ on:
     tags: [ 'release-*' ]
   pull_request:
     branches: [ main ]
-  workflow_dispatch: {}
+  # workflow_dispatch: {}
 
 jobs:
   build_document:
@@ -49,10 +49,12 @@ jobs:
           tar -czvf $HOME/release_src/source_code.tar.gz -C $GITHUB_WORKSPACE .
       
       - name: extract tag name
+        if: startsWith(github.ref, 'refs/tags/release-')
         run: echo "TAG_NAME=${GITHUB_REF#refs/tags/release-}" >> $GITHUB_ENV
 
       - name: create new release
         uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/release-')
         with:
           tag_name: ${{ env.TAG_NAME }}
           draft: false

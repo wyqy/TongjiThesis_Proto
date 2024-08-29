@@ -35,7 +35,7 @@
 1. 本模板使用 GitHub Actions 测试代码正确性, 如果编译成功, 则可在 Release 下载编译好的 pdf 文件和相应的源代码
 1. 注意:
    - 编译环境默认为 Ubuntu + TeXLive 2024 [(@xu-cheng/latex-action)](https://www.github.com/xu-cheng/latex-action/tree/v3/), 尽管进行了仔细检查, 但不同平台仍有可能出现内容的不一致问题, 因此请仔细检查编译生成的 pdf 文件
-   - GitHub Actions 功能对于私有仓库 __不免费__, 本仓库默认配置为对于 __每一个 main 分支上的提交均运行一次编译__, 若不需要该功能, 请删去 build-release.yml 文件中的 ``workflow_dispatch: {}`` (位于 [build-release.yml @ L13](https://github.com/wyqy/TongjiThesis_Proto/blob/main/.github/workflows/build-release.yml#L13))
+   - GitHub Actions 功能对于私有仓库 __不免费__, 若不需要该功能, 请删去 build-release.yml 文件中的 ``on`` 触发器 (位于 [build-release.yml @ L7-L13](https://github.com/wyqy/TongjiThesis_Proto/blob/main/.github/workflows/build-release.yml#L7-L13))
 
 ## F&Q
 ### 编译过程中出现未知的奇怪的错误怎么办
