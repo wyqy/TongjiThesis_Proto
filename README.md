@@ -1,5 +1,5 @@
 # TongjiThesis - 2024
-## 总览
+## 1. 总览
 同济大学硕博士论文LaTeX模板 - 2024 年修订版, 绝赞更新中!
 
 本次修改的发起者：
@@ -17,27 +17,49 @@
 * [TongjiThesis @ marquistj13, CNchence, Wenda, 2020](https://github.com/marquistj13/TongjiThesis);
 * ``Copilot`` \& ``texdoc`` \& ``tex.stackexchange.com``.
 
-## 版本说明
-基于 __TeXLive__ 编写, 版本要求为 __2023 及以上__, 同时要求使用 __XeLaTeX__ 编译
-推荐使用 VSCode + SumatraPDF 编辑
+## 2. 运行环境
 
-### 安装
-1. (必需) 安装 [Texlive](https://mirrors.tuna.tsinghua.edu.cn/ctan/systems/texlive/Images/);
-1. (建议) 安装 [VSCode](https://code.visualstudio.com/) 和 [latex-workshop](https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop) 插件
-1. (建议) 安装 [SumatraPDF](https://www.sumatrapdfreader.org/free-pdf-reader), 请参阅 [Zhihu](https://zhuanlan.zhihu.com/p/95330916) 配置相应文件;
-1. 开始使用.
+> #### ※ Windows / Linux  / Overleaf 等在线编译环境
+> #### ※ TexLive 2023 / 2024
 
-### 使用
-1. 需要提前根据 ``wyqyinputfile`` 命令的使用次数修改 ``\wyqymathversion`` 的参数 (位于 [thesis.tex @ L16](https://github.com/wyqy/TongjiThesis_Proto/blob/main/thesis.tex#L16)).
-1. 已根据最新的 ``写作示例`` 修订了页眉格式 (感谢 [@colderwater666](https://github.com/colderwater666)); 如果要返回到旧版, 请参照 [thesis.tex @ L9](https://github.com/wyqy/TongjiThesis_Proto/blob/main/thesis.tex#L9) 的说明, 通过设置 ``newstyle=false`` 还原
+注意:
 
-### 发布
-1. 本模板使用 GitHub Actions 测试代码正确性, 如果编译成功, 则可在 Release 下载编译好的 pdf 文件和相应的源代码
-1. 注意:
-   - 编译环境默认为 Ubuntu + TeXLive 2024 [(@xu-cheng/latex-action)](https://www.github.com/xu-cheng/latex-action/tree/v3/), 尽管进行了仔细检查, 但不同平台仍有可能出现内容的不一致问题, 因此请仔细检查编译生成的 pdf 文件
-   - GitHub Actions 功能对于私有仓库 __不免费__, 若不需要该功能, 请删去 build-release.yml 文件中的 ``on`` 触发器 (位于 [build-release.yml @ L7-L13](https://github.com/wyqy/TongjiThesis_Proto/blob/main/.github/workflows/build-release.yml#L7-L13))
+- 本模板 __仅支持 XeLaTeX__, 如报错请首先检查编译命令是否正确
+- 本模板自带了写作要求中的全部中英文字体, 因而体积较大, 这些字体 __不需要__ 手动安装到系统中, 模板会自行调用
 
-## F&Q
+
+## 3. 使用方法
+
+### 3.1. 目录结构
+
+| 名称 | 作用|
+| ---- | ---- |
+| thesis.tex | 主文档 |
+| ctex-fontset-tongji.def, <br>tongjithesis.cfg, <br>tongjithesis.cls | 必需模板文件 |
+| tongjiutils.sty | 可选模板文件 <br>如不需要可删除, 并注释掉  [thesis.tex @ L21](https://github.com/wyqy/TongjiThesis_Proto/blob/main/thesis.tex#L21 ) |
+| `data` 目录 | 存放各章对应的 .tex 文件 |
+| `figures` 目录 | 存放模板示例用到的图片文件 |
+| `fonts` 目录 | 存放模板用到的字体 ( 不需要手动安装 ) |
+| `ref` 目录 | 存放参考文献 refs.bib |
+| `.github ` 和 `.vscode` 目录 | 存放 GitHub Action 和 VSCode 配置文件, <br>如不使用可删除 |
+
+
+
+
+### 3.2. 注意事项
+
+> #### ※ 请使用 XeLaTeX 编译 thesis.tex
+> &nbsp;&nbsp;&nbsp;&nbsp;建议使用 VSCode + SumatraPDF, 可调用模板提供的配置文件直接编译和预览
+> #### ※ 需要使用 ``\tongjiinputfile`` 命令导入 `data` 目录下的 .tex 文件 ( 用法详见 thesis.tex )
+> #### ※ 需要提前根据 ``\tongjiinputfile`` 命令的使用次数修改 ``\tongjimathversion`` 的参数 ( 位于 [thesis.tex @ L20](https://github.com/wyqy/TongjiThesis_Proto/blob/main/thesis.tex#L20) )
+> #### ※ 本模板已根据最新的 ``写作示例`` 修订了页眉格式 ( 感谢 [@colderwater666](https://github.com/colderwater666) )
+> &nbsp;&nbsp;&nbsp;&nbsp;如果要返回到旧版, 请参照 [thesis.tex @ L9](https://github.com/wyqy/TongjiThesis_Proto/blob/main/thesis.tex#L9) 的说明, 通过设置 ``newstyle=false`` 还原
+> #### ※ 本模板配置了 GitHub Action 功能, 如果上传到 GitHub, 可实现自动编译并发布 Release ( [@xu-cheng/latex-action](https://www.github.com/xu-cheng/latex-action/tree/v3/) )
+> &nbsp;&nbsp;&nbsp;&nbsp;GitHub Actions 功能对于私有仓库 __不免费__, 若不需要该功能, 请删去 build-release.yml 文件中的 ``on`` 触发器 (位于 [build-release.yml @ L7-L13](https://github.com/wyqy/TongjiThesis_Proto/blob/main/.github/workflows/build-release.yml#L7-L13))
+
+
+
+## 4. F&Q
 ### 编译过程中出现未知的奇怪的错误怎么办
 若碰到奇怪的错误, 最好的方法就是： __清除所有临时文件, 重新编译__
 ### 编译选项在哪里 / 如何自定义编译选项 (如修改输出目录)
@@ -50,4 +72,4 @@
 
 ### 关于参考文献bib的生成
 推荐使用 Zotero 进行文献管理和 bib 生成, 其中 bib 的生成推荐使用 Zotero 的 `Better Bib(La)TeX` 插件
-如果你也用zotero管理文献的话, 可以参考 [这里](https://marquistj13.github.io/MyBlog/2018/05/zotero-export/#%E8%B0%83%E6%95%99better-bibtex-%E6%8F%92%E4%BB%B6%E7%94%9F%E6%88%90%E7%9A%84bib%E6%96%87%E4%BB%B6%E7%9A%84field) 的文献库导出设置, 这样就可以方便地将bib文件的language域删掉或另行处理, （很久以前需要删掉这个language域, 现在不确定是否需要删, 没时间测试了, 诸位自行定夺）
+如果你也用zotero管理文献的话, 可以参考 [这里](https://marquistj13.github.io/MyBlog/2018/05/zotero-export/#%E8%B0%83%E6%95%99better-bibtex-%E6%8F%92%E4%BB%B6%E7%94%9F%E6%88%90%E7%9A%84bib%E6%96%87%E4%BB%B6%E7%9A%84field) 的文献库导出设置, 这样就可以方便地将bib文件的language域删掉或另行处理, 

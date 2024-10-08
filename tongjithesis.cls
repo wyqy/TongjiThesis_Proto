@@ -87,7 +87,7 @@
 \DeclareBoolOption[true]{newstyle}  % 默认为 true (新格式)
 
 % 强制使用 windows 风格字体, 然后映射到目录下的字体文件
-\PassOptionsToClass{fontset=wyqy}{ctexbook}  % 取消字体映射
+\PassOptionsToClass{fontset=tongji}{ctexbook}  % 取消字体映射
 
 % ctexbook 配置
 % tex 默认会尽量使得所有 page 的 bottom margins 相等, raggedbottom 允许不同 page 的 bottom margins 不一样, 防止大段材料跨页
@@ -368,8 +368,8 @@
 \AtBeginDocument{%
   \pagestyle{tongji@empty}
   \renewcommand{\chaptermark}[1]{%
-    \wyqydeletelinebreaktxt{#1}{wyqy@chaptermark}
-    \@mkboth{\CTEXthechapter\hskip\ccwd\wyqy@chaptermark}{}}}
+    \tongjideletelinebreaktxt{#1}{tongji@chaptermark}
+    \@mkboth{\CTEXthechapter\hskip\ccwd\tongji@chaptermark}{}}}
 
 % 预定义页眉和页脚参数
 \iftongji@newstyle\def\xparameter@heading@odd{CO}\else\def\xparameter@heading@odd{RO}\fi
@@ -1089,7 +1089,8 @@
 % 生成新的 mathversion
 \newcounter{mathversioncount} % 定义计数器
 % 解决报错 Too many math alphabets used in version normal: 每章一个 mathversion
-\newcommand{\wyqymathversion}[1]{
+\newcommand{\wyqymathversion}[1]{\tongjimathversion#1}
+\newcommand{\tongjimathversion}[1]{
   \loop % 循环生成
     \stepcounter{mathversioncount}
     \expandafter\def\csname wyqymath\arabic{mathversioncount}\endcsname{}
@@ -1098,7 +1099,8 @@
   \setcounter{mathversioncount}{0} % 重置计数器
 }
 % 插入文件, 同时应用环境
-\newcommand{\wyqyinputfile}[2][\relax]{% 第一个参数为环境名称(可选), 第二个参数为插入文件名称(强制)
+\newcommand{\wyqyinputfile}[2][\relax]{\tongjiinputfile[#1]{#2}}
+\newcommand{\tongjiinputfile}[2][\relax]{% 第一个参数为环境名称(可选), 第二个参数为插入文件名称(强制)
   \stepcounter{mathversioncount}
   \ifx#1\relax % 没有提供可选参数
     {\expandafter\mathversion\expandafter{\csname wyqymath\arabic{mathversioncount}\endcsname}}
@@ -1120,7 +1122,7 @@
 \def\xstringintern@pattern@c{\\ }
 \def\xstringintern@pattern@d{\\}
 % 原文本为命令式, 每次调用都会生成新的变量名
-\newcommand{\wyqydeletelinebreakcmd}[2]{% 第一个参数为原文本命令名称, 第二个参数为新文本命令名称
+\newcommand{\tongjideletelinebreakcmd}[2]{% 第一个参数为原文本命令名称, 第二个参数为新文本命令名称
   \stepcounter{substitutecount}
   \expandafter\StrSubstitute\expandafter{\csname#1\expandafter\endcsname\expandafter}\expandafter{\csname xstringintern@pattern@a\expandafter\endcsname\expandafter}\expandafter{\expandafter}\expandafter[\csname xstringintern@delbreak@\arabic{substitutecount}\endcsname]
   \stepcounter{substitutecount}
@@ -1131,9 +1133,9 @@
   \expandafter\StrSubstitute\expandafter{\csname xstringintern@delbreak@\the\numexpr\arabic{substitutecount}-1\relax\expandafter\endcsname\expandafter}\expandafter{\csname xstringintern@pattern@d\expandafter\endcsname\expandafter}\expandafter{\expandafter}\expandafter[\csname xstringintern@delbreak@\arabic{substitutecount}\endcsname]
   \expandafter\gdef\csname#2\expandafter\endcsname\expandafter{\csname xstringintern@delbreak@\arabic{substitutecount}\endcsname}
 }
-\newcommand{\wyqydeletelinebreaktxt}[2]{% 第一个参数为原文本内容, 第二个参数为新文本命令名称
+\newcommand{\tongjideletelinebreaktxt}[2]{% 第一个参数为原文本内容, 第二个参数为新文本命令名称
    \def\xstringintern@args{#1}
-   \wyqydeletelinebreakcmd{xstringintern@args}{#2}
+   \tongjideletelinebreakcmd{xstringintern@args}{#2}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -11,9 +11,13 @@
 
 % 其他文本格式 / 章节标题格式等选项可以参见 tongjithesis.cfg 中的说明, 按需要修改
 
+% 兼容性提示: 旧版本的  wyqymathversion,   wyqyinputfile 仍然可用
+%            分别等价于 tongjimathversion, tongjiinputfile
+
+
 %%%%%%%%%%%%%%%%%%%%% 导言区 %%%%%%%%%%%%%%%%%%%%%
 % 环境准备
-\wyqymathversion{9}                                     % 填写本文件中 wyqyinputfile 命令的使用次数; 可以比实际数量多, 但不可少
+\wyqymathversion{9}                                     % 填写本文件中 tongjiinputfile 命令的使用次数; 可以比实际数量多, 但不可少
 \usepackage{tongjiutils}                                % 自定义宏放在这里, 包括一些常用指令
 \addbibresource{ref/refs.bib}                           % 加入bib文件
 
@@ -26,9 +30,9 @@
 
 %%% 封面部分
 \frontmatter
-\wyqyinputfile{data/cover} \makecover                   % 封面示例, 位置: data/cover.tex
+\tongjiinputfile{data/cover} \makecover                 % 封面示例, 位置: data/cover.tex
 \tableofcontents                                        % 目录( 自动生成 )
-\wyqyinputfile[denotation]{data/denotation}             % 符号对照表示例, 位置: data/denotation.tex
+\tongjiinputfile[denotation]{data/denotation}             % 符号对照表示例, 位置: data/denotation.tex
 %%% 以下索引按需要选择, 不需要的注释掉即可
 \listoffigures                                          % 插图索引
 \listoftables                                           % 表格索引
@@ -37,16 +41,16 @@
 
 %%% 正文部分
 \mainmatter
-% 用如下格式的命令插入文件, 格式: \wyqyinputfile[环境(可选参数)]{文件的相对路径}
-\wyqyinputfile{data/chap01}                             % 第一章示例, 位置: data/chap01.tex
-\wyqyinputfile{data/chap02}                             % 第二章示例, 位置: data/chap02.tex
+% 用如下格式的命令插入文件, 格式: \tongjiinputfile[环境(可选参数)]{文件的相对路径}
+\tongjiinputfile{data/chap01}                           % 第一章示例, 位置: data/chap01.tex
+\tongjiinputfile{data/chap02}                           % 第二章示例, 位置: data/chap02.tex
 
 %%% 封底部分
 \backmatter
-\wyqyinputfile[acknowledgement]{data/ack}               % 致谢示例, 位置: data/ack.tex
-\wyqyinputfile[reference]{ref/style}                    % 参考文献示例, 位置: data/ref.tex  
-\wyqyinputfile[appendix]{data/appendix}                 % 附录示例, 位置: data/appendix.tex
-\wyqyinputfile[resume]{data/resume}                     % 个人简历示例, 位置: data/resume.tex
-\wyqyinputfile[statements]{data/statements}             % 原创性声明和授权书( 仅供测试, 最终提交时请替换为签字扫描件 )
+\tongjiinputfile[acknowledgement]{data/ack}             % 致谢示例, 位置: data/ack.tex
+\tongjiinputfile[reference]{ref/style}                  % 参考文献示例, 位置: data/ref.tex  
+\tongjiinputfile[appendix]{data/appendix}               % 附录示例, 位置: data/appendix.tex
+\tongjiinputfile[resume]{data/resume}                   % 个人简历示例, 位置: data/resume.tex
+\tongjiinputfile[statements]{data/statements}           % 原创性声明和授权书( 仅供测试, 最终提交时请替换为签字扫描件 )
 
 \end{document}
