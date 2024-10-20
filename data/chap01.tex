@@ -7,7 +7,35 @@
 大家好啊，我是一段文字。
 
 % 另一段文字
-我是另一段文字。中文~English~中文，中文（English，En）中文。
+标点挤压测试：我是另一段文字。中文~English~中文，中文（English，En）中文。
+
+横排引号测试：从前有座山，山里有座庙，庙里有两个和尚，小和尚让老和尚讲故事。老和尚说：
+“从前有座山，山里有座庙，庙里有两个和尚，小和尚让老和尚讲故事。老和尚说：
+‘从前有座山，山里有座庙，庙里有两个和尚……’”
+
+For users who wants to use Roman Quotation Marks in English-only text:
+Please use \verb|\tjeng| environment.
+See \href{https://github.com/CTeX-org/ctex-kit/issues/389}{ctex-issue-281} for more information.
+For example:
+
+\begin{tjeng}
+    Nested Quotation Test: A long time ago in a mountain, there was a temple where two monks lived.
+    The young monk asked the old monk to tell a story, and the old monk said:
+    “A long time ago in a mountain, there was a temple where two monks lived.
+    The young monk asked the old monk to tell a story, and the old monk said:
+    ‘A long time ago in a mountain, there was a temple where two monks lived...’”
+\end{tjeng}
+
+Hyphenation Test: -- A --, -- 汉字 --, --- A ---, --- 汉字 ---
+
+Ligature Test: significance, difference, stationary (\textit{Times New Roman} does not support it)
+
+我是普通样式的文字。This is a pain-styled sentence.
+
+\textbf{我是加粗样式的文字。This is a bold-styled sentence.}
+
+\textit{我是斜体样式的文字。This is a italic-styled sentence.}
+
 我是带有脚注的文字 \footnote{我是脚注。}。
 
 \section{公式排版示例}

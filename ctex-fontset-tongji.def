@@ -3,65 +3,18 @@
 \ProvidesExplFile{ctex-fontset-tongji.def}
   {\ExplFileDate}{2.5.10}{\ExplFileDescription}
 
-\ctex_fontset_case:nnnn
-  { \ctex_fontset_error:n { tongji } }
-  {  % pdftex (only for compatibility)
-    \ctex_zhmap_case:nnn
-      {
-        \setCJKmainfont[Path={fonts/}]{SimSun.ttf}
-        \setCJKsansfont[Path={fonts/}]{SimHei.ttf}
-        \setCJKmonofont[Path={fonts/}]{FangSong_GB2312.ttf}
-
-        \setCJKfamilyfont{zhsong}[Path={fonts/}]{SimSun.ttf}
-        \setCJKfamilyfont{zhhei}[Path={fonts/}]{SimHei.ttf}
-        \setCJKfamilyfont{zhkai}[Path={fonts/}]{KaiTi_GB2312.ttf}
-        \setCJKfamilyfont{zhli}[Path={fonts/}]{LiShu.ttf}
-        \setCJKfamilyfont{zhyou}[Path={fonts/}]{SimYou.ttf}
-        \setCJKfamilyfont{zhyahei}[Path={fonts/}]{MSYaHei.ttf}
-
-        \setmainfont{times.ttf}[ % Times New Roman 字体
-          Path = fonts/,
-          BoldFont = timesbd.ttf,
-          ItalicFont = timesi.ttf,
-          BoldItalicFont = timesbi.ttf
-        ]
-        \setmonofont{cour.ttf}[  % Courier New 字体
-          Path = fonts/,
-          BoldFont = courbd.ttf,
-          ItalicFont = couri.ttf,
-          BoldItalicFont = courbi.ttf
-        ]
-
-        \ctex_punct_set:n { tongji }
-        \ctex_punct_map_family:nn   { \CJKrmdefault        } { zhsong  }
-        \ctex_punct_map_family:nn   { \CJKsfdefault        } { zhhei   }
-        \ctex_punct_map_family:nn   { \CJKttdefault        } { zhsong  }
-        \ctex_punct_map_itshape:nn  { \CJKrmdefault        } { zhkai   }
-        \ctex_punct_map_bfseries:nn { \CJKsfdefault, zhhei } { zhheib  }
-        \ctex_punct_map_bfseries:nn
-          { \CJKrmdefault, \CJKttdefault, zhsong }
-          { zhsongb }
-      }
-      {
-        \ctex_load_zhmap:nnnn { rm } { zhhei } { zhsong } { ubuntu }
-        \ctex_punct_set:n { ubuntu }
-        \ctex_punct_map_family:nn   { \CJKrmdefault } { zhsong }
-        \ctex_punct_map_bfseries:nn { \CJKrmdefault } { zhhei  }
-        \ctex_punct_map_itshape:nn  { \CJKrmdefault } { zhkai  }
-      }
-      { \ctex_fontset_error:n { tongji } }
-  }
-  {  % uptex (only for compatibility)
-    \ctex_set_upmap_unicode:nnn { upserif } { fonts/SimSun.ttf } { fonts/SimSun.ttf }
-    \ctex_set_upmap_unicode:nnn { upsans  } { fonts/SimHei.ttf  } { fonts/SimHei.ttf  }
-    \ctex_set_upmap_unicode:nnn { upmono  } { fonts/FangSong_GB2312.ttf } { }
-    \ctex_set_upmap:nnn { upserifit } { fonts/KaiTi_GB2312.ttf  } { }
-    \ctex_set_upfamily:nnn { zhsong } { upzhserif   } { upzhserifb }
-    \ctex_set_upfamily:nnn { zhhei  } { upzhsans    } { upzhsansb  }
-    \ctex_set_upfamily:nnn { zhkai  } { upzhserifit } { }
-  }
+\ctex_fontset_case:nnn
+  { \ctex_fontset_error:n { tongji } } % fail early for pdfTeX
+  { \ctex_fontset_error:n { tongji } } % fail early for upTeX
   {  % xetex / luatex
-    \setCJKmainfont[Path={fonts/}]{SimSun.ttf}
+    \setmainfont{times.ttf}
+      [ Path = {fonts/}, BoldFont = timesbd.ttf, ItalicFont = timesi.ttf, BoldItalicFont = timesbi.ttf ]
+    \setmonofont{cour.ttf}
+      [ Path = {fonts/}, BoldFont = courbd.ttf, ItalicFont = couri.ttf, BoldItalicFont = courbi.ttf ]
+    
+    \setCJKmainfont{SimSun.ttf}
+      [ Path = {fonts/}, BoldFont = SimHei.ttf, ItalicFont = KaiTi_GB2312.ttf ]
+    
     \setCJKsansfont[Path={fonts/}]{SimHei.ttf}
     \setCJKmonofont[Path={fonts/}]{FangSong_GB2312.ttf}
 
@@ -71,19 +24,6 @@
     \setCJKfamilyfont{zhli}[Path={fonts/}]{LiShu.ttf}
     \setCJKfamilyfont{zhyou}[Path={fonts/}]{SimYou.ttf}
     \setCJKfamilyfont{zhyahei}[Path={fonts/}]{MSYaHei.ttf}
-
-    \setmainfont{times.ttf}[ % Times New Roman 字体
-      Path = fonts/,
-      BoldFont = timesbd.ttf,
-      ItalicFont = timesi.ttf,
-      BoldItalicFont = timesbi.ttf
-    ]
-    \setmonofont{cour.ttf}[  % Courier New 字体
-      Path = fonts/,
-      BoldFont = courbd.ttf,
-      ItalicFont = couri.ttf,
-      BoldItalicFont = courbi.ttf
-    ]
   }
 
 \NewDocumentCommand \songti   { } { \CJKfamily { zhsong  } }

@@ -86,9 +86,6 @@
 % (可选) 页眉格式: false = 传统格式 / true = 新格式
 \DeclareBoolOption[true]{newstyle}  % 默认为 true (新格式)
 
-% 强制使用 windows 风格字体, 然后映射到目录下的字体文件
-\PassOptionsToClass{fontset=tongji}{ctexbook}  % 取消字体映射
-
 % ctexbook 配置
 % tex 默认会尽量使得所有 page 的 bottom margins 相等, raggedbottom 允许不同 page 的 bottom margins 不一样, 防止大段材料跨页
 \DeclareBoolOption[true]{raggedbottom}
@@ -122,7 +119,7 @@
 \fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 中文语言支持 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 字体语言支持 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % 以往, 为LATEX 文档配置中文支持是一件相当繁琐的事情
@@ -132,15 +129,20 @@
 % \songti, \heiti, \fangsong, \kaishu, \lishu, \youyuan, \yahei
 % 等价的CJK命令为\CJKfamily{zhsong}等
 
+% 字体编码
+\RequirePackage[T2A, T1]{fontenc} % Cyrillic fonts
+
+% 使用XeTeX引擎时, \pkg{fontspec}宏包会被\pkg{xeCJK}自动调用
+% 传递给 \pkg{fontspec} 宏包\option{no-math}选项, 避免部分数学符号字体自动调整为 CMR
+\PassOptionsToPackage{no-math}{fontspec}
+
+% 强制使用目录下的字体文件
+\PassOptionsToClass{fontset=tongji}{ctexbook}
 
 % 将伪粗体与伪斜体的选项传递给xeCJK package
 \PassOptionsToPackage{AutoFakeBold=1.2,AutoFakeSlant}{xeCJK}
 % 使用CTeX宏包的默认中文字体配置, 支持不同引擎
 \LoadClass[a4paper,openany,UTF8,zihao=-4,scheme=plain]{ctexbook}
-
-% 使用XeTeX引擎时, \pkg{fontspec}宏包会被\pkg{xeCJK}自动调用
-% 传递给 \pkg{fontspec} 宏包\option{no-math}选项, 避免部分数学符号字体自动调整为 CMR
-\PassOptionsToPackage{no-math}{fontspec}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 一般宏包引用 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -295,10 +297,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 文章字体设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% 字体编码
-\RequirePackage[T2A, T1]{fontenc} % Cyrillic fonts
-\defaultfontfeatures{Mapping=tex-text} % 修复引号等字符的显示
-
 % 标题设置 heiti
 % 各级标题格式设置在本文件后边
 \def\tongji@title@font{\heiti}
@@ -424,22 +422,20 @@
   \cleardoublepage % 强迫第一章的首页从右边开始, 在双面打印中, 即奇数页在右边
   \@mainmattertrue
   \pagenumbering{arabic}
-  \pagestyle{tongji@headingmain}
-  % \renewcommand\thesection{\arabic{chapter}.\ \arabic{section}} % 各级标题以及图标序号格式修改(增加序号中点后的空格)
-  % \renewcommand\thesubsection{\arabic{chapter}.\ \arabic{section}.\ \arabic{subsection}}
-  % \renewcommand\thesubsubsection{\arabic{chapter}.\ \arabic{section}.\ \arabic{subsection}.\ \arabic{subsubsection}}
-  % \renewcommand\thefigure{\arabic{chapter}.\ \arabic{figure}}
-  % \renewcommand\thetable{\arabic{chapter}.\ \arabic{table}}
-  }
+  \pagestyle{tongji@headingmain}}
+% \renewcommand\thesection{\arabic{chapter}.\ \arabic{section}} % 各级标题以及图标序号格式修改(增加序号中点后的空格)
+% \renewcommand\thesubsection{\arabic{chapter}.\ \arabic{section}.\ \arabic{subsection}}
+% \renewcommand\thesubsubsection{\arabic{chapter}.\ \arabic{section}.\ \arabic{subsection}.\ \arabic{subsubsection}}
+% \renewcommand\thefigure{\arabic{chapter}.\ \arabic{figure}}
+% \renewcommand\thetable{\arabic{chapter}.\ \arabic{table}}
 \renewcommand\backmatter{%
   \clearpage
-  \@mainmattertrue
-  % \renewcommand\thesection{\Alph{chapter}.\ \arabic{section}} % 附录中的 chapter 需要使用英文标号
-  % \renewcommand\thesubsection{\Alph{chapter}.\ \arabic{section}.\ \arabic{subsection}}
-  % \renewcommand\thesubsubsection{\Alph{chapter}.\ \arabic{section}.\ \arabic{subsection}.\ \arabic{subsubsection}}
-  % \renewcommand\thefigure{\Alph{chapter}.\ \arabic{figure}}
-  % \renewcommand\thetable{\Alph{chapter}.\ \arabic{table}}
-  }
+  \@mainmattertrue}
+% \renewcommand\thesection{\Alph{chapter}.\ \arabic{section}} % 附录中的 chapter 需要使用英文标号
+% \renewcommand\thesubsection{\Alph{chapter}.\ \arabic{section}.\ \arabic{subsection}}
+% \renewcommand\thesubsubsection{\Alph{chapter}.\ \arabic{section}.\ \arabic{subsection}.\ \arabic{subsubsection}}
+% \renewcommand\thefigure{\Alph{chapter}.\ \arabic{figure}}
+% \renewcommand\thetable{\Alph{chapter}.\ \arabic{table}}
 
 % 脚注部分
 % 生成带圈的脚注数字, 最多处理到 10
@@ -1137,6 +1133,14 @@
    \def\xstringintern@args{#1}
    \tongjideletelinebreakcmd{xstringintern@args}{#2}
 }
+
+% 自定义命令 ( 环境 )
+% 使用英文标点, 注意内部不能有汉字: https://github.com/CTeX-org/ctex-kit/issues/389
+\newenvironment{tjeng}{%
+  \xeCJKDeclareCharClass{HalfLeft}{"2018 , "201C}
+  \xeCJKDeclareCharClass{HalfRight}{"00B7 , "2019 , "201D , "2013 , "2014 , "2025 , "2026 , "2027 , "2E3A} }{%
+  \xeCJKResetPunctClass }
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 结束 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -12,7 +12,7 @@
     "latex-workshop.latex.recipe.default": "lastUsed",
     "latex-workshop.intellisense.package.enabled": true,
     "latex-workshop.intellisense.biblatexJSON.replace": {},
-    "latex-workshop.latex.outDir": ".\\.output",
+    "latex-workshop.latex.outDir": "./.output",
     "latex-workshop.latex.recipes": [
         {
             "name": "build",
