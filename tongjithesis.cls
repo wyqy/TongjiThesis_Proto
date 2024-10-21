@@ -306,7 +306,6 @@
   \@setfontsize\normalsize{12bp}{20bp}%
   \abovedisplayskip=10bp % 用来调整math相关的skip
   \@plus 2bp \@minus 2bp % 同样的功能, 详见The texbook
-  
   \abovedisplayshortskip=10bp \@plus 2bp \@minus 2bp
   \belowdisplayskip=\abovedisplayskip
   \belowdisplayshortskip=\abovedisplayshortskip}
