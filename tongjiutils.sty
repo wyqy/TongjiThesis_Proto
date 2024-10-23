@@ -186,36 +186,39 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 毛子符号 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % cyrillic operator
 % refer to: https://tex.stackexchange.com/questions/14633/what-packages-will-let-me-use-cyrillic-characters-in-math-mode
-\DeclareSymbolFont{cyrillicnormal}{T2A}{cmr}{m}{n}
-\DeclareSymbolFont{cyrillicitalic}{T2A}{cmr}{m}{it}
-% #1 for explicit name, #2 for internal name
-\def\makecynormalsymbol#1#2{% 
-  \begingroup\edef\temp{\endgroup
-    \noexpand\DeclareMathSymbol{\noexpand#1}
-    {\noexpand\mathalpha}{cyrillicnormal} % normal shape
-    {\expandafter\expandafter\expandafter
-    \calccyr\expandafter\meaning\csname T2A\string#2\endcsname\end}} % different size
-\temp}
-\def\makecyitalicsymbol#1#2{%
-  \begingroup\edef\temp{\endgroup
-    \noexpand\DeclareMathSymbol{\noexpand#1}
-    {\noexpand\mathalpha}{cyrillicitalic} % normal shape
-    {\expandafter\expandafter\expandafter
-    \calccyr\expandafter\meaning\csname T2A\string#2\endcsname\end}} % different size
-\temp}
-\expandafter\def\expandafter\calccyr\string\char#1\end{#1}
-% d.i.y. cyrillic symbols in math mode
-% capital
-\makecyitalicsymbol\itCyB\CYRB
-\makecyitalicsymbol\itCyG\CYRG
-\makecyitalicsymbol\itCyI\CYRI
-\makecynormalsymbol\rmCyI\CYRI
-\makecyitalicsymbol\rmCyEl\CYRL
-\makecyitalicsymbol\rmCySha\CYRSH
-% little
-\makecyitalicsymbol\itCyb\cyrb
-\makecyitalicsymbol\itCyg\cyrg
-\makecyitalicsymbol\itCyyu\cyryu
-\makecyitalicsymbol\itCyze\cyrz
+\iftongji@cyrillic{%
+  \DeclareSymbolFont{cyrillicnormal}{T2A}{cmr}{m}{n}
+  \DeclareSymbolFont{cyrillicitalic}{T2A}{cmr}{m}{it}
+  % #1 for explicit name, #2 for internal name
+  \def\makecynormalsymbol#1#2{% 
+    \begingroup\edef\temp{\endgroup
+      \noexpand\DeclareMathSymbol{\noexpand#1}
+      {\noexpand\mathalpha}{cyrillicnormal} % normal shape
+      {\expandafter\expandafter\expandafter
+      \calccyr\expandafter\meaning\csname T2A\string#2\endcsname\end}} % different size
+  \temp}
+  \def\makecyitalicsymbol#1#2{%
+    \begingroup\edef\temp{\endgroup
+      \noexpand\DeclareMathSymbol{\noexpand#1}
+      {\noexpand\mathalpha}{cyrillicitalic} % normal shape
+      {\expandafter\expandafter\expandafter
+      \calccyr\expandafter\meaning\csname T2A\string#2\endcsname\end}} % different size
+  \temp}
+  \expandafter\def\expandafter\calccyr\string\char#1\end{#1}
+  % d.i.y. cyrillic symbols in math mode
+  % capital
+  \makecyitalicsymbol\itCyB\CYRB
+  \makecyitalicsymbol\itCyG\CYRG
+  \makecyitalicsymbol\itCyI\CYRI
+  \makecynormalsymbol\rmCyI\CYRI
+  \makecyitalicsymbol\rmCyEl\CYRL
+  \makecyitalicsymbol\rmCySha\CYRSH
+  % little
+  \makecyitalicsymbol\itCyb\cyrb
+  \makecyitalicsymbol\itCyg\cyrg
+  \makecyitalicsymbol\itCyyu\cyryu
+  \makecyitalicsymbol\itCyze\cyrz
+}\fi
+
 
 \endinput

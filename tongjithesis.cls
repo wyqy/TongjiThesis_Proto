@@ -62,13 +62,6 @@
   \tongji@masterfalse \tongji@doctorfalse
   \expandafter\csname tongji@#1true\endcsname}
 
-% (可选) 引用格式: bibtype=[numeric|authoryear] ( 数字式引用 或 作者-年份引用 )
-\newif\iftongji@numeric \tongji@numerictrue  % 数字式引用 (默认)
-\newif\iftongji@authoryear  % 作者-年份引用
-\define@key{tongji}{bibtype}{%
-  \tongji@numericfalse \tongji@authoryearfalse
-  \expandafter\csname tongji@#1true\endcsname}
-
 % (可选) 硕士学位类别: degreetype=[academic|profession|equaleducation] ( 学术型 或 专业型 或 同等学力 )
 \newif\iftongji@academic \tongji@academictrue  % 学术型 (默认)
 \newif\iftongji@profession  % 专业型
@@ -77,20 +70,33 @@
   \tongji@academicfalse \tongji@professionfalse \tongji@equaleducationfalse
   \expandafter\csname tongji@#1true\endcsname}
 
+% (可选) 引用格式: bibtype=[numeric|authoryear] ( 数字式引用 或 作者-年份引用 )
+\newif\iftongji@numeric \tongji@numerictrue  % 数字式引用 (默认)
+\newif\iftongji@authoryear  % 作者-年份引用
+\define@key{tongji}{bibtype}{%
+  \tongji@numericfalse \tongji@authoryearfalse
+  \expandafter\csname tongji@#1true\endcsname}
+
+% (可选) 页眉格式: false = 传统格式 / true = 新格式
+\DeclareBoolOption[true]{newstyle}  % 默认为 true (新格式)
+
+% (可选) 在脚注标记中使用 \pkg{pifont} 的带圈数字(默认打开), 此选项生成的带圈数字更漂亮
+\DeclareBoolOption[true]{pifootnote}
+\DeclareDefaultOption{\PassOptionsToClass{\CurrentOption}{ctexbook}} % 将选项传递给 \pkg{ctexbook}
+
 % (可选) 电子版标注: electronic / 打印时删除
 \DeclareBoolOption{electronic}  % 默认为 false (不显示)
 
 % (可选) 保密标注: 秘密 / 机密/ 绝密 ( 请同时在 cover.tex 中配置相应选项 )
 \DeclareBoolOption{secret}  % 默认为 false (不显示)
 
-% (可选) 页眉格式: false = 传统格式 / true = 新格式
-\DeclareBoolOption[true]{newstyle}  % 默认为 true (新格式)
+% (可选) 是否使用西里尔字母: true = 使用 (需要安装) / false = 不使用
+\DeclareBoolOption[false]{cyrillic}
+
 
 % ctexbook 配置
 % tex 默认会尽量使得所有 page 的 bottom margins 相等, raggedbottom 允许不同 page 的 bottom margins 不一样, 防止大段材料跨页
 \DeclareBoolOption[true]{raggedbottom}
-% 在脚注标记中使用 \pkg{pifont} 的带圈数字(默认打开), 此选项生成的带圈数字更漂亮
-\DeclareBoolOption[true]{pifootnote}
 \DeclareDefaultOption{\PassOptionsToClass{\CurrentOption}{ctexbook}} % 将选项传递给 \pkg{ctexbook}
 
 % 解析用户传递过来的选项, 并加载 \pkg{ctexbook}
@@ -130,7 +136,8 @@
 % 等价的CJK命令为\CJKfamily{zhsong}等
 
 % 字体编码
-\RequirePackage[T2A, T1]{fontenc} % Cyrillic fonts
+\iftongji@cyrillic\RequirePackage[T2A, T1]{fontenc} % Roman + Cyrillic fonts
+  \else\RequirePackage[T1]{fontenc}\fi % Roman fonts only
 
 % 使用XeTeX引擎时, \pkg{fontspec}宏包会被\pkg{xeCJK}自动调用
 % 传递给 \pkg{fontspec} 宏包\option{no-math}选项, 避免部分数学符号字体自动调整为 CMR

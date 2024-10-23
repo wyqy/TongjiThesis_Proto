@@ -17,6 +17,9 @@
 * [TongjiThesis @ marquistj13, CNchence, Wenda, 2020](https://github.com/marquistj13/TongjiThesis);
 * ``Copilot`` \& ``texdoc`` \& ``tex.stackexchange.com``.
 
+免责声明:
+* 本模板附带的字体仅用于`同济大学硕博士论文LaTeX模板`效果展示和`同济大学学位论文`撰写, 版权归属原作者所有, 若需使用请自行获取字体授权
+
 ## 2. 运行环境
 
 > #### ※ Windows / Linux  / Overleaf 等在线编译环境
