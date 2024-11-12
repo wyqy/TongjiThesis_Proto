@@ -39,7 +39,7 @@
 | ---- | ---- |
 | thesis.tex | 主文档 |
 | ctex-fontset-tongji.def, <br>tongjithesis.cfg, <br>tongjithesis.cls | 必需模板文件 |
-| tongjiutils.sty | 可选模板文件 <br>如不需要可删除, 并注释掉  [thesis.tex @ L21](https://github.com/wyqy/TongjiThesis_Proto/blob/main/thesis.tex#L21 ) |
+| tongjiutils.sty | 可选模板文件 <br>如不需要可删除, 并注释掉  [thesis.tex @ L22](https://github.com/wyqy/TongjiThesis_Proto/blob/main/thesis.tex#L22 ) |
 | `data` 目录 | 存放各章对应的 .tex 文件 |
 | `figures` 目录 | 存放模板示例用到的图片文件 |
 | `fonts` 目录 | 存放模板用到的字体 ( 不需要手动安装 ) |
@@ -54,9 +54,9 @@
 > #### ※ 请使用 XeLaTeX 编译 thesis.tex
 > &nbsp;&nbsp;&nbsp;&nbsp;建议使用 VSCode + SumatraPDF, 可调用模板提供的配置文件直接编译和预览
 > #### ※ 需要使用 ``\tongjiinputfile`` 命令导入 `data` 目录下的 .tex 文件 ( 用法详见 thesis.tex )
-> #### ※ 需要提前根据 ``\tongjiinputfile`` 命令的使用次数修改 ``\tongjimathversion`` 的参数 ( 位于 [thesis.tex @ L20](https://github.com/wyqy/TongjiThesis_Proto/blob/main/thesis.tex#L20) )
+> #### ※ 需要提前根据 ``\tongjiinputfile`` 命令的使用次数修改 ``\tongjimathversion`` 的参数 ( 位于 [thesis.tex @ L21](https://github.com/wyqy/TongjiThesis_Proto/blob/main/thesis.tex#L21) )
 > #### ※ 本模板已根据最新的 ``写作示例`` 修订了页眉格式 ( 感谢 [@colderwater666](https://github.com/colderwater666) )
-> &nbsp;&nbsp;&nbsp;&nbsp;如果要返回到旧版, 请参照 [thesis.tex @ L9](https://github.com/wyqy/TongjiThesis_Proto/blob/main/thesis.tex#L9) 的说明, 通过设置 ``newstyle=false`` 还原
+> &nbsp;&nbsp;&nbsp;&nbsp;如果要返回到旧版, 请在第一行的参数部分设置 ``newstyle=false`` 还原
 > #### ※ 本模板配置了 GitHub Action 功能, 如果上传到 GitHub, 可实现自动编译并发布 Release ( [@xu-cheng/latex-action](https://www.github.com/xu-cheng/latex-action/tree/v3/) )
 > &nbsp;&nbsp;&nbsp;&nbsp;GitHub Actions 功能对于私有仓库 __不免费__, 若不需要该功能, 请删去 build-release.yml 文件中的 ``on`` 触发器 (位于 [build-release.yml @ L7-L13](https://github.com/wyqy/TongjiThesis_Proto/blob/main/.github/workflows/build-release.yml#L7-L13))
 

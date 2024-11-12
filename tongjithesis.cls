@@ -1091,7 +1091,7 @@
 % 生成新的 mathversion
 \newcounter{mathversioncount} % 定义计数器
 % 解决报错 Too many math alphabets used in version normal: 每章一个 mathversion
-\newcommand{\wyqymathversion}[1]{\tongjimathversion#1}
+\newcommand{\wyqymathversion}[1]{\tongjimathversion{#1}}
 \newcommand{\tongjimathversion}[1]{
   \loop % 循环生成
     \stepcounter{mathversioncount}
