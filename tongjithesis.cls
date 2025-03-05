@@ -6,14 +6,16 @@
 \def\version{2}
 
 % 工具宏包
-\RequirePackage{ifxetex} % 判断是否为 xetex
-\RequirePackage{filehook} % 魔改宏包
-\RequirePackage{xstring} % 字符串处理宏包
-\RequirePackage{etoolbox} % LATEX kernel commands 的不同实现
-\RequirePackage{xparse} % \newcommand 的替代: \NewDocumentCommand
+\RequirePackage{ifxetex}    % 判断是否为 xetex
+\RequirePackage{filehook}   % 魔改命令宏包
+\RequirePackage{xstring}    % 字符串处理宏包
+\RequirePackage{environ}    % 可编写多段内容的环境
+\RequirePackage{xspace}     % 给自定义的宏后面自动加空白
+\RequirePackage{etoolbox}   % LATEX kernel commands 的不同实现
+\RequirePackage{xparse}     % \newcommand 的替代: \NewDocumentCommand
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 读取配置选项 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 读取配置选项 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % 读取配置
@@ -23,7 +25,7 @@
   prefix=tongji@,
   setkeys=\kvsetkeys}
 
-% COVERLETTERR 配置
+% 封面配置
 % 注意 \define@key 的语法, 即 \define@key{fam}{key}{ 对参数 #1 的处理,即 handler}
 % 使用 kvoptions 的 \define@key 之后, 就可以以 key-val 的方式设置封面的数据了
 \def\tongji@def@term#1{%
@@ -82,7 +84,6 @@
 
 % (可选) 在脚注标记中使用 \pkg{pifont} 的带圈数字(默认打开), 此选项生成的带圈数字更漂亮
 \DeclareBoolOption[true]{pifootnote}
-\DeclareDefaultOption{\PassOptionsToClass{\CurrentOption}{ctexbook}} % 将选项传递给 \pkg{ctexbook}
 
 % (可选) 电子版标注: electronic / 打印时删除
 \DeclareBoolOption{electronic}  % 默认为 false (不显示)
@@ -90,17 +91,14 @@
 % (可选) 保密标注: 秘密 / 机密/ 绝密 ( 请同时在 cover.tex 中配置相应选项 )
 \DeclareBoolOption{secret}  % 默认为 false (不显示)
 
-% (可选) 是否使用西里尔字母: true = 使用 (需要安装) / false = 不使用
-\DeclareBoolOption[false]{cyrillic}
+% (可选) 指定西文字符编码集: T1: 西欧字符集
+\DeclareStringOption[T1]{encoding}
 
-
-% ctexbook 配置
-% tex 默认会尽量使得所有 page 的 bottom margins 相等, raggedbottom 允许不同 page 的 bottom margins 不一样, 防止大段材料跨页
-\DeclareBoolOption[true]{raggedbottom}
-\DeclareDefaultOption{\PassOptionsToClass{\CurrentOption}{ctexbook}} % 将选项传递给 \pkg{ctexbook}
+% 将选项传递给 \pkg{ctexbook}
+\DeclareDefaultOption{\PassOptionsToClass{\CurrentOption}{ctexbook}} 
 
 % 解析用户传递过来的选项, 并加载 \pkg{ctexbook}
-% 强制指定一个degree选项
+% 强制指定一个 degree 选项
 \ProcessKeyvalOptions*
   \iftongji@master\relax\else
     \iftongji@doctor\relax\else
@@ -109,7 +107,7 @@
                     degree=[master | doctor]}{}      
     \fi
   \fi
-% 杜绝非法的degreetype选项
+% 杜绝非法的 degreetype 选项
 \iftongji@academic\relax\else
   \iftongji@profession\relax\else
     \iftongji@equaleducation\relax\else
@@ -117,7 +115,7 @@
     \fi
   \fi
 \fi
-% 杜绝非法的bibtype选项
+% 杜绝非法的 bibtype 选项
 \iftongji@numeric\relax\else
   \iftongji@authoryear\relax\else    
       \ClassError{tongjithesis}{Unknown bib type option.\MessageBreak Please check your bib type option, good luck!}{}  
@@ -125,22 +123,20 @@
 \fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 字体语言支持 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 字体语言支持 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% 以往, 为LATEX 文档配置中文支持是一件相当繁琐的事情
-% 默认情况下, CTEX 宏集能自动检测编译方式和操作系统, 选择合适的底层支持和字库, 从而简化配置过程
-% 在 Windows 操作系统上, 采用的是中易字库 + 微软雅黑
-% CTEX 宏集预定义的中文字库还定义了一些字体命令
-% \songti, \heiti, \fangsong, \kaishu, \lishu, \youyuan, \yahei
-% 等价的CJK命令为\CJKfamily{zhsong}等
+% 本模板重新定义了字体命令, 不再使用系统自带字体, 而是使用 fonts 目录下的自带字体
+% 这样可以防止字体缺失造成的编译失败等问题, 如果有自定义需要, 请修改 ctex-fontset-tongji.def 文件
+% 附: 本模板可用的字体命令: \songti, \heiti, \fangsong, \kaishu, \lishu, \youyuan
+%                           \rmfamily, \sffamily, \ttfamily, \mdseries, \bfseries, \itshape
 
 % 字体编码
-\iftongji@cyrillic\RequirePackage[T2A, T1]{fontenc} % Roman + Cyrillic fonts
-  \else\RequirePackage[T1]{fontenc}\fi % Roman fonts only
+\RequirePackage[\tongji@encoding]{fontenc} % Roman fonts only
+% \RequirePackage[T2A, T1]{fontenc} % Roman + Cyrillic fonts
 
-% 使用XeTeX引擎时, \pkg{fontspec}宏包会被\pkg{xeCJK}自动调用
-% 传递给 \pkg{fontspec} 宏包\option{no-math}选项, 避免部分数学符号字体自动调整为 CMR
+% 使用 XeTeX 引擎时, \pkg{fontspec}宏包会被\pkg{xeCJK}自动调用
+% 传递给 \pkg{fontspec} 宏包 \option{no-math} 选项, 避免部分数学符号字体自动调整为 CMR
 \PassOptionsToPackage{no-math}{fontspec}
 
 % 强制使用目录下的字体文件
@@ -152,95 +148,63 @@
 \LoadClass[a4paper,openany,UTF8,zihao=-4,scheme=plain]{ctexbook}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 一般宏包引用 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 常用宏包引用 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % 数学排版
-\RequirePackage{amsmath, amssymb} % \AmSTeX\ 宏包
-\RequirePackage{mathtools} % 增强数学功能
-\RequirePackage{nicematrix} % 更好的矩阵排版
+\RequirePackage{amsmath, mathtools} % \AmSTeX\ 宏包
+\RequirePackage{amsfonts, amssymb} % 基本数学字体
+\RequirePackage[amsmath,thmmarks,hyperref]{ntheorem} % 定理环境
+% 示例文档还引用了 empheq 等额外的排版宏包, 可在 tongjiutils.sty 中设置
+% 示例文档还引用了 mathalfa 等额外的数学字体, 可在 tongjiutils.sty 中设置
 
-% 数学字体
-\RequirePackage{amsfonts}
-\RequirePackage{mathrsfs} % \mathscr
-\RequirePackage[oldbold,%
-  cal=dutchcal, calscaled=1.00,%
-  scr=boondoxupr, scrscaled=1.00,%
-  bb=libus, bbscaled=1.00]{mathalfa}
-% 符号字体
-\iftongji@pifootnote
-  \RequirePackage{pifont}% pifont有很多Pi fonts, 如Dingbats(杂锦字体), Symbol, etc
-\fi
+% 汉字排版
+\RequirePackage{CJKfntef} % 实现下划线等格式, box 内两端/分散对齐
+% 并可以避免 \cs{makebox}\oarg{width}\oarg{s} 可能产生的 underful boxes
 
-% 图形支持宏包, 支持 eps
-\RequirePackage{graphicx}
-% tikz 绘制图形
-\RequirePackage{tikz}
-% 并排图形
-\RequirePackage[labelformat=simple]{subcaption}
+% 图片排版
+\RequirePackage{graphicx} % 支持导入 eps 图形
+\RequirePackage[labelformat=simple]{subcaption} % 并排图形
 
-% \pkg{pdfpages} 宏包便于我们插入扫描后的授权页和声明页 PDF 文档
-\RequirePackage{pdfpages}
-\includepdfset{fitpaper=true}
-
-% 更好的列表环境: enumerate, itemize and description
+% 列表排版: enumerate, itemize and description
 \RequirePackage[shortlabels]{enumitem}
-% environ使得我们在创建新的环境的时候可以定义new author interface
-\RequirePackage{environ}
 
-% 禁止在留白页(\cs{cleardoublepage})上标记页眉页脚(页码)
-\RequirePackage{emptypage} 
-
-% 页眉页脚样式
-% 禁止自动调整多余的页面底部空白
-% 保持脚注仍然在底部, 并按页编号
-\iftongji@raggedbottom
-  \RequirePackage[bottom,perpage,hang]{footmisc}
-  \raggedbottom
-\else
-  \RequirePackage[perpage,hang]{footmisc}
-\fi
-
-% 利用 \pkg{CJKfntef} 实现汉字的下划线和盒子内两段对齐, 并可以避免
-% \cs{makebox}\oarg{width}\oarg{s} 可能产生的 underful boxes
-\RequirePackage{CJKfntef}
-
-% 定理类环境宏包, 其中 \pkg{amsmath} 选项用来兼容 \AmSTeX\ 的宏包
-\RequirePackage[amsmath,thmmarks,hyperref]{ntheorem}
-
-% 表格控制
+% 表格排版
 \RequirePackage{array}
-\RequirePackage{longtable}
-% 使用三线表: \cs{toprule}, \cs{midrule}, \cs{bottomrule}
-\RequirePackage{booktabs}
-% 采用supertabular实现长表格分页显示
-\RequirePackage{supertabular}
-% 增强表格
-\RequirePackage{threeparttable} % 允许脚注
-\RequirePackage{multirow, makecell} % 表格中支持跨行/列
-\RequirePackage{diagbox} % 表格中的反斜线
-\RequirePackage{tabularx} % 方便定义宽度的表格
-\RequirePackage{slashbox} % 表格中的反斜线
+% 示例文档还引用了 threeparttable 等表格宏包, 可在 tongjiutils.sty 中设置
 
-% 算法宏包
+% 算法宏包, 本模板目前仅兼容 algorithm2e, 相关设置和用法参见 tongjiutils.sty 和示例文档
 \let\old@chapter\@chapter % Store \@chapter
 \RequirePackage[algochapter,linesnumbered,ruled]{algorithm2e}
 \let\@chapter\old@chapter % Restore \@chapter % 避免章间空隙
 % https://tex.stackexchange.com/questions/237388/remove-vertical-space-after-new-chapters-in-listofalgorithms
 
-% 其它宏包
-\RequirePackage[ntheorem]{empheq}
-\RequirePackage{stackengine}
-\RequirePackage{ulem, cases}
+% (可选) 符号字体
+\iftongji@pifootnote
+  \RequirePackage{pifont}% pifont有很多 Pi fonts, 如 Dingbats(杂锦字体), Symbol, etc
+\fi
 
-% 确定浮动对象的位置, 可以使用~H, 强制将浮动对象放到这里(可能效果很差)
-\RequirePackage{float}
+% 插入 PDF 文档( 扫描后的授权页和声明页 )
+\RequirePackage{pdfpages}
+\includepdfset{fitpaper=true}
+
+\RequirePackage{fancyhdr} % 设置页眉页脚
+\RequirePackage{emptypage} % 禁止在留白页上标记页眉页脚(页码)
+
+% 页眉页脚对齐
+% tex 默认会设法使所有页面的 bottom margins 相等
+\raggedbottom  % 本模板指定 raggedbottom 选项, 允许不同页面的 bottom margins 不一样, 防止大段材料跨页
+\RequirePackage[bottom,perpage,hang]{footmisc} % 禁止自动调整多余的页面底部空白, 保持脚注仍然在底部, 并按页编号
+% 如果需要调整这种行为, 可注释掉上述命令, 使用 \RequirePackage[perpage,hang]{footmisc}
+% 详细行为请参考 latex-2e 标准文档和 footmisc 宏包文档
+
 % 浮动图形控制宏包
+\RequirePackage{float} % 确定浮动对象的位置, 可以使用~H 强制将浮动对象放到这里(可能效果很差)
 % 允许上一个~section 的浮动图形出现在下一个~section 的开始部分
-% 该宏包提供处理浮动对象的~|\FloatBarrier| 命令, 使所有未处理的浮动图形立即被处理
+
 % 这三个宏包仅供参考, 未必使用: 
-% \RequirePackage[below]{placeins}
-% \RequirePackage{floatflt} % 图文混排用宏包
+% \RequirePackage[below]{placeins} % 提供~|\FloatBarrier| 命令, 强制处理未处理的浮动图形
+% \RequirePackage{floatflt} % 提供~|floatingfigure| 和~|floatingtable| 环境, 用于浮动图形和表格
 % \RequirePackage{rotating} % 图形和表格的控制旋转
 
 % 参考文献引用: biblatex
@@ -260,7 +224,7 @@
 \DefineBibliographyStrings{english}{in={}}  % 去掉中文析出文献的 in 符号
 \DefineBibliographyStrings{english}{incn={}} % 去掉中文析出文献的 // 符号
 
-% 生成有书签的 pdf 及其开关, 请结合 gbk2uni 避免书签乱码
+% 生成有书签的 pdf 及其开关
 \RequirePackage{hyperref}
 \ifxetex
   \hypersetup{%
@@ -297,16 +261,9 @@
 	headsep=5.4mm,	% 页眉距顶端要求 2cm. 即25.4-20=5.4
 	footskip=5.4mm}	%\footskip指的是正文最后一行距离页脚的距离(baseline)
 
-\RequirePackage{fancyhdr} % 利用 \pkg{fancyhdr} 设置页眉页脚
-\RequirePackage{xspace} % 给自定义的宏后面自动加空白
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 文章字体设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 文章字体设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% 标题设置 heiti
-% 各级标题格式设置在本文件后边
-\def\tongji@title@font{\heiti}
 
 % 正文小四号 (12bp) 字, 行距为固定值 20 bp
 \renewcommand\normalsize{%
@@ -316,15 +273,15 @@
   \abovedisplayshortskip=10bp \@plus 2bp \@minus 2bp
   \belowdisplayskip=\abovedisplayskip
   \belowdisplayshortskip=\abovedisplayshortskip}
-% \fontsize的内部实现就是: 
+% \fontsize 的内部实现就是: 
 % \DeclareRobustCommand{\fontsize}[2]{\set@fontsize \baselinestretch {#1}{#2}}
-% 而\@setfontsize具有三个参数, 对于我们上面的用法\@setfontsize\normalsize{12bp}{20bp}
+% 而 \@setfontsize 具有三个参数, 对于我们上面的用法 \@setfontsize\normalsize{12bp}{20bp}
 % 展开为: 
 % \@nomath\normalsize
 % \ifx\protect\@typeset@protect\let\@currsize\normalsize\fi
 % \fontsize{12bp}{20bp}\selectfont
-% 第一行确保LaTeX to disallow \normalsize in math mode
-% 第二行将\@currsize设为\normalsize, 第三行调用\fontsize, 字体12bp, 行距20bp
+% 第一行确保 LaTeX to disallow \normalsize in math mode
+% 第二行将 \@currsize设为\normalsize, 第三行调用\fontsize, 字体12bp, 行距20bp
 % 以上解释来自: https://tex.stackexchange.com/questions/112492/setfontsize-vs-fontsize
 
 % 根据习惯定义字号
@@ -365,10 +322,10 @@
 \setlist{nosep}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 文章页面设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 文章页面设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% 修改 \cs{chaptermark}, 导致页眉多余章号并且英文大写的问题
+% 修改 \cs{chaptermark}, 解决页眉多余章号并且英文大写的问题
 \AtBeginDocument{%
   \pagestyle{tongji@empty}
   \renewcommand{\chaptermark}[1]{%
@@ -380,7 +337,7 @@
 \iftongji@newstyle\def\xparameter@heading@even{CE}\else\def\xparameter@heading@even{LE}\fi
 \iftongji@newstyle\def\xparameter@heading@mainleft{\leftmark}\else\def\xparameter@heading@mainleft{\tongji@schoolname~\tongji@capply~\tongji@cheadingtitlenew}\fi
 \iftongji@newstyle\def\xparameter@heading@mainright{\leftmark}\else\def\xparameter@heading@mainright{\leftmark}\fi
-\iftongji@newstyle\newcommand{\xparameter@heading@cother}[1]{#1}\else\newcommand{\xparameter@heading@cother}[1]{\wuhao\songti\tongji@schoolname~\tongji@capply~#1}\fi
+\iftongji@newstyle\newcommand{\xparameter@heading@cother}[1]{#1}\else\newcommand{\xparameter@heading@cother}[1]{\songti\wuhao\tongji@schoolname~\tongji@capply~#1}\fi
 \iftongji@newstyle\newcommand{\xparameter@heading@eother}[1]{#1}\else\newcommand{\xparameter@heading@eother}[1]{\wuhao\tongji@eschoolname~\; the degree of Master \;~#1}\fi
 
 % \texttt{tongji@empty}: 页眉页脚都没有
@@ -396,21 +353,21 @@
   \renewcommand{\headrulewidth}{0pt}
   \renewcommand{\footrulewidth}{0pt}}
 
-% 正文样式: 页眉页脚同时显示 (可选择是否页眉居中)
+% 页眉页脚同时显示 (可选择是否页眉居中)
 \fancypagestyle{tongji@headingmain}{%
   \fancyhead{}
-  \fancyhead[\xparameter@heading@odd]{\wuhao\songti\xparameter@heading@mainleft}
-  \fancyhead[\xparameter@heading@even]{\wuhao\songti\xparameter@heading@mainright}
+  \fancyhead[\xparameter@heading@odd]{\psfamily\wuhao\xparameter@heading@mainleft}
+  \fancyhead[\xparameter@heading@even]{\psfamily\wuhao\xparameter@heading@mainright}
   \fancyfoot{}
   \fancyfoot[C]{\songti\wuhao\thepage}
   \renewcommand{\headrulewidth}{0.4pt}
   \renewcommand{\footrulewidth}{0pt}}
 
-% 附录样式: 页眉页脚同时显示, 且左右相同 (可选择是否页眉居中)
+% 页眉页脚同时显示, 且左右相同 (可选择是否页眉居中)
 \fancypagestyle{tongji@headingappendix}{%
   \fancyhead{}
-  \fancyhead[\xparameter@heading@odd]{\wuhao\songti\xparameter@heading@cother{\appendixname}}
-  \fancyhead[\xparameter@heading@even]{\wuhao\songti\xparameter@heading@cother{\appendixname}}
+  \fancyhead[\xparameter@heading@odd]{\psfamily\wuhao\xparameter@heading@cother{\appendixname}}
+  \fancyhead[\xparameter@heading@even]{\psfamily\wuhao\xparameter@heading@cother{\appendixname}}
   \fancyfoot{}
   \fancyfoot[C]{\songti\wuhao\thepage}
   \renewcommand{\headrulewidth}{0.4pt}
@@ -423,7 +380,7 @@
   \pagenumbering{Roman}
   \pagestyle{tongji@empty}
   }
-% 注意 \mainmatter的heading 设置除此之外, 还有 \ctexset 的 pagestyle 域
+% 注意 \mainmatter的 heading 设置除此之外, 还有 \ctexset 的 pagestyle 域
 \renewcommand\mainmatter{%
   \cleardoublepage % 强迫第一章的首页从右边开始, 在双面打印中, 即奇数页在右边
   \@mainmattertrue
@@ -470,7 +427,7 @@
 \renewcommand{\footnote}[1]{\oldfootnote{#1\vspace{2.1pt}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 断行分页设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 断行分页设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % 允许太长的公式断行, 分页等
@@ -500,7 +457,7 @@
 % only floats.)被浮动对象占的比例最少是0.6
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 图表样式设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 图表样式设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % 定制浮动图形和表格标题样式
@@ -550,26 +507,24 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 目录样式设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 目录样式设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % 各级标题格式设置
 % 同济的英文摘要以及各章标题都要加粗, 故不需要\ifthenelse{<test>}{<then clause>}{<else clause>}的判断了
 \ctexset{%
   chapter={ % 章标题
-    afterindent=true,               % afterindent 选项用于设置章节标题后首段的缩进
-    pagestyle={tongji@headingmain}, % 这句用来保证章首页的页眉正确
-                                    % 注意我们在前面 \mainmatter 时已经定义过 \pagestyle{tongji@headingmain}了, 但这里必须再重新应用一次, 用来保证章首页的页眉正确
+    afterindent=true,               % 设置章节标题后首段的缩进
+    pagestyle={tongji@headingmain}, % 保证章首页的页眉正确
     beforeskip={2bp},               % 设置章节标题前的垂直间距
-    aftername=\hskip\ccwd,          % 控制章节编号与标题内容之间的距离
-                                    % \ccwd 为一个汉字的宽度，在 ctex 宏集中有介绍
+    aftername=\hskip\ccwd,          % 控制章节编号与标题内容之间的距离, 其中 \ccwd 为一个汉字的宽度
     afterskip={18bp},               % 控制章节标题与后面下方之间的距离
-    format={\centering\bfseries\tongji@title@font\sanhao[1.8]},
-                                    % format 项用于控制章节标题的全局格式, 作用域为章节名字和随后的标题内容
+    format={\centering\bfseries\phfamily\sanhao[1.8]},
+                                    % 控制章节标题的全局格式, 作用域为章节名字和随后的标题内容
                                     % 可以用于控制章节标题的对齐方式, 整体字体字号等格
     nameformat=\relax,
     numberformat=\relax,
-    titleformat=\bfseries,
+    titleformat=\relax,
     lofskip=0pt,                    % 控制插图目录(.lof)中, 章之间的插图标题的距离
     lotskip=0pt,                    % 控制表格目录(.lot)中, 章之间的表格标题的距离
     % loaskip=0pt,
@@ -578,22 +533,22 @@
     afterindent=true,
     beforeskip={24bp \@plus 1ex \@minus .2ex},
     afterskip={13bp \@plus .2ex},
-    format={\tongji@title@font\xiaosan[1.8]},
-	numberformat={\tongji@title@font\sanhao[1]},
+    format={\phfamily\xiaosan[1.8]},
+	numberformat={\phfamily\sanhao[1]},
   },
   subsection={
     afterindent=true,
     beforeskip={12bp \@plus 1ex \@minus .2ex},
     afterskip={13bp \@plus .2ex},
-    format={\tongji@title@font \sihao[1.8]},
-    numberformat={\tongji@title@font\xiaosan[1]},
+    format={\phfamily\sihao[1.8]},
+    numberformat={\phfamily\xiaosan[1]},
   },
   subsubsection={
     afterindent=true,
     beforeskip={12bp \@plus 1ex \@minus .2ex},
     afterskip={13bp \@plus .2ex},
-    format={\tongji@title@font\xiaosi[1.8]},
-	numberformat={\tongji@title@font\banxiaosi[1]},
+    format={\phfamily\xiaosi[1.8]},
+	numberformat={\phfamily\banxiaosi[1]},
   },
   paragraph/afterindent=true,
   subparagraph/afterindent=true}
@@ -615,11 +570,11 @@
     \ClassError{tongjithesis}{You have to use the star form: \string\tongji@chapter*}{}
   }%
   \clearpage 
-  \phantomsection % \phantomsection是给 hyperref 用的, 使它能够跳转到正确的页面
+  \phantomsection % \phantomsection 是给 hyperref 用的, 使它能够跳转到正确的页面
   % in other words it puts a hyper marker on the page
   % For example a starred section or chapter added to the TOC would normally refer to the wrong place without \phantomsection
   % \IfValueTF {<argument>} {<true code>} {<false code>}
-  \IfValueTF{#2}{% 若第一个o对应的可选参数没有提供, 那么#2=-NoValue-,此判断为false
+  \IfValueTF{#2}{% 若第一个o对应的可选参数没有提供, 那么 #2=-NoValue-,此判断为 false
     \ifthenelse{\equal{#2}{}}{% 第二个参数有, 但为空, 此 chapter 不出现在目录中
       \addtocounter{tongji@bookmark}\@ne
       \pdfbookmark[0]{#3}{tongjichapter.\thetongji@bookmark}}
@@ -627,7 +582,7 @@
       \addcontentsline{toc}{chapter}{#2}
       % \addcontentsline{file}{sec_unit}{entry}
       % file是文件扩展名: toc (table of contents), lof (list of figures), or lot (list of tables).
-      % sec_unit, 对于toc来说就是这些名字: part, chapter, section 等
+      % sec_unit, 对于 toc 来说就是这些名字: part, chapter, section 等
     }
   }
   {% 若没有指定该参数(即#2=-NoValue-), 表示目录出现title
@@ -667,12 +622,10 @@
 % The setting\setcounter{secnumdepth}{level} suppresses heading numbers at any depth > level,
 
 % 每章标题行前空 6 磅, 后空 0 磅
-% 如果目录项的英文要使用 Arial, 那么就加上 \cs{sffamily}
-% 章节名中英文用 Arial 字体, 页码仍用 Times
 % 减小目录项中的导引小点跟页码之间的留白
 % 目录生成命令
 \renewcommand\tableofcontents{%
-  \tongji@chapter*[]{\contentsname}[\xparameter@heading@cother{\contentsname}]
+  \tongji@chapter*[]{\contentsname}[\psfamily\xparameter@heading@cother{\contentsname}]
   \xiaosi[1.5]\@starttoc{toc}\normalsize\clearpage}
 
 
@@ -681,17 +634,17 @@
 \RequirePackage{titletoc}
 \contentsmargin{0em}
 \titlecontents{chapter}[0em]{\filright}%
-    {\xiaosi\songti\thecontentslabel\enspace}%
-        {\xiaosi\songti}{\dotfill\contentspage}[\addvspace{0pt}]
+    {\songti\xiaosi\thecontentslabel\enspace}%
+        {\songti\xiaosi}{\dotfill\contentspage}[\addvspace{0pt}]
 \titlecontents{section}[1em]{\addvspace{0pt}}%
-    {\xiaosi\songti \thecontentslabel\enspace}%
-        {\xiaosi\songti}{\dotfill\contentspage}[\addvspace{0pt}]
+    {\songti\xiaosi \thecontentslabel\enspace}%
+        {\songti\xiaosi}{\dotfill\contentspage}[\addvspace{0pt}]
 \titlecontents{subsection}[2em]{\addvspace{0pt}}%
-    {\xiaosi\songti\thecontentslabel\enspace}%
-        {\xiaosi\songti}{\dotfill\contentspage}[\addvspace{0pt}]
+    {\songti\xiaosi\thecontentslabel\enspace}%
+        {\songti\xiaosi}{\dotfill\contentspage}[\addvspace{0pt}]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 论文摘要设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 论文摘要设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % 摘要
@@ -722,7 +675,7 @@
 \tongji@parse@keywords{ekeywords}
 \newcommand{\tongji@makeabstract}{%
   \cleardoublepage % always openright for Abstract
-  \tongji@chapter*[]{\tongji@cabstractname}[\xparameter@heading@cother{\tongji@cabstractname}] % no tocline
+  \tongji@chapter*[]{\tongji@cabstractname}[\rmfamily\xparameter@heading@cother{\tongji@cabstractname}] % no tocline
   \pagenumbering{Roman}
   \tongji@cabstract
   \vskip12bp
@@ -730,7 +683,7 @@
   \noindent\hangindent\wd0\hangafter1
     \box0\tongji@ckeywords
   % \cleardoublepage % always openright for Abstract  
-  \tongji@chapter*[]{\tongji@eabstractname}[\xparameter@heading@eother{\tongji@eabstractname}] % no tocline
+  \tongji@chapter*[]{\tongji@eabstractname}[\rmfamily\xparameter@heading@eother{\tongji@eabstractname}] % no tocline
   \tongji@eabstract
   \vskip12bp
   \setbox0=\hbox{{\bfseries\tongji@ekeyword@title}}
@@ -738,13 +691,13 @@
     \box0\tongji@ekeywords}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 符号列表设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 符号列表设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
 % 主要符号对照表  
 % 基于清华模板, 利用 \pkg{enumitem} 改造环境定义
 \NewDocumentEnvironment{denotation}{O{3.5cm}}{%
-  \tongji@chapter*{\tongji@denotationname}[\xparameter@heading@cother{\tongji@denotationname}]
+  \tongji@chapter*{\tongji@denotationname}[\psfamily\xparameter@heading@cother{\tongji@denotationname}]
   \vskip-30bp\xiaosi[1.6]\begin{tongji@denotation}[labelwidth=#1]
 }{%
   \end{tongji@denotation}
@@ -763,7 +716,7 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 图表索引设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 图表索引设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % 定义索引样式
@@ -776,16 +729,16 @@
   \setcounter{tocdepth}{2} % restore tocdepth in case being modified
   \@ifstar
     {%带星的不加入目录, 如\listoftables*
-      \tongji@chapter*[]{\csname list#1name\endcsname}[\xparameter@heading@cother\expandafter{\csname list#1name\endcsname}]
+      \tongji@chapter*[]{\csname list#1name\endcsname}[\psfamily\xparameter@heading@cother\expandafter{\csname list#1name\endcsname}]
       \tongji@starttoc{#1}
       \clearpage}
     {%加入目录
-      \tongji@chapter*{\csname list#1name\endcsname}[\xparameter@heading@cother\expandafter{\csname list#1name\endcsname}]
+      \tongji@chapter*{\csname list#1name\endcsname}[\psfamily\xparameter@heading@cother\expandafter{\csname list#1name\endcsname}]
       \tongji@starttoc{#1}
       \clearpage}
   \titlecontents{#1}[0em]{\filright}%设定索引样式
-    {\xiaosi\songti\thecontentslabel\enspace}%
-      {\xiaosi\songti}{\dotfill\contentspage}[\addvspace{0pt}]
+    {\songti\xiaosi\thecontentslabel\enspace}%
+      {\songti\xiaosi}{\dotfill\contentspage}[\addvspace{0pt}]
   \contentsuse{#1}{\csname ext@#1\endcsname}
 }
 
@@ -818,17 +771,17 @@
 \newcommand\listofequations{\tongji@listof{equation}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 致谢声明设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 致谢声明设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % 设置文档环境
 \NewDocumentEnvironment{acknowledgement}{}{%
-  \tongji@chapter*{\tongji@acknowname}[\xparameter@heading@cother{\tongji@acknowname}] 
+  \tongji@chapter*{\tongji@acknowname}[\psfamily\xparameter@heading@cother{\tongji@acknowname}] 
   \fangsong}
   {\clearpage}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 参考文献设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 参考文献设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % 兼容参考文献的老命令
@@ -842,11 +795,11 @@
 
 % 设置文档环境
 \NewDocumentEnvironment{reference}{}{%
-  \tongji@chapter*{\tongji@referencename}[\xparameter@heading@cother{\tongji@referencename}]}
+  \tongji@chapter*{\tongji@referencename}[\psfamily\xparameter@heading@cother{\tongji@referencename}]}
   {\clearpage}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 附录样式设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 附录样式设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % 设置文档环境
@@ -862,18 +815,18 @@
   \let\title\@gobble \clearpage}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 个人简历设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 个人简历设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \NewDocumentEnvironment{resume}{}{%
-  \tongji@chapter*{\tongji@resumename}[\xparameter@heading@cother{\tongji@resumename}] 
+  \tongji@chapter*{\tongji@resumename}[\psfamily\xparameter@heading@cother{\tongji@resumename}] 
   \wuhao[1.5] \setlist[enumerate,1]{leftmargin=2em}} % 设置enumerate左间隙距离
   {\clearpage}
 
-\newcommand{\resumeitem}[1]{\vspace{2.5em}{\bfseries\wuhao\heiti\leftline{#1}}\par}
+\newcommand{\resumeitem}[1]{\vspace{2.5em}{\bfseries\heiti\wuhao\leftline{#1}}\par}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 原创声明设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 原创声明设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \NewDocumentEnvironment{statements}{}{
@@ -881,7 +834,7 @@
   {\clearpage}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 封面格式设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 封面格式设置 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % \parbox[position][height][inner-pos]{width}{text}
@@ -897,7 +850,7 @@
       \iftongji@secret{\sanhao\tongji@secret@title}
       \else\rule{1cm}{0cm} \fi % 是否显示密级
       \\[0.1cm]
-      \iftongji@electronic{{\kaishu\xiaosi\bfseries\itshape\tongji@thesistype (打印时删除)}}
+      \iftongji@electronic{{\bfseries\itshape\kaishu\xiaosi\tongji@thesistype (打印时删除)}}
       \else\rule{1cm}{0cm} \fi % 是否显示打印时删除
     }
     \\[-.9cm]
@@ -916,7 +869,7 @@
         \fi \fi \fi \par
 
         \parbox[t]{\paperwidth-7cm}{\begin{center}\zihao{-4}\linespread{1.0}\selectfont
-          \erhao[2]{\bfseries\heiti\tongji@ctitle} % title
+          \erhao[2]{\bfseries\sffamily\tongji@ctitle}% 中文标题
         \end{center}}
         \par\vskip -0.3cm
 
@@ -930,10 +883,10 @@
     \hspace*{1.2cm}
     \parbox[t][11cm][t]{\textwidth}{
       {
-        \fangsong\sanhao[1.5]        
+        \fangsong\sanhao[1.5]
         \begin{center}
-          \setlength{\extrarowheight}{4pt}          
-          \iftongji@profession % 专业学位
+          \setlength{\extrarowheight}{4pt}
+          \iftongji@profession% 专业学位
               \setlength{\tongji@title@width}{7em}
               \ifxetex \begin{tabular}{p{\tongji@title@width}@{}c@{\extracolsep{8pt}}p{7cm}l}
               \else \begin{tabular}{p{\tongji@title@width}c@{\extracolsep{8pt}}p{7cm}l} \fi
@@ -951,7 +904,7 @@
               \ifx\tongji@cjointinstitution\@empty\else
                   \tongji@put@title{\tongji@cjointinstitutiontitle}  & \tongji@title@sep & \tongji@cjointinstitution  \\
               \fi
-          \else % 学术学位
+          \else% 学术学位
               \ifx\tongji@cassosupervisor\@empty \setlength{\tongji@title@width}{5em}
               \else \setlength{\tongji@title@width}{6em} \fi
               \ifxetex \begin{tabular}{p{\tongji@title@width}@{}c@{\extracolsep{8pt}}p{7cm}l}
@@ -976,7 +929,7 @@
     }
 
     \begin{center}
-      {\sanhao\songti\tongji@cdate}
+      {\songti\sanhao\tongji@cdate}
     \end{center}
   \end{center}
 } % end of titlepage
@@ -988,7 +941,7 @@
       \vspace*{0.8cm}
       \parbox[t][1.8cm][t]{\textwidth}{
         \centering\hspace*{.3cm}
-       \includegraphics[width=10cm]{tongji-whole-logo.pdf}
+        \includegraphics[width=10cm]{tongji-whole-logo.pdf}
       } % logo
       \\[-.6cm]
       
@@ -998,7 +951,7 @@
           \else \iftongji@master \sihao[1.3]{\tongji@eapplymaster}
           \fi \fi \par\vskip 1.4cm
 
-          \xiaoer[1.5]{\bfseries\sffamily\tongji@etitle}
+          \xiaoer[1.5]{\bfseries\sffamily\tongji@etitle}% 英文标题
           \par% \vskip 14pt
 
           \ifx\efunds\@empty\else\xiaosi[1.3]{\tongji@efunds}\fi
@@ -1073,19 +1026,7 @@
   \let\@tabular\tongji@tabular}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 书脊设置(失效) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% 书脊
-% 单独使用书脊命令会在新的一页产生竖排书脊
-\NewDocumentCommand{\shuji}{O{\tongji@cheadingtitlenew} O{\tongji@cauthortitle}}{%
-  \newpage\thispagestyle{tongji@empty}%
-  \fangsong\ifxetex\addCJKfontfeatures*{RawFeature={vertical:}}\fi
-  \xiaosan\ziju{0.4}%
-  \noindent\hfill\rotatebox[origin=lt]{-90}{\makebox[\textheight]{#1\hfill#2}}}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 自定义指令 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 自定义 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % 生成新的 mathversion
@@ -1149,7 +1090,7 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 结束 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 结束 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % 在模板文档结束时即装入配置文件, 这样用户就能在导言区进行相应的修改

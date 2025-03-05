@@ -1,4 +1,4 @@
-\chapter{引言}
+\chapter{中文引言~English Introduction~中文引言}
 \label{chap:intro}
 
 \section{文字排版示例}
@@ -8,6 +8,10 @@
 
 % 另一段文字
 标点挤压测试：我是另一段文字。中文~English~中文，中文（English，En）中文。
+
+汉字排版测试:
+我是一段\CJKunderdot{加点和\CJKunderline{下划线的汉字}}。
+我是一段\CJKunderline{加下划线和\CJKunderdot{点的汉字}}。
 
 横排引号测试：从前有座山，山里有座庙，庙里有两个和尚，小和尚让老和尚讲故事。老和尚说：
 “从前有座山，山里有座庙，庙里有两个和尚，小和尚让老和尚讲故事。老和尚说：
@@ -62,9 +66,9 @@ Ligature Test: significance, difference, stationary (\textit{Times New Roman} do
 \end{align} \end{subequations}
 下面展示了一组带有左大括号和子公式编号的公式~\ref{eq:3}：
 \begin{subequations} \label{eq:3} \begin{empheq}[left={\empheqlbrace\,}]{align}
-    \vec{x}(\indn+1) &= \mat{A}\sps[d] \vec{x}(\indn) + \mat{B}\sps[d] \vec{u}(\indn) + \vec{z}\sps[x](\indn), \label{eq:3:a} \\
-    \vec{y}\sps[n](\indn) &= \mat{C}\sps[d] \vec{x}(\indn) + \mat{D}\sps[d] \vec{u}(\indn) + \vec{z}\sps[y](\indn), \label{eq:3:b} \\
-    \vec{u}\sps[n](\indn) &= \vec{u}(\indn) + \vec{z}\sps[u](\indn). \label{eq:3:c}
+    \vec{x}(n+1) &= \mat{A}\sps[d] \vec{x}(n) + \mat{B}\sps[d] \vec{u}(n) + \vec{z}\sps[x](n), \label{eq:3:a} \\
+    \vec{y}\sps[n](n) &= \mat{C}\sps[d] \vec{x}(n) + \mat{D}\sps[d] \vec{u}(n) + \vec{z}\sps[y](n), \label{eq:3:b} \\
+    \vec{u}\sps[n](n) &= \vec{u}(n) + \vec{z}\sps[u](n). \label{eq:3:c}
 \end{empheq} \end{subequations}
 
 \section{引用排版示例}
@@ -109,9 +113,9 @@ Ligature Test: significance, difference, stationary (\textit{Times New Roman} do
         % nodes
         % frame 1 - measurement
         \node[roundrect node]
-            (timeinit) { 生成满足定义~\ref{eq:3} 的采样时刻~$\setT\sps[ua]$, $\setT\sps[ya]$ };
+            (timeinit) { 生成满足定义~\ref{eq:3} 的采样时刻~$\mathbb{T}\sps[ua]$, $\mathbb{T}\sps[ya]$ };
         \node[roundrect node, below = of timeinit]
-            (experiment) { 根据采样时刻进行实验，收集数据~$\setS\sps[ua]$、$\setS\sps[ya]$ };
+            (experiment) { 根据采样时刻进行实验，收集数据~$\mathbb{S}\sps[ua]$、$\mathbb{S}\sps[ya]$ };
         % frame 2 - calculation
         \node[roundrect node, below = of experiment, yshift = -16pt]
         (freqest) { 计算不变子空间参数~$\hat{\vec{U}}\sps[a]$、$\hat{\vec{Y}}\sps[a]$ };
@@ -180,7 +184,7 @@ Ligature Test: significance, difference, stationary (\textit{Times New Roman} do
     \LinesNumbered \SetAlgoLined
     \caption{我是一个带有注释的算法} \label{algorithm:1}
     \KwData{$\mat{Y}_N\sps[nd]$、$\mat{U}_N\sps[nd]$。}
-    \KwResult{$\hat{\mat{\Xi}}\ups[yy,\indl]\sps[d]$、$\hat{\mat{\Xi}}\ups[uu]\sps[d]$。}
+    \KwResult{$\hat{\mat{\Xi}}\ups[yy,l]\sps[d]$、$\hat{\mat{\Xi}}\ups[uu]\sps[d]$。}
     
     \tcc{1. 计算参数1}
     $\hat{\mathbcal{Y}}\sps[rd] \leftarrow \FFT(\mat{Y}_N\sps[nd])$、$\hat{\mathbcal{U}}\sps[rd] \leftarrow \FFT(\mat{U}_N\sps[nd])$ \tcpright{逐列计算 FFT}
@@ -190,10 +194,10 @@ Ligature Test: significance, difference, stationary (\textit{Times New Roman} do
     $\hat{\mathbcal{Y}}\ups[1]\sps[rd] \leftarrow \RESHAPE(\hat{\mathbcal{Y}}\sps[rd],[p \; 1 \; N])$、$\hat{\mathbcal{Y}}\ups[2]\sps[rd] \leftarrow \overline{\RESHAPE(\hat{\mathbcal{Y}}\sps[rd],[1 \; p \; N])}$\;
     $\hat{\mathbcal{Y}}\ups[yy]\sps[rd] \leftarrow \PAGEMTIMES(\hat{\mathbcal{Y}}\ups[1]\sps[rd], \hat{\mathbcal{Y}}\ups[2]\sps[rd])$\;
     $\hat{\mathbcal{y}}\ups[yy]\sps[rd] \leftarrow \IFFT(\hat{\mathbcal{Y}}\ups[yy]\sps[rd])$ \tcpright{对最后一维计算 IFFT}
-    $\hat{\mat{\Xi}}\ups[yy,\indl]\sps[d] \leftarrow \frac{1}{N} \times \RESHAPE[(\hat{\mathbcal{y}}\ups[yy]\sps[rd])_{\text{切片：}[:,:,\indl]}] - \sum_{\indn=0}^{\indl-1}{x(\indn)\overline{y(N-\indl+\indn)}}$\;
+    $\hat{\mat{\Xi}}\ups[yy,l]\sps[d] \leftarrow \frac{1}{N} \times \RESHAPE[(\hat{\mathbcal{y}}\ups[yy]\sps[rd])_{\text{切片：}[:,:,l]}] - \sum_{n=0}^{l-1}{x(n)\overline{y(N-l+n)}}$\;
 
     \tcc{3. 计算参数3}
     $\hat{\mat{\Xi}}\ups[uu]\sps[d] \leftarrow \frac{1}{N^2} \times (\hat{\mathbcal{U}}\sps[rd])\tr \overline{\hat{\mathbcal{U}}\sps[rd]}$\;
 
-    \Return $\hat{\mat{\Xi}}\ups[yy,\indl]\sps[d]$（$\indl = 0,\ldots,M-1$）、$\hat{\mat{\Xi}}\ups[uu]\sps[d]$.
+    \Return $\hat{\mat{\Xi}}\ups[yy,l]\sps[d]$（$l = 0,\ldots,M-1$）、$\hat{\mat{\Xi}}\ups[uu]\sps[d]$.
 \end{algorithm}

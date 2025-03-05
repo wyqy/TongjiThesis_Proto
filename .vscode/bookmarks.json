@@ -1,0 +1,104 @@
+{
+	"files": [
+		{
+			"path": "tongjithesis.cls",
+			"bookmarks": [
+				{
+					"line": 17,
+					"column": 0,
+					"label": "读取配置选项"
+				},
+				{
+					"line": 125,
+					"column": 0,
+					"label": "字体语言支持"
+				},
+				{
+					"line": 150,
+					"column": 0,
+					"label": "常用宏包引用"
+				},
+				{
+					"line": 264,
+					"column": 0,
+					"label": "文章字体设置"
+				},
+				{
+					"line": 324,
+					"column": 0,
+					"label": "文章页面设置"
+				},
+				{
+					"line": 429,
+					"column": 0,
+					"label": "断行分页设置"
+				},
+				{
+					"line": 459,
+					"column": 0,
+					"label": "图表样式设置"
+				},
+				{
+					"line": 509,
+					"column": 0,
+					"label": "目录样式设置"
+				},
+				{
+					"line": 646,
+					"column": 0,
+					"label": "论文摘要设置"
+				},
+				{
+					"line": 693,
+					"column": 0,
+					"label": "符号列表设置"
+				},
+				{
+					"line": 718,
+					"column": 0,
+					"label": "图标索引设置"
+				},
+				{
+					"line": 773,
+					"column": 0,
+					"label": "致谢声明设置"
+				},
+				{
+					"line": 783,
+					"column": 0,
+					"label": "参考文献设置"
+				},
+				{
+					"line": 801,
+					"column": 0,
+					"label": "附录样式设置"
+				},
+				{
+					"line": 817,
+					"column": 0,
+					"label": "个人简历设置"
+				},
+				{
+					"line": 828,
+					"column": 0,
+					"label": "原创声明设置"
+				},
+				{
+					"line": 836,
+					"column": 0,
+					"label": "封面格式设置"
+				},
+				{
+					"line": 1028,
+					"column": 0,
+					"label": "自定义"
+				},
+				{
+					"line": 1092,
+					"column": 0,
+					"label": "结束"
+				}
+			]
+		}
+	]
+}

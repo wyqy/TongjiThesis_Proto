@@ -1,24 +1,37 @@
 \ProvidesPackage{tongjiutils}[modified by WYQY]
+% 此处所有的宏包引用, 命令定义都是可选的, 仅供模板使用者参考
+% 使用者可以根据需要, 任意删除或修改
 
 % 原始模板定义
 \newcommand{\china}{中华人民共和国} % 国家
 \newcommand{\pozhehao}{\kern0.3ex\rule[0.8ex]{2em}{0.1ex}\kern0.3ex} % 破折号
 \newcommand{\ffrac}[2]{\displaystyle\frac{#1}{#2}} % 更好的\frac{}{}, 在多级公式中更美观
-% 表格: 定义三种新的column对齐格式, 允许使用L C R的带长度的表格列
-\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}           
-\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
-\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
-% 表格内部强制换行
-\newcommand{\tabincell}[2]{
-\begin{tabular}{@{}#1@{}}#2\end{tabular}
-}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  ALGO2E  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newlength{\commentWidth}
-\setlength{\commentWidth}{5cm}
-\newcommand{\tcpright}[1]{\tcp*[r]{\makebox[\commentWidth]{#1\hfill}}}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TIKZ绘图 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  数学排版  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% 排版
+\RequirePackage[ntheorem]{empheq}
+\RequirePackage{ulem, cases, stackengine}
+
+% 字体
+\RequirePackage[oldbold,%
+  cal=cm,         calscaled=1.00,% style of \mathcal
+  scr=boondoxupr, scrscaled=1.00,% style of \mathscr
+  bb =libus,      bbscaled=1.00]%  style of \mathbb
+  {mathalfa}
+
+% 更好的矩阵排版
+\RequirePackage{nicematrix}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 图片排版 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% tikz 绘图
+\RequirePackage{tikz}
+
 \usetikzlibrary{
   arrows.meta, quotes, fit,
   calc, positioning, backgrounds
@@ -47,69 +60,82 @@
   }
 }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Operator类符号 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% RedeclareMathOperator
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  表格排版  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% 增强功能
+\RequirePackage{multirow, makecell} % 表格中支持跨行/列
+\RequirePackage{diagbox}            % 表格中的反斜线
+\RequirePackage{tabularx}           % 方便定义宽度的表格
+\RequirePackage{slashbox}           % 表格中的反斜线
+
+% 允许表格下方的脚注
+\RequirePackage{threeparttable}
+
+% 超长表格
+\RequirePackage{longtable} % 超长表格支持
+\RequirePackage{supertabular} % 超长表格的分页显示
+
+% 三线表: \cs{toprule}, \cs{midrule}, \cs{bottomrule}
+\RequirePackage{booktabs}
+
+% 定义三种新的 column 对齐格式, 允许使用L C R的带长度的表格列
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}           
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+% 内部强制换行
+\newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  算法排版  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% algorithm2e 宏包自定义
+\newlength{\commentWidth}
+\setlength{\commentWidth}{5cm}
+\newcommand{\tcpright}[1]{\tcp*[r]{\makebox[\commentWidth]{#1\hfill}}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 符号定义 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% 定义数学算符
 \newcommand\RedeclareMathOperator{%
   \@ifstar{\def\rmo@s{m}\rmo@redeclare}{\def\rmo@s{o}\rmo@redeclare}%
 }
-% this is taken from \renew@command
-\newcommand\rmo@redeclare[2]{%
+\newcommand\rmo@redeclare[2]{% this is taken from \renew@command
   \begingroup \escapechar\m@ne\xdef\@gtempa{{\string#1}}\endgroup
-  \expandafter\@ifundefined\@gtempa
-     {\@latex@error{\noexpand#1undefined}\@ehc}%
-     \relax
+  \expandafter\@ifundefined\@gtempa {\@latex@error{\noexpand#1undefined}\@ehc} \relax
   \expandafter\rmo@declmathop\rmo@s{#1}{#2}}
-% This is just \@declmathop without \@ifdefinable
-\newcommand\rmo@declmathop[3]{%
-  \DeclareRobustCommand{#2}{\qopname\newmcodes@#1{#3}}%
-}
+\newcommand\rmo@declmathop[3]{% just \@declmathop without \@ifdefinable
+  \DeclareRobustCommand{#2}{\qopname\newmcodes@#1{#3}}}
 \@onlypreamble\RedeclareMathOperator
 
-% general operator
-% stat
-% \DeclareMathOperator{\Pr}{Pr}
-\DeclareMathOperator{\E}{E}
-\DeclareMathOperator{\Var}{Var}
-\DeclareMathOperator{\Cov}{Cov}
-\DeclareMathOperator{\Corr}{Corr}
-% little
-\RedeclareMathOperator*{\max}{max}
-\RedeclareMathOperator*{\min}{min}
-\DeclareMathOperator*{\argmax}{arg\,max}
-\DeclareMathOperator*{\argmin}{arg\,min}
-\DeclareMathOperator{\supp}{supp}
-\DeclareMathOperator{\vect}{vec}
-\DeclareMathOperator{\row}{row}
-\DeclareMathOperator{\diag}{diag}
-\DeclareMathOperator{\rank}{rank}
-\DeclareMathOperator{\svd}{svd}
-\DeclareMathOperator{\fft}{fft}
-\DeclareMathOperator{\atantwo}{atan2}
-% capital
-\DeclareMathOperator{\ROOTS}{ROOTS}
-\DeclareMathOperator{\ROC}{ROC}
-\DeclareMathOperator{\IDFT}{IDFT}
-\DeclareMathOperator{\DFT}{DFT}
-\DeclareMathOperator{\IFFT}{IFFT}
-\DeclareMathOperator{\FFT}{FFT}
-\DeclareMathOperator{\RESHAPE}{RESHAPE}
-\DeclareMathOperator{\PAGEMTIMES}{PAGEMTIMES}
+% symbol
+\def\dual{^{\ast}}
+\def\im{{\mathscr{j}}}   \def\e   {{\mathscr{e}}}
+\def\d {{\mathrm{d}\,}}  \def\dint{{\,\mathrm{d}}}
+\def\tr{^{\mathrm{T}}}   \def\ct  {^{\mathrm{H}}}
+
+% scripts
+\def\sps[#1]{^{\mathrm{#1}}} % 上标
+\def\ups[#1]{_{\mathrm{#1}}} % 下标
+
+% math operator
+\DeclareMathOperator{\E}{E}             \DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}         \DeclareMathOperator{\Corr}{Corr}
+\RedeclareMathOperator*{\max}{max}      \DeclareMathOperator*{\argmax}{arg\,max}
+\RedeclareMathOperator*{\min}{min}      \DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\FFT}{FFT}         \DeclareMathOperator{\IFFT}{IFFT}
+\DeclareMathOperator{\RESHAPE}{RESHAPE} \DeclareMathOperator{\PAGEMTIMES}{PAGEMTIMES}
 
 % paired operator for both dynamic (no star) and static mode (star)
 % refer to: https://tex.stackexchange.com/questions/43008/absolute-value-symbols
-\DeclarePairedDelimiter\abs{\lvert}{\rvert}
-\DeclarePairedDelimiter\norm{\lVert}{\rVert}
-\DeclarePairedDelimiter\ceil{\lceil}{\rceil} % alternative: \lfloor {#1}+1
-\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
-\DeclarePairedDelimiterX\inprod[2]{\langle}{\rangle}{{#1},{#2}}
-\let\oldabs\abs \def\abs{\@ifstar{\oldabs}{\oldabs*}}
-\let\oldnorm\norm \def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
-\let\oldceil\ceil \def\ceil{\@ifstar{\oldceil}{\oldceil*}}
-\let\oldfloor\floor \def\floor{\@ifstar{\oldfloor}{\oldfloor*}}
-\let\oldinprod\inprod \def\inprod{\@ifstar{\oldinprod}{\oldinprod*}}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Command, Def类符号 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}     \let\oldabs\abs \def\abs{\@ifstar{\oldabs}{\oldabs*}}
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}    \let\oldnorm\norm \def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}    \let\oldceil\ceil \def\ceil{\@ifstar{\oldceil}{\oldceil*}}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor} \let\oldfloor\floor \def\floor{\@ifstar{\oldfloor}{\oldfloor*}}
 
 % bold Greek letters
 % refer to: https://tex.stackexchange.com/questions/383324/bold-checkmark/383798#383798
@@ -121,7 +147,7 @@
   #1%
   \special{pdf:literal 0 Tr}% 恢复文本渲染模式
 }
-% matrix
+% matrix symbol with bold Greek letters
 \newcommand{\mat}[1]{
   \ifcat\noexpand#1\relax {{\boldgreek{#1}}} 
   \else {{\mathbf{#1}}} \fi
@@ -130,95 +156,5 @@
   \ifcat\noexpand#1\relax {{\boldgreek{#1}}} 
   \else {{\boldsymbol{#1}}} \fi
 }
-% probability
-\newcommand{\widesim}[2][1.5]{
-  \mathrel{\overset{#2}{\scalebox{#1}[1]{$\sim$}}}
-} % \widesim[2]{SS}
-
-% symbol
-\def\im{{\mathcal{j}}} \def\e{{\mathcal{e}}}
-\def\K{{\mathbb{K}}} % self-defined field
-\def\Z{{\mathbb{Z}}} \def\Q{{\mathbb{Q}}}
-\def\R{{\mathbb{R}}} \def\C{{\mathbb{C}}}
-\def\U{{\mathbb{U}}} % unit circle on \C
-% analysis
-\def\d{{\mathrm{d}\,}} \def\dint{{\,\mathrm{d}}}
-\def\Fc{{\mathbcal{F}}} \def\Fd{{\mathfrak{F}}} % Fourier
-\def\Hc{{\mathbcal{H}}} \def\Hd{{\mathfrak{H}}} % Hilbert
-\def\Lu{{\mathcal{L}}} \def\Lb{{\mathfrak{L}}} % Laplace
-% matrix
-\def\tr{^{\mathrm{T}}} \def\ct{^{\mathrm{H}}}
-\newcommand{\oproj}[3]{{{#1} \; \diagup \; {#2} \; ({#3})}}
-% space
-\def\dual{^{\ast}}
-\def\spaceba{{\mathbcal{ba}}}
-\def\spaceC{{\mathbcal{C}}}
-\def\spaceL{{\mathbcal{L}}} \def\spacel{{\mathbcal{l}}}
-\def\spaceH{{\mathbcal{H}}}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 符号表示 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% scripts
-\def\sps[#1]{^{\mathrm{#1}}} % 上标
-\def\cps[#1]{{\mathrm{#1}}} % 快速正体
-\def\ups[#1]{_{\mathrm{#1}}} % 下标
-% indices
-% general usage:
-\def\inda{{a}} \def\indb{{b}} \def\indc{{c}} % no \d
-\def\indi{{i}} \def\indj{{j}}
-\def\indk{{k}} \def\indl{{\mathcal{l}}}
-\def\indm{{m}} \def\indn{{n}} 
-\def\indq{{q}} \def\indr{{r}} \def\inds{{s}} % no \p
-% special usage:
-\def\enumk{{\mathscr{k}}} \def\enuml{{\mathscr{l}}}
-\def\enump{{\mathscr{p}}}
-
-% sets
-\def\setT{{\mathbb{T}}} % sampling moment set
-\def\setS{{\mathbb{S}}} % sampled data set
-\def\setF{{\mathbb{F}}} % used frequency set
-
-% specified operator
-\DeclareMathOperator{\kerf}{{\mathcal{f}}}
-\DeclareMathOperator{\kerk}{{\mathcal{k}}}
-\DeclareMathOperator{\kerg}{{\mathcal{g}}}
-\DeclareMathOperator{\kert}{{\mathcal{t}}}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 毛子符号 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% cyrillic operator
-% refer to: https://tex.stackexchange.com/questions/14633/what-packages-will-let-me-use-cyrillic-characters-in-math-mode
-\iftongji@cyrillic{%
-  \DeclareSymbolFont{cyrillicnormal}{T2A}{cmr}{m}{n}
-  \DeclareSymbolFont{cyrillicitalic}{T2A}{cmr}{m}{it}
-  % #1 for explicit name, #2 for internal name
-  \def\makecynormalsymbol#1#2{% 
-    \begingroup\edef\temp{\endgroup
-      \noexpand\DeclareMathSymbol{\noexpand#1}
-      {\noexpand\mathalpha}{cyrillicnormal} % normal shape
-      {\expandafter\expandafter\expandafter
-      \calccyr\expandafter\meaning\csname T2A\string#2\endcsname\end}} % different size
-  \temp}
-  \def\makecyitalicsymbol#1#2{%
-    \begingroup\edef\temp{\endgroup
-      \noexpand\DeclareMathSymbol{\noexpand#1}
-      {\noexpand\mathalpha}{cyrillicitalic} % normal shape
-      {\expandafter\expandafter\expandafter
-      \calccyr\expandafter\meaning\csname T2A\string#2\endcsname\end}} % different size
-  \temp}
-  \expandafter\def\expandafter\calccyr\string\char#1\end{#1}
-  % d.i.y. cyrillic symbols in math mode
-  % capital
-  \makecyitalicsymbol\itCyB\CYRB
-  \makecyitalicsymbol\itCyG\CYRG
-  \makecyitalicsymbol\itCyI\CYRI
-  \makecynormalsymbol\rmCyI\CYRI
-  \makecyitalicsymbol\rmCyEl\CYRL
-  \makecyitalicsymbol\rmCySha\CYRSH
-  % little
-  \makecyitalicsymbol\itCyb\cyrb
-  \makecyitalicsymbol\itCyg\cyrg
-  \makecyitalicsymbol\itCyyu\cyryu
-  \makecyitalicsymbol\itCyze\cyrz
-}\fi
-
 
 \endinput

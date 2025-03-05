@@ -2,9 +2,7 @@
 \item[{{$a, b, c, \ldots$}}] 标量
 \item[{{$\vec{a}, \vec{b}, \vec{c}, \ldots$}}] 向量
 \item[{{$\mat{A}, \mat{B}, \mat{C}, \ldots$}}] 矩阵
-\item[{{$(a_i), (b_i), (c_i), \ldots$}}] 数列
 \item[{{$\mathbb{Q}, \mathbb{R}, \mathbb{C}, \ldots$}}] 集合
-\item[{{$f(x), g(x), h(x), \ldots$}}] 函数
 \item[{{$\mathcal{D}, \mathcal{E}, \mathcal{F}, \ldots$}}] 概率分布
 
 \item % 隔开一行
@@ -14,67 +12,36 @@
 \item[{{$\Re(x)$}}] 复实部
 \item[{{$\Im(x)$}}] 复虚部 
 \item[{{$\overline{x}$}}] 复共轭
-\item[{{$\ceil{x}$}}] 向上取整 
+\item[{{$\ceil{x}$}}] 向上取整
 \item[{{$\floor{x}$}}] 向下取整
 \item[{{$x \bmod T$}}] 取余（模）：$a - T\floor{\frac{a}{T}}$
+
 % 矩阵操作
 \item[{{$\mat{I}_{N}$}}] $N$~阶单位矩阵
 \item[{{$\norm{\mat{A}}$}}] 矩阵范数
 \item[{{$\mat{A}\tr$}}] 矩阵的转置
 \item[{{$\mat{A}\ct$}}] 矩阵的共轭转置
-\item[{{$\row(\mat{A})$}}] 矩阵的行空间
 \item[{{$\mat{A}^\dagger$}}] 矩阵的 Moore-Penrose~伪逆
-\item[{{$\mat{A}.*\mat{B}$}}] 矩阵的 Hadamard~乘积（逐元素相乘）
-\item[{{$\mat{A}\otimes\mat{B}$}}] 矩阵的 Kronecker~乘积
-\item[{{$\mat{A}\odot\mat{B}$}}] 矩阵的Khatri-Rao乘积
-% 数列操作
-% \item[{{$\spacel^1$}}] $\spacel^1$空间，即绝对收敛的数列空间：$\sum_i{\abs{a_i}} < \infty$
-% \item[{{$\spacel^\infty$}}] $\spacel^\infty$空间，即有界数列空间：$\max_i{\abs{a_i}} < \infty$
+
 % 集合操作
 \item[{{$\#\mathbb{S}$}}] 集合的势，对于有限集合即为元素的个数
+
 % 函数操作
 \item[{{$\delta(t)$}}] Kronecker delta~函数：$\delta(t) = \begin{cases}
     1, & t = 0 \\
     0, & t \neq 0
 \end{cases}$
-\item[{{$p$}}] 函数的微分算子：$p f(x) = \frac{\d f(x)}{\d x}$
-\item[{{$z$}}] 函数的时延算子：$z f(\indn T_s) = f(\indn T_s + T_s)$
 \item[{{$f\sps[(n)](x)$}}] 函数的 $n$~阶导数
-\item[{{$V(f)$}}] 函数的全变差，即 $V(f) = \sup_{\mathcal{P}}{\sum_{i=1}^{N\sps[p]}{\abs{f(x_i) - f(x_{i-1})}}}$，
-    \\ 其中 $\mathcal{P}$ 为定义域 $[a, b]$ 的任意分割，
-    \\ $N\sps[p]$ 为分割 $\mathcal{P}$ 所得区间个数
-\item[{{$\Fc_{f}(\indk)$}}] 连续时域、周期函数的 Fourier~级数：$\frac{1}{T}\int_T{f(t)\e^{-\im\frac{2\pi}{T}\indk t}\dint t}$
-\item[{{$\Fc_{f}(\omega)$}}] 连续时域、非周期函数的 Fourier~变换：$\int_\R{f(t)\e^{-\im2\pi\omega t}\dint t}$
-\item[{{$\Fd_{f}(\e^{\im\omega T})$}}] 离散时域函数的 Fourier~变换：$\sum_{\indn=-\infty}^{\infty}{f(\indn)\e^{-\im\indn\omega T}}$
-\item[{{$\Lu_{f}(s)$}}] 连续时域函数的单边 Laplace~变换：$\int_0^\infty{f(t)\e^{-st}\dint t}$
-\item[{{$\Lu_{F}^{-1}(t)$}}] 单边 Laplace~变换的逆变换：$\frac{1}{2\pi\im}\lim_{T\to\infty}{\int_{\gamma-\im T}^{\gamma+\im T}{F(s)\e^{st}\dint s}}$ % $\gamma\in\ROC(F)$
+\item[{{$\mathcal{F}_{f}(k)$}}] 连续时域、周期函数的 Fourier~级数：$\frac{1}{T}\int_T{f(t)\e^{-\im\frac{2\pi}{T}k t}\dint t}$
+\item[{{$\mathfrak{F}_{f}(\e^{\im\omega T})$}}] 离散时域函数的 Fourier~变换：$\sum_{n=-\infty}^{\infty}{f(n)\e^{-\im n\omega T}}$
 \item[{{$(f \circledast g)(t)$}}] 函数 $f(\tau)$ 与 $f(\tau)$ 的卷积
-\item[{{a.e.}}] 几乎处处（almost everywhere），即该性质对至多零测度的集合以外的所有点都成立
+
 % 概率分布操作
-\item[{{w.p.1}}] 依概率 $1$ 成立，即 $\Pr( \lim_{n\to\infty}{\mathbb{X}_n} = \mathbb{X} ) = 1$
 \item[{{$\E\mathcal{D}$}}] 概率分布的数学期望
 \item[{{$\Var\mathcal{D}$}}] 概率分布的方差
-\item[{{$\Cov(\mathcal{E},\mathcal{F})$}}] 概率分布 $\mathcal{E}$ 与 $\mathcal{F}$ 的协方差
-\item[{{$\Corr_{\mathcal{E}, \mathcal{F}}(\tau)$}}] 随机过程 $\mathcal{E}(t)$ 与 $\mathcal{F}(t)$ 的相关函数
 
 \item % 隔开一行
 
-\item[{{EIV}}] 变量含误差（Error-In-Variables）
-\item[{{CT}}] 连续时域（Continuous Time-domain）
-\item[{{DT}}] 离散时域（Discrete Time-domain） 
 \item[{{SISO}}] 单输入单输出（Single-Input Single-Output）
 \item[{{MIMO}}] 多输入多输出（Multi-Input Multi-Output）
 \item[{{LTI}}] 线性时不变（Linear Time-Invariant）
-\item[{{(I)DTFT}}] 离散时间（逆）Fourier~变换
-    \\（Discrete-Time [Inverse] Fourier Transform）
-\item[{{(I)DFT}}] 离散（逆）Fourier~变换
-    \\（Discrete [Inverse] Fourier Transform）
-\item[{{(I)FFT}}] 快速（逆）傅里叶变换
-    \\（Fast Fourier [Inverse] Transformation）
-\item[{{NUDFT}}] 非均匀离散~Fourier~变换
-    \\（Non-uniform Discrete Fourier Transform）
-\item[{{ST-DFT}}] 短时离散~Fourier~变换
-    \\（Short-time Discrete Fourier Transform）
-\item[{{FRF}}] 频率响应函数（Frequency-Response Function）
-\item[{{SVD}}] 奇异值分解（Singular Value Decomposition）
-\item[{{BV}}] 有界变差（Bounded Variation）

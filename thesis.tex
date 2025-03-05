@@ -7,7 +7,7 @@
 %   pifootnote,                                         % 可选, 脚注是否用 ① 这种格式, 默认已打开
 % 	electronic,                                         % 可选, 电子版标注: " 打印时删除 ", 默认已关闭
 %   secret,                                             % 可选, 是否保密: 秘密 / 机密 / 绝密, 默认已关闭
-%   cyrillic,                                           % 可选, 是否使用西里尔字母, 默认已关闭
+%   encoding,                                           % 可选, 自定义西文编码 (默认无需定义, 详情请参考 fontenc 宏包文档)
 %   注：默认已打开的选项可以使用 arialtitle=false 的形式关闭
 
 % 其他文本格式 / 章节标题格式等选项可以参见 tongjithesis.cfg 中的说明, 按需要修改
@@ -55,6 +55,7 @@
 \tongjiinputfile[reference]{ref/style}                  % 参考文献示例, 位置: data/ref.tex  
 \tongjiinputfile[appendix]{data/appendix}               % 附录示例, 位置: data/appendix.tex
 \tongjiinputfile[resume]{data/resume}                   % 个人简历示例, 位置: data/resume.tex
-\tongjiinputfile[statements]{data/statements}           % 原创性声明和授权书( 仅供测试, 最终提交时请替换为签字扫描件 )
+\tongjiinputfile[statements]{data/statements}           % 原创性声明和授权书( 仅供测试, 最终提交时请替换为自己的扫描件 )
+\includepdf{data/statements-scan.pdf}                   % 原创性声明和授权书扫描件( 仅供测试, 最终提交时请替换为自己的扫描件 )
 
 \end{document}
